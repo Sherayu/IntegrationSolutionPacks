@@ -2,35 +2,113 @@
 
 > Generated on 2026-07-06 | Domain: Higher Education | Framework: CAUDIT Higher Education Reference Models (HERM)
 
+## CAUDIT HERM Business Capability Model Reference
+
+The CAUDIT Higher Education Reference Model (HERM) **Business Reference Model v3.2** defines the standard business capabilities for higher education institutions. The table below lists all Level 2 capabilities grouped by Level 1 domain. Each process flow in this document is mapped to its relevant HERM capability codes.
+
+### Learning & Teaching
+
+| Capability | Code | Description |
+|-----------|------|-------------|
+| **Curriculum Management** | `BC001` | Design, develop, and maintain academic programs, courses, and curricula |
+| **Curriculum Delivery** | `BC023` | Deliver teaching and learning experiences across modalities |
+| **Student Assessment** | `BC028` | Assess, grade, and certify student learning outcomes |
+
+### Research & Innovation
+
+| Capability | Code | Description |
+|-----------|------|-------------|
+| **Research Opportunities & Planning** | `BC065` | Identify, evaluate, and plan research opportunities and strategy |
+| **Research Funding** | `BC071` | Secure, administer, and report on research funding and grants |
+| **Research Activity** | `BC074` | Conduct and manage research projects and investigations |
+| **Research Dissemination** | `BC086` | Publish, disseminate, and commercialise research outputs |
+| **Research Management** | `BC093` | Manage research portfolios, performance, and reporting |
+| **Research Assurance** | `BC245` | Ensure research integrity, ethics, and regulatory compliance |
+
+### Student Administration
+
+| Capability | Code | Description |
+|-----------|------|-------------|
+| **Student Recruitment** | `BC008` | Attract, engage, and recruit prospective students |
+| **Student Admission** | `BC014` | Process applications, make admission decisions, and manage offers |
+| **Student Enrolment** | `BC019` | Enrol, register, and orient students into programs |
+| **Student Management** | `BC044` | Maintain student records, progression, and academic history |
+| **Student Support** | `BC052` | Provide wellbeing, academic support, and student services |
+| **Completion Management** | `BC032` | Manage graduation, certification, and program completion |
+
+### Corporate Services
+
+| Capability | Code | Description |
+|-----------|------|-------------|
+| **Financial Management** | `BC184` | Manage budgeting, accounting, procurement, and financial control |
+| **Human Resource Management** | `BC171` | Manage workforce planning, recruitment, payroll, and development |
+| **Legal Services** | `BC155` | Provide legal counsel, contracts, and compliance advice |
+| **Governance Risk & Compliance** | `BC160` | Oversee governance, risk management, audit, and regulatory compliance |
+| **Strategy Management** | `BC147` | Develop institutional strategy, planning, and performance monitoring |
+| **Business Capability Management** | `BC206` | Manage enterprise architecture and business capability evolution |
+
+### Engagement & Advancement
+
+| Capability | Code | Description |
+|-----------|------|-------------|
+| **Marketing Management** | `BC107` | Manage brand, communications, and market engagement |
+| **Advancement Management** | `BC232` | Manage alumni relations, fundraising, and donor stewardship |
+| **Engagement & Relationship Management** | `BC238` | Manage stakeholder engagement, partnerships, and community relations |
+
+### Infrastructure & Operations
+
+| Capability | Code | Description |
+|-----------|------|-------------|
+| **Facilities & Estate Management** | `BC125` | Manage campus, buildings, space, and physical infrastructure |
+| **Supporting Services** | `BC114` | Provide ancillary services (catering, printing, transport, etc.) |
+
+### Information & Library
+
+| Capability | Code | Description |
+|-----------|------|-------------|
+| **Library Administration** | `BC133` | Manage library collections, access, and information services |
+| **Information Management** | `BC135` | Manage information assets, records, and data governance |
+| **Publishing Management** | `BC250` | Manage institutional publishing and university press operations |
+| **Archive Management** | `BC255` | Preserve and provide access to permanently valuable records |
+
+### Technology
+
+| Capability | Code | Description |
+|-----------|------|-------------|
+| **ICT Management** | `BC201` | Plan, deliver, and support information and communication technology services |
+
+---
+
+
 ## Table of Contents
 
-- [Student Administration](#student-administration)
+- [Student Administration  - BC008, BC014, BC019, BC044, BC052, BC032](#student-administration)
   - [1.1 Student Onboarding (Prospect → Enrollment)](#1.1-student-onboarding-prospect--enrollment)
   - [1.2 Enrollment & Registration](#1.2-enrollment--registration)
-- [Student Administration](#student-administration)
+- [Student Administration  - BC008, BC014, BC019, BC044, BC052, BC032](#student-administration)
   - [1.3 Academic Records Management](#1.3-academic-records-management)
   - [1.4 Graduation & Certification](#1.4-graduation--certification)
-- [Learning & Teaching](#learning-teaching)
+- [Learning & Teaching  - BC001, BC023, BC028](#learning-teaching)
   - [2.1 Curriculum Management](#2.1-curriculum-management)
   - [2.2 Course Delivery & Assessment](#2.2-course-delivery--assessment)
   - [2.3 Timetable & Scheduling](#2.3-timetable--scheduling)
-- [HR & Faculty Management](#hr-faculty-management)
+- [HR & Faculty Management  - BC171](#hr-faculty-management)
   - [3.1 Faculty Recruitment](#3.1-faculty-recruitment)
   - [3.2 Payroll & Benefits](#3.2-payroll--benefits)
   - [3.3 Faculty Performance & Development](#3.3-faculty-performance--development)
-- [Finance & Resource Management](#finance-resource-management)
+- [Finance & Resource Management  - BC184](#finance-resource-management)
   - [4.1 Fee Assessment & Billing](#4.1-fee-assessment--billing)
   - [4.2 Financial Aid Management](#4.2-financial-aid-management)
   - [4.3 Procurement & Vendor Management](#4.3-procurement--vendor-management)
-- [Research Management](#research-management)
+- [Research Management  - BC065, BC071, BC074, BC086, BC093, BC245](#research-management)
   - [5.1 Grant Lifecycle Management](#5.1-grant-lifecycle-management)
   - [5.2 Research Outputs & Publishing](#5.2-research-outputs--publishing)
-- [Institutional Engagement](#institutional-engagement)
+- [Institutional Engagement  - BC107, BC232, BC238](#institutional-engagement)
   - [6.1 Marketing & Student Recruitment](#6.1-marketing--student-recruitment)
   - [6.2 Alumni Relations & Fundraising](#6.2-alumni-relations--fundraising)
-- [Library & Learning Support](#library-learning-support)
+- [Library & Learning Support  - BC133, BC135](#library-learning-support)
   - [7.1 Library Resource Management](#7.1-library-resource-management)
-- [Enterprise Data & Analytics](#enterprise-data-analytics)
+- [Enterprise Data & Analytics  - BC201, BC135](#enterprise-data-analytics)
   - [8.1 Data Integration & Warehousing](#8.1-data-integration--warehousing)
   - [8.2 Institutional Reporting & BI](#8.2-institutional-reporting--bi)
 
@@ -82,7 +160,7 @@ The following test data is used consistently across all sequence diagrams:
 
 ---
 
-# Student Administration
+# Student Administration  - `BC008` `BC014` `BC019` `BC044` `BC052` `BC032`
 
 End-to-end management of the student lifecycle from prospect engagement through graduation.
 
@@ -174,7 +252,7 @@ sequenceDiagram
 | Enrollment & Registration | Enrollment | SyncEnrollmentToLMS | SIS (PeopleSoft Campus Solutions) | LMS (Blackboard Learn) | PeopleSoft REST API (JWT) | Blackboard REST API (OAuth2) | Batch (Scheduled) | Simple |
 ---
 
-# Student Administration
+# Student Administration  - `BC008` `BC014` `BC019` `BC044` `BC052` `BC032`
 
 
 
@@ -256,7 +334,7 @@ sequenceDiagram
 | Graduation & Certification | Alumni Record | CreateAlumniRecord | SIS (Ellucian Banner) | Alumni CRM (Blackbaud) | Banner REST API | Blackbaud API (OAuth2) | Event-driven | Simple |
 ---
 
-# Learning & Teaching
+# Learning & Teaching  - `BC001` `BC023` `BC028`
 
 Design, develop, deliver, and assess academic programs and courses. Spans curriculum planning, timetable scheduling, delivery, and assessment.
 
@@ -373,7 +451,7 @@ sequenceDiagram
 | Timetable & Scheduling | Scheduled Section | SyncSections | Scheduling Engine (Ad Astra) | SIS (PeopleSoft Campus Solutions) | Ad Astra REST API | PeopleSoft REST API (JWT) | Batch (Scheduled) | Simple |
 ---
 
-# HR & Faculty Management
+# HR & Faculty Management  - `BC171`
 
 Full lifecycle of faculty and staff: recruitment, onboarding, payroll, performance management, professional development.
 
@@ -492,7 +570,7 @@ sequenceDiagram
 | Faculty Performance & Development | Development Request | ApproveTraining | HRIS (Workday HCM) | Development Platform (Coursera Campus) | Workday API (WS-Security) | Coursera API (OAuth2) | API-led (Real-time) | Simple |
 ---
 
-# Finance & Resource Management
+# Finance & Resource Management  - `BC184`
 
 Manage financial resources: student fees, financial aid, procurement, budgeting, general ledger.
 
@@ -610,7 +688,7 @@ sequenceDiagram
 | Procurement & Vendor Management | Invoice | SyncInvoice | Procurement System (Coupa) | Finance ERP (Oracle EBS) | Coupa API (OAuth2) | Oracle EBS REST API (SOAP) | Batch (Scheduled) | Medium |
 ---
 
-# Research Management
+# Research Management  - `BC065` `BC071` `BC074` `BC086` `BC093` `BC245`
 
 Full research lifecycle: opportunity discovery, grant applications, award management, project execution, publication, compliance.
 
@@ -687,7 +765,7 @@ sequenceDiagram
 | Research Outputs & Publishing | Grant Output | UpdateGrantOutput | Research Admin (InfoEd) | Research Admin (InfoEd) | Internal | Internal | API-led (Real-time) | Simple |
 ---
 
-# Institutional Engagement
+# Institutional Engagement  - `BC107` `BC232` `BC238`
 
 Marketing, recruitment, alumni relations, fundraising, and community partnerships.
 
@@ -760,7 +838,7 @@ sequenceDiagram
 | Alumni Relations & Fundraising | Giving History | SyncGivingHistory | Fundraising Platform (Advancement) | Alumni CRM (Blackbaud) | Advancement API (OAuth2) | Blackbaud API (OAuth2) | Event-driven | Simple |
 ---
 
-# Library & Learning Support
+# Library & Learning Support  - `BC133` `BC135`
 
 Library resource management, digital content delivery, research support, and course resource lists integrated with LMS.
 
@@ -802,7 +880,7 @@ sequenceDiagram
 | Library Resource Management | Usage Analytics | SyncUsageAnalytics | Library System (Ex Libris Alma) | LMS (Canvas) | Alma API (API Key) | Canvas API (OAuth2) | Batch (Scheduled) | Simple |
 ---
 
-# Enterprise Data & Analytics
+# Enterprise Data & Analytics  - `BC201` `BC135`
 
 Centralized data integration, data warehousing, business intelligence, and institutional reporting across all domains.
 
