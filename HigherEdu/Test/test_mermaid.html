@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+</head><body>
+<div id="test"></div>
+<script>
+async function test() {
+    const div = document.getElementById('test');
+    const src = `    participant P as Prospect/Student
+    participant CRM as CRM&lt;br/&gt;(Salesforce)
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    participant LMS as LMS&lt;br/&gt;(Canvas)
+    participant FIN as Finance&lt;br/&gt;(Workday)
+    participant HOUS as Housing
+    P-&gt;&gt;CRM: Submit inquiry&lt;br/&gt;name=Jane Smith&lt;br/&gt;program=MSc Data Science
+    CRM-&gt;&gt;CRM: Create prospect record&lt;br/&gt;ID: PRO-2026-042
+    P-&gt;&gt;CRM: Submit application&lt;br/&gt;transcripts, essays
+    CRM-&gt;&gt;SIS: Create applicant&lt;br/&gt;createApplicant(PRO-2026-042)
+    SIS--&gt;&gt;CRM: ApplicantID: APP-2026-088
+    Admissions Officer-&gt;&gt;SIS: Review &amp; admit&lt;br/&gt;decision=Accepted
+    SIS-&gt;&gt;CRM: Update status&lt;br/&gt;status=Admitted
+    CRM-&gt;&gt;P: Offer letter&lt;br/&gt;program=MSc Data Science
+    P-&gt;&gt;CRM: Accept offer
+    CRM-&gt;&gt;SIS: Confirm enrollment&lt;br/&gt;enrollStudent(APP-2026-088)
+    SIS-&gt;&gt;FIN: Create fee account&lt;br/&gt;createFeeAccount(STU-2026-001, $12,500)
+    SIS-&gt;&gt;LMS: Create user &amp; course access&lt;br/&gt;createCanvasUser(STU-2026-001)
+    SIS-&gt;&gt;HOUS: Request accommodation&lt;br/&gt;housingRequest(STU-2026-001)
+    HOUS--&gt;&gt;SIS: Room assigned&lt;br/&gt;Hall: Adams, Room 204
+    SIS-&gt;&gt;P: Welcome email with credentials`;
+    try {
+        mermaid.initialize({startOnLoad: false, theme: 'neutral', securityLevel: 'loose'});
+        const result = await mermaid.render('test-svg', src);
+        div.innerHTML = result.svg;
+        div.innerHTML += '<div style="color:green">SUCCESS</div>';
+    } catch(e) {
+        div.innerHTML = '<div style="color:red">Error: ' + e.message + '</div>';
+    }
+}
+test();
+</script>
+</body></html>

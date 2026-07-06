@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant SIS as SIS&lt;br/&gt;(PeopleSoft)
+    participant FIN as Finance ERP&lt;br/&gt;(Workday Financials)
+    participant PG as Payment Gateway&lt;br/&gt;(TouchNet)
+    participant PORT as Student Portal
+    SIS-&gt;&gt;SIS: Calculate fees&lt;br/&gt;tuition=$10,000, fees=$2,500
+    SIS-&gt;&gt;FIN: Assess student fees&lt;br/&gt;assessFees(STU-2026-001, $12,500)
+    FIN-&gt;&gt;FIN: Generate invoice&lt;br/&gt;INV-2026-8901
+    FIN-&gt;&gt;PORT: Notify invoice available
+    PORT--&gt;&gt;Student: View invoice
+    Student-&gt;&gt;PORT: Pay invoice&lt;br/&gt;credit card ending 4242
+    PORT-&gt;&gt;PG: processPayment($12,500)
+    PG-&gt;&gt;PG: Authorize and capture
+    PG--&gt;&gt;PORT: Transaction approved&lt;br/&gt;ref: PAY-7X3K2
+    PORT-&gt;&gt;FIN: Payment notification
+    FIN-&gt;&gt;FIN: Update ledger&lt;br/&gt;AR decreased by $12,500
+    FIN-&gt;&gt;SIS: Clear fee hold
+    PORT--&gt;&gt;Student: Receipt generated</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-10", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant ALUM as Alumni
+    participant CRM as Alumni CRM&lt;br/&gt;(Blackbaud)
+    participant FUND as Fundraising&lt;br/&gt;(Advancement)
+    participant FIN as Finance ERP&lt;br/&gt;(Workday)
+    CRM-&gt;&gt;ALUM: Newsletter&lt;br/&gt;Class of 2019 reunion
+    ALUM-&gt;&gt;CRM: Update contact info&lt;br/&gt;email=emily.j@corp.com
+    ALUM-&gt;&gt;FUND: Make donation&lt;br/&gt;amount=$5,000, fund=CS Scholarship
+    FUND-&gt;&gt;FIN: Record gift&lt;br/&gt;recordGift(donationID=G-2026-042, $5k)
+    FIN--&gt;&gt;FUND: Gift confirmed
+    FUND-&gt;&gt;CRM: Update giving history&lt;br/&gt;total_giving=$15,000, segment=Major
+    FUND-&gt;&gt;ALUM: Tax receipt&lt;br/&gt;receiptID: RCPT-2026-301
+    Development Officer-&gt;&gt;FUND: Campaign performance&lt;br/&gt;goal=$2M, raised=$1.8M, progress=90%</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-16", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant SCH as Scheduler
+    participant ENG as Scheduling Engine&lt;br/&gt;(Ad Astra)
+    participant SIS as SIS&lt;br/&gt;(PeopleSoft)
+    participant ROOM as Room Booking&lt;br/&gt;(EMS)
+    participant PORT as Student Portal
+    SCH-&gt;&gt;ENG: Create timetable&lt;br/&gt;semester=Fall2026, term=16-week
+    ENG-&gt;&gt;SIS: Load course demand&lt;br/&gt;getCourseDemand(Fall2026)
+    SIS--&gt;&gt;ENG: 1,250 course requests
+    ENG-&gt;&gt;ROOM: Check room availability&lt;br/&gt;getAvailableRooms(time_slots)
+    ROOM--&gt;&gt;ENG: Available rooms list
+    ENG-&gt;&gt;ENG: Optimize schedule&lt;br/&gt;minimize conflicts
+    ENG--&gt;&gt;SCH: Proposed timetable
+    SCH-&gt;&gt;ENG: Publish timetable
+    ENG-&gt;&gt;SIS: Sync scheduled sections&lt;br/&gt;syncSections(Fall2026)
+    SIS-&gt;&gt;PORT: Publish student schedule
+    FAC-&gt;&gt;ENG: View teaching assignment&lt;br/&gt;CS501: Mon/Wed 10-11:30, Hall B</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-6", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

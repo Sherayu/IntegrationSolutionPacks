@@ -1,3 +1,6 @@
-*.py
-*.html
 __pycache__/
+~$*
+
+# Ignore orphaned root-level originals (locked, replaced by HigherEdu/ copies)
+/integration-details.xlsx
+/higher-education-process-flows.pdf

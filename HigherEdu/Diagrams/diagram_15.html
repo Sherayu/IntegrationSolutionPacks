@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant MKT as Marketing Team
+    participant MA as Marketing Automation&lt;br/&gt;(Marketo)
+    participant CRM as CRM&lt;br/&gt;(Salesforce)
+    participant CMS as Website CMS
+    participant EVT as Event Mgmt
+    MKT-&gt;&gt;MA: Create campaign&lt;br/&gt;Fall 2026 Open Day
+    MA-&gt;&gt;CMS: Publish landing page&lt;br/&gt;URL: /openday-fall2026
+    Prospective Student-&gt;&gt;CMS: Register for event&lt;br/&gt;name=Jane Smith, email=jane.s@...
+    CMS-&gt;&gt;CRM: Create lead&lt;br/&gt;createLead(Jane Smith, source=Open Day)
+    CRM-&gt;&gt;MA: Sync lead&lt;br/&gt;score=25, status=New
+    MA-&gt;&gt;CRM: Nurture campaign&lt;br/&gt;email sequence: 5 emails
+    Prospective Student-&gt;&gt;EVT: Attend Open Day&lt;br/&gt;attended=yes, interest=MSc DS
+    EVT-&gt;&gt;CRM: Update lead engagement
+    MKT-&gt;&gt;MA: Campaign report&lt;br/&gt;impressions=50k, conversions=1200</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-15", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

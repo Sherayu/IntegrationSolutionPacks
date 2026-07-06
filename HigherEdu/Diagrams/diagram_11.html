@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant STU as Student
+    participant FAN as Financial Aid&lt;br/&gt;(PowerFAIDS)
+    participant GOV as Gov Portal&lt;br/&gt;(FAFSA/NSLDS)
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    participant FIN as Finance&lt;br/&gt;(Workday)
+    STU-&gt;&gt;FAN: Submit aid application&lt;br/&gt;FAFSA, institutional forms
+    FAN-&gt;&gt;GOV: Verify FAFSA data&lt;br/&gt;getFederalData(SSN, tax info)
+    GOV--&gt;&gt;FAN: EFC=$5,000, Pell eligible
+    FAN-&gt;&gt;FAN: Calculate need&lt;br/&gt;COA=$30k - EFC=$5k = need $25k
+    FAN-&gt;&gt;SIS: Check enrollment status&lt;br/&gt;getEnrollment(STU-2026-001)
+    SIS--&gt;&gt;FAN: Full-time, 15 credits
+    FAN-&gt;&gt;FAN: Package aid&lt;br/&gt;Pell=$3,500, SEOG=$1,000, loan=$5,500
+    FAN-&gt;&gt;FAN: Award scholarship&lt;br/&gt;Merit=$2,500
+    FAN-&gt;&gt;STU: Award letter&lt;br/&gt;total aid: $12,500
+    STU-&gt;&gt;FAN: Accept award
+    FAN-&gt;&gt;SIS: Post aid to account&lt;br/&gt;postAid(STU-2026-001, $12,500)
+    FAN-&gt;&gt;FIN: Disburse funds&lt;br/&gt;disburse(STU-2026-001, $12,500)
+    FIN-&gt;&gt;STU: Refund excess&lt;br/&gt;aid-fees = $0 (exact match)</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-11", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

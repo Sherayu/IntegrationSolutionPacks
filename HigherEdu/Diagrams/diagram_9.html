@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant FAC as Faculty
+    participant SIS as SIS
+    participant LMS as LMS
+    participant HR as HRIS&lt;br/&gt;(Workday HCM)
+    participant DEV as Development&lt;br/&gt;(Coursera Campus)
+    HR-&gt;&gt;HR: Open performance cycle&lt;br/&gt;period=AY 2025-26
+    SIS-&gt;&gt;HR: Faculty teaching load data&lt;br/&gt;courses=CS501,CS502, students=215
+    LMS-&gt;&gt;HR: Course evaluation scores&lt;br/&gt;CS501 avg=4.6/5.0
+    FAC-&gt;&gt;HR: Self-assessment
+    Chair-&gt;&gt;HR: Peer review input
+    HR-&gt;&gt;HR: Calculate composite score&lt;br/&gt;score=4.2/5.0
+    FAC-&gt;&gt;HR: Request professional dev&lt;br/&gt;workshop=AI in Education
+    HR-&gt;&gt;DEV: Approve and register&lt;br/&gt;courseID: AI-ED-101
+    DEV-&gt;&gt;FAC: Access to workshop
+    HR-&gt;&gt;HR: Update tenure tracker&lt;br/&gt;year=3 of 6, status=On Track</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-9", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant CC as Curriculum Committee
+    participant CMS as Curriculum Mgmt&lt;br/&gt;(CourseLeaf)
+    participant SIS as SIS&lt;br/&gt;(PeopleSoft)
+    participant PORT as Student Portal
+    participant LMS as LMS&lt;br/&gt;(Canvas)
+    CC-&gt;&gt;CMS: Propose new course&lt;br/&gt;CS502: Deep Learning, 4 credits
+    CMS-&gt;&gt;CMS: Workflow routing&lt;br/&gt;department to school to senate
+    Dean-&gt;&gt;CMS: Approve proposal
+    CMS-&gt;&gt;SIS: Create course catalog entry&lt;br/&gt;createCourse(CS502, Deep Learning, 4cr)
+    SIS--&gt;&gt;CMS: CourseID: CS502
+    CMS-&gt;&gt;SIS: Define program structure&lt;br/&gt;B.Sc. CS requires CS502
+    SIS-&gt;&gt;PORT: Publish updated catalog
+    SIS-&gt;&gt;LMS: Create course shell&lt;br/&gt;createCourseShell(CS502, Fall2026)
+    CC-&gt;&gt;CMS: Update syllabus&lt;br/&gt;learning outcomes, assessments
+    CMS-&gt;&gt;LMS: Sync syllabus&lt;br/&gt;syllabusID: SYL-2026-014</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-4", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

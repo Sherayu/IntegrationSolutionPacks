@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant RES as Researcher&lt;br/&gt;(Dr. Sarah Smith)
+    participant RAD as Research Admin&lt;br/&gt;(InfoEd)
+    participant FIN as Finance&lt;br/&gt;(Workday Financials)
+    participant COMP as Compliance&lt;br/&gt;(IRB/IACUC)
+    participant SPON as Sponsor&lt;br/&gt;(NSF)
+    RES-&gt;&gt;RAD: Find grant opportunity&lt;br/&gt;NSF AI Research, Due: 2026-03-15
+    RES-&gt;&gt;RAD: Submit proposal&lt;br/&gt;title=AI-Driven Personalized Learning
+    RAD-&gt;&gt;RAD: Internal review&lt;br/&gt;budget=$250k, IDC=25 percent
+    RAD-&gt;&gt;SPON: Submit proposal&lt;br/&gt;proposalID: NSF-2026-045
+    SPON--&gt;&gt;RAD: Award notification&lt;br/&gt;grantID: GR-2026-045, $250k
+    RAD-&gt;&gt;FIN: Create award account&lt;br/&gt;createAwardAccount(GR-2026-045)
+    RAD-&gt;&gt;COMP: Register compliance&lt;br/&gt;human subjects, data privacy
+    COMP--&gt;&gt;RAD: IRB approval: IRB-2026-102
+    RES-&gt;&gt;RAD: Submit expense report&lt;br/&gt;equipment=$45k, student stipend=$30k
+    RAD-&gt;&gt;FIN: Verify expense&lt;br/&gt;budget check: within limits
+    FIN--&gt;&gt;RAD: Verified
+    RAD-&gt;&gt;SPON: Submit technical report&lt;br/&gt;Q1 progress, deliverables met
+    SPON--&gt;&gt;RAD: Report accepted</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-13", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant FAC as Faculty
+    participant TIME as Time Tracking
+    participant HR as HR&lt;br/&gt;(Workday HCM)
+    participant PAY as Payroll System&lt;br/&gt;(ADP)
+    participant FIN as Finance&lt;br/&gt;(Oracle EBS)
+    FAC-&gt;&gt;TIME: Submit timesheet&lt;br/&gt;week=Oct 5-11, hours=40
+    TIME-&gt;&gt;HR: Approve timesheet
+    HR-&gt;&gt;HR: Process payroll&lt;br/&gt;month=October 2026
+    HR-&gt;&gt;PAY: Submit payroll data&lt;br/&gt;employeeData(FAC-101, salary=$95k)
+    PAY-&gt;&gt;PAY: Calculate payroll&lt;br/&gt;gross=$7,916.67, deductions...
+    PAY--&gt;&gt;HR: Payroll summary
+    HR-&gt;&gt;FAC: Payslip notification
+    PAY-&gt;&gt;FIN: Journal entry&lt;br/&gt;GL: salary expense $7,916.67
+    FIN--&gt;&gt;PAY: Journal posted
+    PAY-&gt;&gt;FAC: Direct deposit&lt;br/&gt;net amount=$5,850.00</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-8", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

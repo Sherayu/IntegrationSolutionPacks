@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    participant LMS as LMS&lt;br/&gt;(Canvas)
+    participant HR as HRIS&lt;br/&gt;(Workday HCM)
+    participant FIN as Finance&lt;br/&gt;(Workday Financials)
+    participant CRM as CRM&lt;br/&gt;(Salesforce)
+    participant DW as Data Warehouse&lt;br/&gt;(Snowflake)
+    participant BI as BI Tool&lt;br/&gt;(Tableau)
+    SIS-&gt;&gt;DW: CDC replication&lt;br/&gt;tables: student, course, enrollment, grade
+    LMS-&gt;&gt;DW: Daily extract&lt;br/&gt;tables: course_activity, assignment, quiz
+    HR-&gt;&gt;DW: Full refresh&lt;br/&gt;tables: employee, faculty_assignment, payroll
+    FIN-&gt;&gt;DW: Incremental load&lt;br/&gt;tables: invoice, payment, ledger, budget
+    CRM-&gt;&gt;DW: Hourly sync&lt;br/&gt;tables: lead, prospect, campaign, alumni
+    DW-&gt;&gt;DW: Transform &amp; model&lt;br/&gt;star schema: fact_enrollment, dim_student
+    BI-&gt;&gt;DW: Query data&lt;br/&gt;DAX/MDX: retention, graduation rate
+    DW--&gt;&gt;BI: Results
+    BI-&gt;&gt;BI: Dashboard: Institutional KPIs
+    BI-&gt;&gt;BI: Report: Student Success Analytics</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-18", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

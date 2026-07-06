@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant DEPT as Department Admin
+    participant PROC as Procurement&lt;br/&gt;(Coupa)
+    participant FIN as Finance&lt;br/&gt;(Oracle EBS)
+    participant VEND as Vendor
+    DEPT-&gt;&gt;PROC: Submit requisition&lt;br/&gt;54-inch display x5, $1,200 ea
+    PROC-&gt;&gt;PROC: Approve requisition
+    PROC-&gt;&gt;VEND: Send PO&lt;br/&gt;PO-2026-301, total=$6,000
+    VEND--&gt;&gt;PROC: PO accepted
+    VEND-&gt;&gt;PROC: Deliver goods&lt;br/&gt;5 displays delivered
+    DEPT-&gt;&gt;PROC: Confirm receipt
+    PROC-&gt;&gt;FIN: Create invoice payable&lt;br/&gt;invoice=INV-VEND-102, $6,000
+    FIN-&gt;&gt;FIN: 3-way match&lt;br/&gt;PO vs receipt vs invoice
+    FIN-&gt;&gt;FIN: Schedule payment&lt;br/&gt;net 30
+    FIN-&gt;&gt;VEND: Payment remittance&lt;br/&gt;wire transfer ref: W-8821</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-12", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

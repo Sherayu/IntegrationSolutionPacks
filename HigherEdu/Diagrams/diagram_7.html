@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant HM as Hiring Manager&lt;br/&gt;(Dean)
+    participant HR as HR&lt;br/&gt;(Workday HCM)
+    participant ATS as ATS&lt;br/&gt;(Interfolio)
+    participant FIN as Finance&lt;br/&gt;(Workday Financials)
+    participant SIS as SIS
+    HM-&gt;&gt;HR: Submit faculty requisition&lt;br/&gt;position=Prof. CS, rank=Assistant
+    HR-&gt;&gt;FIN: Budget check&lt;br/&gt;checkBudget(CS, salary=$95,000)
+    FIN--&gt;&gt;HR: Budget approved
+    HR-&gt;&gt;HR: Create position&lt;br/&gt;positionID: POS-2026-042
+    HR-&gt;&gt;ATS: Post job&lt;br/&gt;jobID: JOB-2026-088
+    Candidate-&gt;&gt;ATS: Submit application&lt;br/&gt;name=Dr. Sarah Smith
+    ATS-&gt;&gt;ATS: Initial screening
+    HM-&gt;&gt;ATS: Review shortlist
+    HM-&gt;&gt;HR: Interview scorecard&lt;br/&gt;score: 4.8/5.0
+    HR-&gt;&gt;HR: Generate offer letter&lt;br/&gt;salary=$95,000, start=Aug 15
+    Candidate-&gt;&gt;HR: Accept offer
+    HR-&gt;&gt;HR: Onboard new hire&lt;br/&gt;status=Active
+    HR-&gt;&gt;SIS: Create faculty profile&lt;br/&gt;ID: FAC-101
+    SIS-&gt;&gt;HR: FacultyID confirmed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-7", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

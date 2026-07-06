@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant STU as Student
+    participant PORT as Student Portal
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    participant FIN as Finance&lt;br/&gt;(Workday)
+    participant CRM as Alumni CRM
+    STU-&gt;&gt;PORT: Apply for graduation&lt;br/&gt;semester=Spring 2026, degree=B.Sc. CS
+    PORT-&gt;&gt;SIS: submitGraduationApp(STU-2026-001)
+    SIS-&gt;&gt;SIS: Degree audit&lt;br/&gt;check 120 credits, GPA&gt;=2.0
+    SIS--&gt;&gt;PORT: Requirements satisfied
+    SIS-&gt;&gt;FIN: Check financial clearance&lt;br/&gt;checkHolds(STU-2026-001)
+    FIN--&gt;&gt;SIS: No holds
+    Registrar-&gt;&gt;SIS: Approve graduation
+    SIS-&gt;&gt;SIS: Confer degree &amp; generate diploma
+    SIS-&gt;&gt;PORT: Degree conferred, download diploma
+    SIS-&gt;&gt;CRM: Create alumni record&lt;br/&gt;createAlumni(STU-2026-001, B.Sc. CS, 2026)
+    CRM-&gt;&gt;CRM: Welcome kit, alumni benefits</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-3", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant STU as Student
+    participant LMS as LMS&lt;br/&gt;(Blackboard)
+    participant ASSESS as Assessment Tool&lt;br/&gt;(Proctorio)
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    LMS-&gt;&gt;LMS: Publish course materials&lt;br/&gt;CS501 Week 1-14 modules
+    STU-&gt;&gt;LMS: Access lecture videos and readings
+    STU-&gt;&gt;LMS: Submit assignment&lt;br/&gt;A1: Neural Networks Essay
+    LMS-&gt;&gt;ASSESS: Send for AI similarity check
+    ASSESS--&gt;&gt;LMS: Similarity score: 12 percent
+    FAC-&gt;&gt;LMS: Grade assignment&lt;br/&gt;score: 88/100
+    LMS-&gt;&gt;LMS: Update gradebook
+    STU-&gt;&gt;LMS: Take online quiz&lt;br/&gt;Midterm: 42/50
+    LMS-&gt;&gt;ASSESS: Proctoring validation
+    ASSESS--&gt;&gt;LMS: Proctoring result: Pass
+    FAC-&gt;&gt;LMS: Finalize course grades
+    LMS-&gt;&gt;SIS: Push final grades&lt;br/&gt;gradePush(CS501, Fall2026)
+    SIS--&gt;&gt;LMS: Grades accepted</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-5", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

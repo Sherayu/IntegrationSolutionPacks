@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant FAC as Faculty
+    participant LMS as LMS&lt;br/&gt;(Canvas)
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    participant PORT as Student Portal
+    participant DW as Data Warehouse&lt;br/&gt;(Snowflake)
+    FAC-&gt;&gt;LMS: Submit final grades&lt;br/&gt;CS501: A, MATH302: B+, ...
+    LMS-&gt;&gt;SIS: Push grades&lt;br/&gt;gradePush(courseID=CS501, term=Fall2026)
+    SIS-&gt;&gt;SIS: Calculate GPA&lt;br/&gt;student=STU-2026-001, GPA=3.75
+    SIS-&gt;&gt;SIS: Update transcript
+    SIS-&gt;&gt;PORT: Notify grades available
+    PORT-&gt;&gt;SIS: View transcript
+    SIS--&gt;&gt;PORT: Display transcript
+    Student-&gt;&gt;PORT: Request official transcript
+    PORT-&gt;&gt;SIS: generateTranscript(STU-2026-001, official=true)
+    SIS--&gt;&gt;PORT: Digital transcript (PDF)
+    SIS-&gt;&gt;DW: Incremental load grades&lt;br/&gt;table: fact_grades
+    DW-&gt;&gt;DW: Update student_rollup
+    LMS-&gt;&gt;DW: Load course activity&lt;br/&gt;table: fact_course_activity</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-2", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

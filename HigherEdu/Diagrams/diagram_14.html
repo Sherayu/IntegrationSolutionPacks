@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">    participant RES as Researcher
+    participant RAD as Research Admin&lt;br/&gt;(InfoEd)
+    participant REPO as Institutional Repository&lt;br/&gt;(DSpace)
+    participant PUB as Publisher
+    RES-&gt;&gt;PUB: Submit manuscript&lt;br/&gt;title=Deep Learning in Education
+    PUB--&gt;&gt;RES: Accepted&lt;br/&gt;DOI: 10.1234/edu.2026.005
+    RES-&gt;&gt;RAD: Register publication&lt;br/&gt;DOI, journal, authors
+    RAD-&gt;&gt;REPO: Deposit full-text&lt;br/&gt;open access, CC-BY license
+    REPO-&gt;&gt;REPO: Assign handle&lt;br/&gt;handle: 1234/56789
+    RAD-&gt;&gt;RAD: Update grant output&lt;br/&gt;GR-2026-045, publication count+1
+    RES-&gt;&gt;REPO: View impact metrics&lt;br/&gt;citations=12, downloads=450</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-14", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>
