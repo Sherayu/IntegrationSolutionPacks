@@ -1,0 +1,3 @@
+*.py
+*.html
+__pycache__/
