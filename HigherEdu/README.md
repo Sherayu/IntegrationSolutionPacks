@@ -6,6 +6,10 @@
 
 The CAUDIT Higher Education Reference Model (HERM) **Business Reference Model v3.2** defines the standard business capabilities for higher education institutions. The table below lists all Level 2 capabilities grouped by Level 1 domain. Each process flow in this document is mapped to its relevant HERM capability codes.
 
+![CAUDIT HERM Business Reference Model overview — Core (Learning & Teaching, Research) and Enabling (Corporate, Engagement, Infrastructure, Information, Technology) capability domains](./Document/herm-brm-overview.png)
+
+*Source: [CAUDIT Higher Education Reference Models](https://www.ucd.ie/itservices/ea/highereducationreferencemodels/) — used under CC BY-NC-SA 4.0*
+
 ### Learning & Teaching
 
 | Capability | Code | Description |

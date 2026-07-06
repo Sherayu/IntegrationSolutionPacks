@@ -122,15 +122,15 @@ with sync_playwright() as p:
 
 # Verify
 pdf_size = Path(out_pdf).stat().st_size
+page_count = 0
 with open(out_pdf, "rb") as f:
     data = f.read()
-text = data.decode("latin-1")
-svg_count = text.count("<svg")
-print(f"PDF size: {pdf_size/1024:.0f} KB, SVG in PDF: {svg_count}")
+    page_count = data.count(b"/Type /Page") - data.count(b"/Type /Pages")
+print(f"PDF size: {pdf_size/1024:.0f} KB, pages: {page_count}, mermaid rendered: {result['ok']}/{result['total']}")
 
 html_path.unlink(missing_ok=True)
 
-if svg_count >= 20:
-    print("SUCCESS: All diagrams rendered as SVG in PDF!")
+if result["ok"] == result["total"] and result["total"] > 0:
+    print(f"SUCCESS: All {result['total']} mermaid diagrams rendered in PDF ({page_count} pages)!")
 else:
-    print(f"WARNING: Only {svg_count} SVGs found - trying alternative...")
+    print(f"WARNING: {result['err']} diagrams failed to render")
