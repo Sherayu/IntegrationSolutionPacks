@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant DB as Digital Banking&lt;br/&gt;(Backbase)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant TR as Treasury System&lt;br/&gt;(Murex)
+    C-&gt;&gt;DB: Configure sweep rule&lt;br/&gt;threshold=500.00 GBP, target=Savings
+    DB-&gt;&gt;CBS: Save sweep rule&lt;br/&gt;account=ACCT-4001-2026, threshold=500.00
+    CBS--&gt;&gt;DB: Rule saved
+    CBS-&gt;&gt;CBS: Daily balance check&lt;br/&gt;balance=44,490.50 GBP
+    CBS-&gt;&gt;CBS: Excess above threshold&lt;br/&gt;surplus=43,990.50 GBP
+    CBS-&gt;&gt;CBS: Sweep to savings&lt;br/&gt;transfer 40,000.00 GBP to Savings
+    CBS--&gt;&gt;C: Sweep executed
+    CBS-&gt;&gt;TR: Invest sweep amount&lt;br/&gt;auto-invest 40,000.00 GBP in money market
+    TR--&gt;&gt;CBS: Investment confirmed
+    DB--&gt;&gt;C: Statement updated&lt;br/&gt;savings balance, investment confirmed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

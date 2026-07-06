@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant LOS as LOS&lt;br/&gt;(nCino)
+    participant DE as Decision Engine&lt;br/&gt;(FICO)
+    participant CB as Credit Bureau&lt;br/&gt;(Experian)
+    participant OBP as Open Banking&lt;br/&gt;(Token.io)
+    participant UN as Underwriter
+    LOS-&gt;&gt;DE: Send application data&lt;br/&gt;customerId=CUST-2026-001, amount=25,000 GBP
+    DE-&gt;&gt;CB: Request credit report&lt;br/&gt;name=Alice Johnson, DOB=1990-04-15
+    CB--&gt;&gt;DE: Credit score=720&lt;br/&gt;history=8 years, defaults=0
+    DE-&gt;&gt;OBP: Request bank statements&lt;br/&gt;consent granted, 12 months data
+    OBP--&gt;&gt;DE: Transaction history&lt;br/&gt;income=4,200 GBP/month, outgoings=2,800 GBP
+    DE-&gt;&gt;DE: Compute risk score&lt;br/&gt;score=680, band=A
+    DE-&gt;&gt;DE: Recommend terms&lt;br/&gt;limit=30,000 GBP, rate=6.9%, term=60m
+    DE--&gt;&gt;LOS: Recommendation
+    Loan Officer-&gt;&gt;LOS: Review recommendation
+    LOS-&gt;&gt;UN: Request underwriter approval
+    UN-&gt;&gt;LOS: Approve&lt;br/&gt;loan_id=LN-2026-042, conditions=none
+    LOS-&gt;&gt;LOS: Final approval recorded</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

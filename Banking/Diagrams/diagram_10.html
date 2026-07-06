@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant POS as POS Terminal
+    participant ACQ as Merchant Acquirer&lt;br/&gt;(Worldpay)
+    participant NET as Payment Network&lt;br/&gt;(Mastercard)
+    participant CMS as Card Management&lt;br/&gt;(Fiserv)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    C-&gt;&gt;POS: Tap card at POS&lt;br/&gt;amount=85.50 GBP
+    POS-&gt;&gt;ACQ: Authorization request&lt;br/&gt;PAN=4532XXXX8901, amount=85.50
+    ACQ-&gt;&gt;NET: Route to issuer&lt;br/&gt;BIN lookup, amount=85.50
+    NET-&gt;&gt;CMS: Authorize transaction&lt;br/&gt;cardId=CARD-2026-001, amount=85.50
+    CMS-&gt;&gt;CMS: Check available balance&lt;br/&gt;balance=45,280.00, txn=85.50
+    CMS--&gt;&gt;NET: Approval&lt;br/&gt;authCode=AUTH-8921
+    NET--&gt;&gt;ACQ: Authorization approved
+    ACQ--&gt;&gt;POS: Transaction approved
+    POS--&gt;&gt;C: Receipt printed
+    ACQ-&gt;&gt;NET: Settlement file&lt;br/&gt;end of day batch
+    NET-&gt;&gt;CMS: Clearing file
+    CMS-&gt;&gt;CBS: Post transaction&lt;br/&gt;debit ACCT-4001-2026, -85.50 GBP
+    CBS--&gt;&gt;CMS: Posted
+    CMS-&gt;&gt;NET: Settlement confirmation</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

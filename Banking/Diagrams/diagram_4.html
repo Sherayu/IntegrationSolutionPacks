@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant DB as Digital Banking&lt;br/&gt;(Backbase)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant PH as Payment Hub&lt;br/&gt;(Volante)
+    participant SW as SWIFT Alliance&lt;br/&gt;(SWIFT GPI)
+    participant CORR as Correspondent Bank&lt;br/&gt;(Deutsche Bank)
+    participant BEN as Beneficiary Bank
+    C-&gt;&gt;DB: Initiate international payment&lt;br/&gt;beneficiary=Bob Smith, IBAN=DE89370400440532013000
+    DB-&gt;&gt;CBS: Validate &amp; check FX&lt;br/&gt;amount=1,250.00 GBP, FX rate=1.15
+    CBS--&gt;&gt;DB: FX quote: 1.15, total=1,437.50 EUR
+    C-&gt;&gt;DB: Confirm cross-border payment
+    DB-&gt;&gt;PH: Submit international payment
+    PH-&gt;&gt;PH: Validate &amp; format MT103&lt;br/&gt;Senders REF: TXN-2026-8901
+    PH-&gt;&gt;SW: Send MT103&lt;br/&gt;SWIFT GPI tracked
+    SW-&gt;&gt;CORR: Route via correspondent&lt;br/&gt;MT103 cover with MT202
+    CORR-&gt;&gt;CORR: Process cover payment
+    CORR-&gt;&gt;BEN: Credit beneficiary&lt;br/&gt;amount=1,437.50 EUR
+    BEN--&gt;&gt;CORR: Confirmation
+    CORR--&gt;&gt;SW: SWIFT GPI status update&lt;br/&gt;status=ACCC
+    SW--&gt;&gt;PH: Status update&lt;br/&gt;gpi_tracker=ACK
+    PH-&gt;&gt;CBS: Post transaction
+    DB--&gt;&gt;C: Payment confirmed&lt;br/&gt;ref=TXN-2026-8901, status=Completed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

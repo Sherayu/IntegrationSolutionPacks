@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant LOS as LOS&lt;br/&gt;(nCino)
+    participant VAL as Valuation Provider&lt;br/&gt;(Hometrack)
+    participant SOL as Solicitor Portal
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    C-&gt;&gt;LOS: Submit mortgage application&lt;br/&gt;property=123 Main St, amount=350,000 GBP
+    LOS-&gt;&gt;LOS: Decision in Principle&lt;br/&gt;approve_in_principle=true
+    LOS--&gt;&gt;C: DIP issued
+    C-&gt;&gt;LOS: Provide full docs&lt;br/&gt;payslips, bank statements, ID
+    LOS-&gt;&gt;VAL: Order property valuation&lt;br/&gt;property=123 Main St, type=House
+    VAL--&gt;&gt;LOS: Valuation report&lt;br/&gt;market_value=355,000 GBP
+    LOS-&gt;&gt;LOS: Formal offer&lt;br/&gt;loan=280,000 GBP, rate=4.5%
+    LOS-&gt;&gt;C: Issue mortgage offer
+    C-&gt;&gt;LOS: Accept offer
+    LOS-&gt;&gt;SOL: Instruct solicitor&lt;br/&gt;conveyancing, title deeds
+    SOL--&gt;&gt;LOS: Completion ready
+    LOS-&gt;&gt;CBS: Release funds&lt;br/&gt;amount=280,000 GBP, to solicitor
+    CBS--&gt;&gt;LOS: Funds released
+    LOS-&gt;&gt;C: Completion confirmed&lt;br/&gt;mortgage account active</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

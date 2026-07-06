@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant DB as Digital Banking&lt;br/&gt;(Backbase)
+    participant DIS as Dispute System&lt;br/&gt;(Fiserv)
+    participant NET as Payment Network&lt;br/&gt;(Mastercard)
+    participant ACQ as Merchant Acquirer&lt;br/&gt;(Worldpay)
+    participant MER as Merchant
+    C-&gt;&gt;DB: Dispute transaction&lt;br/&gt;txn=AUTH-8921, amount=85.50 GBP, reason=Unauthorized
+    DB-&gt;&gt;DIS: Create dispute case&lt;br/&gt;caseID=DSP-2026-042
+    DIS-&gt;&gt;NET: Submit retrieval request&lt;br/&gt;txn reference, merchant ID
+    NET-&gt;&gt;ACQ: Forward retrieval request
+    ACQ-&gt;&gt;MER: Request transaction evidence&lt;br/&gt;signed receipt, proof of delivery
+    MER--&gt;&gt;ACQ: Evidence provided
+    ACQ--&gt;&gt;NET: Evidence submitted
+    NET--&gt;&gt;DIS: Evidence available
+    DIS-&gt;&gt;DIS: Review evidence&lt;br/&gt;signature matches, goods delivered
+    DIS-&gt;&gt;NET: Issue chargeback&lt;br/&gt;reason_code=10.1, amount=85.50
+    NET-&gt;&gt;ACQ: Chargeback notification
+    ACQ--&gt;&gt;NET: Chargeback accepted
+    NET--&gt;&gt;DIS: Chargeback confirmed
+    DIS-&gt;&gt;CBS: Reverse funds&lt;br/&gt;credit ACCT-4001-2026, +85.50 GBP
+    DB--&gt;&gt;C: Dispute resolved&lt;br/&gt;refund processed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

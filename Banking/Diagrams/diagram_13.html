@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant DB as Digital Banking&lt;br/&gt;(Backbase)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant PR as Pricing Engine
+    C-&gt;&gt;DB: Apply for term deposit&lt;br/&gt;amount=10,000.00 GBP, term=12 months
+    DB-&gt;&gt;CBS: Check available rates&lt;br/&gt;12-month fixed rate
+    CBS-&gt;&gt;PR: Get current rate
+    PR--&gt;&gt;CBS: Rate=4.2% p.a.
+    CBS--&gt;&gt;DB: Rate offered: 4.2% p.a.
+    C-&gt;&gt;DB: Accept term deposit
+    DB-&gt;&gt;CBS: Create term deposit&lt;br/&gt;debit current account, open TD
+    CBS-&gt;&gt;CBS: Debit ACCT-4001-2026&lt;br/&gt;balance=34,490.50 GBP
+    CBS-&gt;&gt;CBS: Open TD account&lt;br/&gt;TD-2026-042, 10,000.00 GBP, 4.2%, 12m
+    CBS-&gt;&gt;CBS: Accrue interest daily&lt;br/&gt;daily_interest=1.15 GBP
+    CBS--&gt;&gt;DB: Term deposit active&lt;br/&gt;maturity_date=2027-07-06
+    CBS-&gt;&gt;CBS: Maturity reached
+    CBS-&gt;&gt;C: Principal + interest&lt;br/&gt;total=10,420.00 GBP to ACCT-4001-2026</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

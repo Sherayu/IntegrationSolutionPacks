@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant SW as SWIFT Alliance&lt;br/&gt;(Correspondent Bank)
+    participant REC as Reconciliation Engine&lt;br/&gt;(SmartStream)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant GL as General Ledger&lt;br/&gt;(SAP)
+    participant OPS as Settlement Operations
+    SW-&gt;&gt;REC: Send MT950 statement&lt;br/&gt;nostro account, date=2026-07-05
+    REC-&gt;&gt;REC: Load statement&lt;br/&gt;125 transactions, total=4,250,000.00 GBP
+    CBS-&gt;&gt;REC: Internal transactions&lt;br/&gt;matching period=2026-07-05
+    REC-&gt;&gt;REC: Auto-match&lt;br/&gt;122 matched, 3 unmatched
+    REC--&gt;&gt;OPS: Exception report&lt;br/&gt;3 unmatched items, total=12,500.00 GBP
+    OPS-&gt;&gt;REC: Manual match&lt;br/&gt;investigate discrepancies
+    REC--&gt;&gt;GL: Post adjustments&lt;br/&gt;journal entries for matched items
+    GL--&gt;&gt;REC: Adjustments posted
+    REC-&gt;&gt;SW: Send MT940 response&lt;br/&gt;confirmed balance
+    REC-&gt;&gt;REC: Generate reconciliation report&lt;br/&gt;breakdown=99.5% matched</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

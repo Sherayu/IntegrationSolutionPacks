@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant AML as AML System&lt;br/&gt;(Oracle FCCM)
+    participant SCR as Sanctions Screening&lt;br/&gt;(WorldCheck)
+    participant CM as Case Management&lt;br/&gt;(Pega)
+    participant CO as Compliance Officer
+    CBS-&gt;&gt;AML: Payment for screening&lt;br/&gt;customer=Bob Smith, IBAN=DE89370400440532013000, amount=15,000 GBP
+    AML-&gt;&gt;SCR: Sanctions check&lt;br/&gt;UN, OFAC, EU, HMT sanctions lists
+    SCR--&gt;&gt;AML: Possible match&lt;br/&gt;name variant, score=87%
+    AML-&gt;&gt;SCR: PEP check&lt;br/&gt;Bob Smith, country=DE
+    SCR--&gt;&gt;AML: PEP status=No
+    AML-&gt;&gt;SCR: Adverse media scan
+    SCR--&gt;&gt;AML: No adverse media
+    AML-&gt;&gt;AML: Composite risk score&lt;br/&gt;score=42/100, medium risk
+    AML-&gt;&gt;CM: Create alert&lt;br/&gt;caseID=AML-2026-088, severity=Medium
+    CM--&gt;&gt;CO: Alert for review
+    CO-&gt;&gt;CM: Review &amp; clear&lt;br/&gt;false positive, name variant
+    CM-&gt;&gt;CBS: Release payment
+    CBS-&gt;&gt;CBS: Process payment</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

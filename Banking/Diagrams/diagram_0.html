@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant OBP as Onboarding Platform&lt;br/&gt;(Backbase)
+    participant CRM as CRM&lt;br/&gt;(Salesforce Financial Svcs)
+    participant VER as Identity Verification&lt;br/&gt;(Onfido)
+    participant SCR as Screening&lt;br/&gt;(WorldCheck)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    C-&gt;&gt;OBP: Submit registration&lt;br/&gt;name=Alice Johnson, email=alice.j@email.com
+    OBP-&gt;&gt;CRM: Check existing customer&lt;br/&gt;findCustomer(email=alice.j@email.com)
+    CRM--&gt;&gt;OBP: No existing record
+    OBP-&gt;&gt;VER: Verify identity docs&lt;br/&gt;passport, liveness check
+    VER-&gt;&gt;VER: Document verification&lt;br/&gt;passport valid, liveness pass
+    VER--&gt;&gt;OBP: Identity verified&lt;br/&gt;confidence=98.5%
+    OBP-&gt;&gt;SCR: Screen customer&lt;br/&gt;name=Alice Johnson, DOB=1990-04-15
+    SCR-&gt;&gt;SCR: Check PEP, sanctions, adverse media
+    SCR--&gt;&gt;OBP: Low risk result&lt;br/&gt;no matches found
+    OBP-&gt;&gt;CRM: Request risk assessment&lt;br/&gt;customerData, verificationResult
+    CRM-&gt;&gt;CRM: Calculate risk score&lt;br/&gt;score=15/100, risk_rating=Low
+    CRM-&gt;&gt;CBS: Create CIF record&lt;br/&gt;createCustomer(name, dob, risk_rating)
+    CBS--&gt;&gt;CRM: CustomerID: CUST-2026-001
+    CRM--&gt;&gt;OBP: Customer created
+    OBP--&gt;&gt;C: Welcome &amp; credentials&lt;br/&gt;customer_id=CUST-2026-001</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

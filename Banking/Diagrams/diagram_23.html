@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant PH as Payment Hub&lt;br/&gt;(Volante)
+    participant RTGS as RTGS System&lt;br/&gt;(TARGET2)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant GL as General Ledger&lt;br/&gt;(SAP)
+    participant REC as Reconciliation Engine&lt;br/&gt;(SmartStream)
+    PH-&gt;&gt;PH: Aggregate net positions&lt;br/&gt;total_outgoing=85,000,000 GBP, incoming=72,500,000 GBP
+    PH-&gt;&gt;RTGS: Submit net settlement&lt;br/&gt;multilateral net position=-12,500,000 GBP
+    RTGS-&gt;&gt;RTGS: Process settlement&lt;br/&gt;queue, collateral check, finality
+    RTGS--&gt;&gt;PH: Settlement finality&lt;br/&gt;timestamp=2026-07-06T18:00:00Z
+    PH-&gt;&gt;CBS: Post settlement entries&lt;br/&gt;debit/credit positions
+    CBS--&gt;&gt;PH: Settlement posted
+    PH-&gt;&gt;GL: Post GL journal&lt;br/&gt;EOD settlement entries
+    GL--&gt;&gt;PH: GL updated
+    PH-&gt;&gt;REC: Settlement transactions
+    REC-&gt;&gt;REC: Match settled items&lt;br/&gt;all matched, no breaks
+    PH-&gt;&gt;PH: Generate EOD report&lt;br/&gt;settlement summary</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

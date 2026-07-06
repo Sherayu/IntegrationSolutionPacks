@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant DB as Digital Banking&lt;br/&gt;(Backbase)
+    participant LOS as LOS&lt;br/&gt;(nCino)
+    participant CB as Credit Bureau&lt;br/&gt;(Experian)
+    participant DE as Decision Engine&lt;br/&gt;(FICO)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    C-&gt;&gt;DB: Apply for personal loan&lt;br/&gt;amount=25,000 GBP, term=60 months
+    DB-&gt;&gt;LOS: Submit application&lt;br/&gt;customerId=CUST-2026-001
+    LOS-&gt;&gt;CB: Credit bureau check&lt;br/&gt;name=Alice Johnson, DOB=1990-04-15
+    CB--&gt;&gt;LOS: Credit report&lt;br/&gt;score=720, rating=Good
+    LOS-&gt;&gt;DE: Calculate affordability&lt;br/&gt;income, commitments, DTI
+    DE--&gt;&gt;LOS: Affordability result&lt;br/&gt;DTI=28%, max_loan=30,000 GBP
+    LOS-&gt;&gt;LOS: System decision&lt;br/&gt;recommend=Approve, terms=6.9% APR
+    Loan Officer-&gt;&gt;LOS: Review application
+    LOS-&gt;&gt;LOS: Approve loan&lt;br/&gt;loan_id=LN-2026-042
+    LOS-&gt;&gt;CBS: Disburse funds&lt;br/&gt;loan_amount=25,000 GBP, account=ACCT-4001-2026
+    CBS--&gt;&gt;LOS: Disbursed
+    LOS-&gt;&gt;DB: Notification
+    DB--&gt;&gt;C: Loan approved &amp; funded&lt;br/&gt;LN-2026-042, 6.9% APR, 60 months</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

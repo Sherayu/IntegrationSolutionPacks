@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant DB as Digital Banking&lt;br/&gt;(Backbase)
+    participant CMS as Card Management&lt;br/&gt;(Fiserv)
+    participant BUR as Card Bureau&lt;br/&gt;(CPI)
+    participant WAL as Digital Wallet
+    C-&gt;&gt;DB: Request debit card&lt;br/&gt;type=Debit Mastercard
+    DB-&gt;&gt;CMS: Create card request&lt;br/&gt;customerId=CUST-2026-001, account=ACCT-4001-2026
+    CMS-&gt;&gt;CMS: Generate card details&lt;br/&gt;PAN, expiry=2029-06, CVV
+    CMS-&gt;&gt;BUR: Production order&lt;br/&gt;personalization, embossing
+    BUR--&gt;&gt;CMS: Card produced &amp; mailed
+    CMS--&gt;&gt;DB: Card status=Issued&lt;br/&gt;pan_mask=4532-XXXX-XXXX-8901
+    C-&gt;&gt;DB: Activate card&lt;br/&gt;card_id=CARD-2026-001
+    DB-&gt;&gt;CMS: ActivateCard(CARD-2026-001)
+    CMS--&gt;&gt;DB: Card activated
+    C-&gt;&gt;DB: Set PIN
+    DB-&gt;&gt;CMS: SetPIN(CARD-2026-001, hash)
+    C-&gt;&gt;WAL: Add to digital wallet&lt;br/&gt;tokenize card CARD-2026-001
+    WAL-&gt;&gt;CMS: Tokenization request
+    CMS--&gt;&gt;WAL: Token issued&lt;br/&gt;device bound, PAN never shared
+    WAL--&gt;&gt;C: Card added to wallet</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

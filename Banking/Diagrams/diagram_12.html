@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant BR as Branch Teller&lt;br/&gt;(Fiserv DNA)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant PH as Payment Hub&lt;br/&gt;(Volante)
+    participant DD as Direct Debit Scheme&lt;br/&gt;(Bacs)
+    C-&gt;&gt;BR: Deposit cash&lt;br/&gt;amount=500.00 GBP
+    BR-&gt;&gt;CBS: Post cash deposit&lt;br/&gt;credit ACCT-4001-2026, +500.00 GBP
+    CBS--&gt;&gt;BR: Balance updated&lt;br/&gt;balance=45,780.00
+    BR--&gt;&gt;C: Receipt issued
+    CBS-&gt;&gt;CBS: Standing order due&lt;br/&gt;monthly rent=1,200.00 GBP
+    CBS-&gt;&gt;PH: Execute standing order&lt;br/&gt;payee=Bob Smith, amount=1,200.00 GBP
+    PH--&gt;&gt;CBS: Standing order executed
+    DD--&gt;&gt;CBS: Direct debit collection&lt;br/&gt;utility bill, amount=89.50 GBP
+    CBS-&gt;&gt;CBS: Post debit&lt;br/&gt;debit ACCT-4001-2026, -89.50 GBP
+    CBS--&gt;&gt;C: Statement updated&lt;br/&gt;balance=44,490.50 GBP</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

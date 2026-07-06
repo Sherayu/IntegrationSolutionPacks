@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant IB as Internet Banking&lt;br/&gt;(Backbase)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant CRM as CRM&lt;br/&gt;(Salesforce Financial Svcs)
+    participant CMS as Content Mgmt&lt;br/&gt;(Adobe AEM)
+    C-&gt;&gt;IB: Login with credentials&lt;br/&gt;username=alice.j
+    IB-&gt;&gt;IB: MFA authentication&lt;br/&gt;OTP sent to +44 7700 900001
+    C-&gt;&gt;IB: Enter OTP
+    IB-&gt;&gt;IB: Authenticated
+    IB-&gt;&gt;CBS: Fetch account balances&lt;br/&gt;customerId=CUST-2026-001
+    CBS--&gt;&gt;IB: Accounts&lt;br/&gt;current=44,490.50 GBP, savings=40,000.00 GBP
+    IB-&gt;&gt;CRM: Fetch customer profile&lt;br/&gt;offers, alerts
+    CRM--&gt;&gt;IB: Profile with 2 offers
+    IB-&gt;&gt;CMS: Fetch marketing content&lt;br/&gt;banners, promotions
+    CMS--&gt;&gt;IB: Content rendered
+    IB--&gt;&gt;C: Dashboard displayed&lt;br/&gt;aggregated balances, offers
+    C-&gt;&gt;IB: Initiate bill payment&lt;br/&gt;utility, amount=89.50 GBP
+    IB-&gt;&gt;CBS: Process payment
+    CBS--&gt;&gt;IB: Payment confirmed
+    IB--&gt;&gt;C: Confirmation displayed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

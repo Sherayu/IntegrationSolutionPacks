@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant MB as Mobile Banking App&lt;br/&gt;(Backbase)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant PUSH as Push Notification&lt;br/&gt;(Firebase)
+    participant CHQ as Cheque Processing
+    C-&gt;&gt;MB: Open app &amp; authenticate&lt;br/&gt;fingerprint biometric
+    MB-&gt;&gt;MB: Biometric match&lt;br/&gt;device bound credential
+    MB--&gt;&gt;C: Authenticated
+    PUSH-&gt;&gt;MB: Pending approval alert&lt;br/&gt;authorize new payee + 1,250.00 GBP
+    MB--&gt;&gt;C: Approve payment?&lt;br/&gt;notification tap
+    C-&gt;&gt;MB: Authorize payment
+    MB-&gt;&gt;CBS: Process payment
+    CBS--&gt;&gt;MB: Payment confirmed
+    C-&gt;&gt;MB: Deposit cheque&lt;br/&gt;photo front &amp; back
+    MB-&gt;&gt;CHQ: Process image&lt;br/&gt;MICR read, amount OCR
+    CHQ--&gt;&gt;MB: Cheque accepted&lt;br/&gt;amount=500.00 GBP, hold=2 days
+    MB--&gt;&gt;C: Cheque deposit confirmed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

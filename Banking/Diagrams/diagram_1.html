@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant C as Customer
+    participant OBP as Onboarding Platform&lt;br/&gt;(Backbase)
+    participant CRM as CRM&lt;br/&gt;(Salesforce Financial Svcs)
+    participant CBS as Core Banking&lt;br/&gt;(Temenos Transact)
+    participant CARD as Card Management&lt;br/&gt;(Fiserv)
+    participant DB as Digital Banking&lt;br/&gt;(Backbase)
+    C-&gt;&gt;OBP: Select account type&lt;br/&gt;Current Account, GBP
+    OBP-&gt;&gt;CRM: Validate eligibility&lt;br/&gt;risk_rating=Low, no adverse flags
+    CRM--&gt;&gt;OBP: Eligible
+    C-&gt;&gt;OBP: Submit account application&lt;br/&gt;funding=25,000 GBP
+    OBP-&gt;&gt;CBS: Open account&lt;br/&gt;createAccount(CUST-2026-001, Current, GBP)
+    CBS-&gt;&gt;CBS: Generate IBAN&lt;br/&gt;GB29NWBK60161331926819
+    CBS--&gt;&gt;OBP: Account created&lt;br/&gt;ACCT-4001-2026, balance=25,000.00
+    OBP-&gt;&gt;CARD: Order debit card&lt;br/&gt;cardType=Debit Mastercard
+    CARD--&gt;&gt;OBP: Card ordered&lt;br/&gt;CARD-2026-001
+    OBP-&gt;&gt;DB: Enroll digital banking&lt;br/&gt;username=alice.j, customerId=CUST-2026-001
+    DB--&gt;&gt;OBP: Digital banking enrolled
+    OBP--&gt;&gt;C: Account opened&lt;br/&gt;IBAN: GB29NWBK60161331926819
+    CARD--&gt;&gt;C: Card dispatched&lt;br/&gt;pan_mask=4532-XXXX-XXXX-8901</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>
