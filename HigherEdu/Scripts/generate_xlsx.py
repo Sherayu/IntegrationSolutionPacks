@@ -8,7 +8,28 @@ README = ROOT / "README.md"
 out_path = ROOT / "Catalogue" / "integration-details.xlsx"
 
 headers = ["Flow Name", "Entity", "Info Flow Name", "Source System", "Target System",
-           "Source Connector", "Target Connector", "Integration Pattern", "Complexity"]
+           "Source Connector", "Target Connector", "Integration Pattern", "Complexity", "Complexity Reason"]
+
+REASON_MAP = {
+    ("High", "API-led (Real-time)"):            "OT/IT boundary crossing with sub-second latency and strict data fidelity requirements",
+    ("High", "Event-driven"):                  "Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail",
+    ("High", "Batch (Real-time)"):             "High-frequency near-real-time batch processing with minimal latency tolerance",
+    ("High", "Batch (Scheduled)"):             "Large-volume scheduled processing with data integrity validation and reconciliation",
+    ("High", "Batch (ETL)"):                   "Large-scale ETL pipeline requiring complex transformations, deduplication, and reconciliation",
+    ("High", "Database Replication (CDC)"):    "Continuous change-data-capture replication with conflict resolution and consistency guarantees",
+    ("Medium", "API-led (Real-time)"):         "API integration requiring moderate transformation, error handling, and data reconciliation",
+    ("Medium", "Event-driven"):                "Event-driven integration with intermediate complexity in event routing and state management",
+    ("Medium", "Batch (Real-time)"):           "Periodic near-real-time batch with data validation and transformation needs",
+    ("Medium", "Batch (Scheduled)"):           "Scheduled batch transfer requiring field mapping, validation, and exception handling",
+    ("Medium", "Batch (ETL)"):                 "Intermediate ETL process with data cleansing, enrichment, and staging requirements",
+    ("Medium", "Database Replication (CDC)"):  "CDC-based synchronization with conflict detection and periodic reconciliation",
+    ("Simple", "API-led (Real-time)"):         "Direct API integration with minimal transformation and single-system lookup",
+    ("Simple", "Event-driven"):                "Simple event notification with fire-and-forget delivery semantics",
+    ("Simple", "Batch (Real-time)"):           "Minimal near-real-time batch with basic data pass-through",
+    ("Simple", "Batch (Scheduled)"):           "Straightforward periodic data transfer with no real-time constraints",
+    ("Simple", "Batch (ETL)"):                 "Basic ETL pipeline with direct mapping and flat-file exchange",
+    ("Simple", "Database Replication (CDC)"):  "Simple database replication with native CDC tool and no transformation",
+}
 
 wb = Workbook()
 wb.remove(wb.active)
@@ -37,7 +58,6 @@ for line in lines:
     if stripped.startswith("# ") and not stripped.startswith("## ") and "Higher Education Process" not in stripped:
         if current_section and current_rows:
             sections_data[current_section] = list(current_rows)
-        # Extract clean section name from H1 (remove codes)
         m = re.match(r"#\s*(?:\d+:\s*)?(.+?)\s*-", stripped)
         if m:
             current_section = m.group(1).strip()
@@ -57,7 +77,7 @@ for line in lines:
             continue
         if stripped.startswith("|"):
             parts = [p.strip() for p in stripped.split("|")[1:-1]]
-            if len(parts) == 9:
+            if len(parts) in (9, 10):
                 current_rows.append(tuple(parts))
         else:
             in_integration = False
@@ -76,7 +96,12 @@ for sheet_title, rows in sections_data.items():
         cell.border = thin_border
 
     for row_idx, row_data in enumerate(rows, 2):
-        for col_idx, value in enumerate(row_data, 1):
+        parts = list(row_data)
+        if len(parts) == 9:
+            pattern, complexity = parts[7], parts[8]
+            reason = REASON_MAP.get((complexity, pattern), f"{complexity} complexity for {pattern} integration")
+            parts.append(reason)
+        for col_idx, value in enumerate(parts, 1):
             cell = ws.cell(row=row_idx, column=col_idx, value=value)
             cell.border = thin_border
             cell.alignment = Alignment(wrap_text=True, vertical="top")
@@ -91,8 +116,9 @@ for sheet_title, rows in sections_data.items():
     ws.column_dimensions["G"].width = 22
     ws.column_dimensions["H"].width = 22
     ws.column_dimensions["I"].width = 14
+    ws.column_dimensions["J"].width = 40
 
-    ws.auto_filter.ref = f"A1:I{len(rows)+1}"
+    ws.auto_filter.ref = f"A1:J{len(rows)+1}"
     ws.freeze_panes = "A2"
     total_rows += len(rows)
 
