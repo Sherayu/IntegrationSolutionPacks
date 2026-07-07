@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant DS as Data Steward
+    participant CAT as Data Catalog&lt;br/&gt;(Collibra)
+    participant DQ as Data Quality&lt;br/&gt;(Informatica)
+    participant MDM as MDM System
+    participant DW as Data Warehouse&lt;br/&gt;(Snowflake)
+    participant COMP as Compliance Portal
+    DS-&gt;&gt;CAT: Define student data domain&lt;br/&gt;entity=Student, owner=Registrar
+    CAT-&gt;&gt;CAT: Create business glossary&lt;br/&gt;term=GPA, definition, lineage
+    DQ-&gt;&gt;DW: Run quality checks&lt;br/&gt;table=dim_student, rules=12
+    DW--&gt;&gt;DQ: Quality results&lt;br/&gt;98.5% pass rate, 1,250 records checked
+    DQ-&gt;&gt;DS: Alert: duplicates found&lt;br/&gt;student_id=STU-2026-001, 2 records
+    DS-&gt;&gt;MDM: Investigate duplicate&lt;br/&gt;source A=SIS, source B=CRM
+    MDM-&gt;&gt;MDM: Merge records&lt;br/&gt;survivor=STU-2026-001, golden record
+    MDM-&gt;&gt;DW: Update master record&lt;br/&gt;STU-2026-001, consolidated
+    DS-&gt;&gt;CAT: Create data quality rule&lt;br/&gt;rule=unique_student_id, severity=Critical
+    CAT-&gt;&gt;DQ: Deploy quality rule
+    DQ-&gt;&gt;DW: Schedule monthly check&lt;br/&gt;first of month, full scan
+    DW--&gt;&gt;DQ: 100% unique constraint satisfied
+    COMP-&gt;&gt;CAT: Request data lineage&lt;br/&gt;for FERPA compliance audit
+    CAT-&gt;&gt;CAT: Trace lineage&lt;br/&gt;student_email: CRM -&gt; DW -&gt; BI
+    CAT--&gt;&gt;COMP: Lineage report&lt;br/&gt;7 systems, 12 transformations
+    DS-&gt;&gt;CAT: Review data access&lt;br/&gt;STU-2026-001 accessed by 3 users
+    CIO-&gt;&gt;CAT: Data governance dashboard&lt;br/&gt;quality=96.3%, coverage=89%</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

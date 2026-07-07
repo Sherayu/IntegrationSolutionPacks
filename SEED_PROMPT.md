@@ -33,6 +33,8 @@ For the given `business_domain`, perform web research to determine:
 
 5. **Public domain-overview diagram** — Find a publicly available diagram/image that shows the capability model overview for this domain. Use it in the README and credit the source.
 
+6. **Acceptance Criteria** - Include appropriate acceptance criterias that are relevant for the information flows and list them in a table in each sub-section after the table listing the integrations.
+
 ### Folder Structure
 
 ```

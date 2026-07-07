@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant RO as Risk Officer
+    participant RSK as Risk Mgmt&lt;br/&gt;(RSA Archer)
+    participant AUD as Internal Audit
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    participant DW as Data Warehouse&lt;br/&gt;(Snowflake)
+    RO-&gt;&gt;RSK: Identify risk&lt;br/&gt;area=Data Privacy, score=Medium
+    RSK-&gt;&gt;RSK: Risk assessment&lt;br/&gt;likelihood=3, impact=4, risk_score=12
+    RO-&gt;&gt;RSK: Define mitigation&lt;br/&gt;encryption, access control, training
+    RSK-&gt;&gt;SIS: Audit access logs&lt;br/&gt;sensitive data access report
+    SIS--&gt;&gt;RSK: 125 users, 3 unauthorized attempts
+    RSK-&gt;&gt;DW: Analyze breach patterns&lt;br/&gt;fact_access_log, 6 months
+    DW--&gt;&gt;RSK: Anomaly report&lt;br/&gt;2 outliers, further investigation
+    AUD-&gt;&gt;AUD: Plan audit engagement&lt;br/&gt;scope=Data Privacy, period=2025-26
+    AUD-&gt;&gt;RSK: Request risk register&lt;br/&gt;control test sample size=25
+    RSK--&gt;&gt;AUD: Risk register extract&lt;br/&gt;12 risks, 40 controls
+    AUD-&gt;&gt;AUD: Test controls&lt;br/&gt;24 of 25 effective, 1 improvement
+    AUD-&gt;&gt;SIS: Verify access controls&lt;br/&gt;sample=25 users, roles, permissions
+    SIS--&gt;&gt;AUD: 1 exception found&lt;br/&gt;user has excess privileges
+    AUD-&gt;&gt;AUD: Draft audit report&lt;br/&gt;findings=3, recommendations=5
+    AUD-&gt;&gt;Department Head: Management letter&lt;br/&gt;remediate by 2026-09-30
+    Department Head-&gt;&gt;AUD: Remediation plan&lt;br/&gt;actions=5, owner=CISO</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

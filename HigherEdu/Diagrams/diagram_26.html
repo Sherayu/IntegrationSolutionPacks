@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant STU as Student&lt;br/&gt;(John Doe)
+    participant CAREER as Career Services&lt;br/&gt;(Handshake)
+    participant CRM as CRM&lt;br/&gt;(Salesforce Education Cloud)
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    participant EMP as Employer&lt;br/&gt;(Google)
+    STU-&gt;&gt;CAREER: Create profile&lt;br/&gt;STU-2026-001, resume uploaded
+    CAREER-&gt;&gt;SIS: Verify enrollment&lt;br/&gt;program=B.Sc. CS, year=3, GPA=3.75
+    SIS--&gt;&gt;CAREER: Verified&lt;br/&gt;active student, good standing
+    CAREER-&gt;&gt;CAREER: Suggest opportunities&lt;br/&gt;based on major, skills, preferences
+    EMP-&gt;&gt;CAREER: Post job listing&lt;br/&gt;SWE Intern, 10 positions, deadline=2026-09-30
+    CAREER-&gt;&gt;STU: Notify matching listing&lt;br/&gt;SWE Intern @ Google, match=92%
+    STU-&gt;&gt;CAREER: Submit application&lt;br/&gt;resume, cover letter, transcript
+    CAREER-&gt;&gt;EMP: Forward application&lt;br/&gt;applicant=STU-2026-001, score=88
+    EMP--&gt;&gt;CAREER: Interview selected&lt;br/&gt;STU-2026-001 shortlisted
+    CAREER-&gt;&gt;STU: Interview invitation&lt;br/&gt;Google SWE, 2026-08-15
+    STU-&gt;&gt;STU: Attend interview&lt;br/&gt;technical + behavioural rounds
+    EMP-&gt;&gt;CAREER: Offer extended&lt;br/&gt;STU-2026-001, SWE Intern, start=Jan 2027
+    CAREER-&gt;&gt;STU: Offer notification&lt;br/&gt;review and accept by 2026-09-01
+    STU-&gt;&gt;CAREER: Accept offer&lt;br/&gt;placement_id=PL-2026-001
+    CAREER-&gt;&gt;SIS: Record placement&lt;br/&gt;STU-2026-001, Google, SWE Intern
+    CAREER-&gt;&gt;CRM: Update student record&lt;br/&gt;placement_confirmed=Yes
+    CAREER-&gt;&gt;CAREER: Create outcome survey&lt;br/&gt;First Destination Survey
+    STU-&gt;&gt;CAREER: Complete survey&lt;br/&gt;salary=$8,000/month, satisfaction=5/5</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant LIB as Librarian
+    participant LS as Library System&lt;br/&gt;(Ex Libris Alma)
+    participant DIS as Discovery Service&lt;br/&gt;(Primo)
+    participant LMS as LMS&lt;br/&gt;(Canvas)
+    participant PORT as Student Portal
+    LIB-&gt;&gt;LS: Acquire new resource&lt;br/&gt;ebook=Deep Learning, 5 copies
+    LS-&gt;&gt;DIS: Publish to discovery
+    Faculty-&gt;&gt;LS: Create reading list&lt;br/&gt;CS501: 3 textbooks, 5 articles
+    LS-&gt;&gt;LMS: Push reading list&lt;br/&gt;LTI integration, course=CS501
+    Student-&gt;&gt;PORT: Search library&lt;br/&gt;keyword=Neural Networks
+    PORT-&gt;&gt;DIS: Query discovery&lt;br/&gt;search(&quot;Neural Networks&quot;)
+    DIS--&gt;&gt;PORT: 125 results
+    Student-&gt;&gt;LMS: Access course readings&lt;br/&gt;listID: RL-CS501-Fall2026
+    Student-&gt;&gt;LS: Checkout ebook&lt;br/&gt;7-day loan
+    LS-&gt;&gt;LS: Update circulation
+    LS-&gt;&gt;LMS: Return reading analytics&lt;br/&gt;usage stats for course CS501</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

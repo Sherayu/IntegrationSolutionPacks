@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant PO as Policy Officer
+    participant POL as Policy Mgmt System
+    participant DOC as Document Mgmt&lt;br/&gt;(M-Files)
+    participant ACC as Accreditation Portal
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    PO-&gt;&gt;POL: Draft new policy&lt;br/&gt;Student Data Privacy Policy, POL-2026-001
+    POL-&gt;&gt;POL: Workflow routing&lt;br/&gt;legal review -&gt; committee -&gt; exec
+    PO-&gt;&gt;DOC: Upload supporting docs&lt;br/&gt;FERPA guidelines, GDPR references
+    DOC--&gt;&gt;POL: Documents attached
+    Executive-&gt;&gt;POL: Approve policy&lt;br/&gt;effective=2026-01-01
+    POL-&gt;&gt;POL: Publish policy&lt;br/&gt;category=Data Governance
+    PO-&gt;&gt;SIS: Notify stakeholders&lt;br/&gt;all staff, faculty, relevant depts
+    ACC-&gt;&gt;ACC: Accreditation cycle&lt;br/&gt;ABET review, Computer Science program
+    Accreditation Body-&gt;&gt;ACC: Request evidence&lt;br/&gt;standard=3, criteria=a-e
+    ACC-&gt;&gt;SIS: Pull enrollment data&lt;br/&gt;CS program: 350 students
+    SIS--&gt;&gt;ACC: Enrollment report
+    ACC-&gt;&gt;LMS: Pull course artifacts&lt;br/&gt;CS501 syllabi, assessments
+    LMS--&gt;&gt;ACC: Course files&lt;br/&gt;SYL-2026-014, 120 graded samples
+    ACC-&gt;&gt;ACC: Self-study report&lt;br/&gt;strengths=4, weaknesses=2
+    Accreditation Body-&gt;&gt;ACC: Site visit scheduled&lt;br/&gt;2026-10-15 to 10-17</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

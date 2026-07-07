@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant LIB as Librarian
+    participant LS as Library System&lt;br/&gt;(Ex Libris Alma)
+    participant RES as Course Reserves Module
+    participant LMS as LMS&lt;br/&gt;(Canvas)
+    participant CC as Copyright Clearance
+    participant DIS as Discovery&lt;br/&gt;(Primo)
+    Faculty-&gt;&gt;LS: Submit reserve request&lt;br/&gt;course=CS501, articles=5, chapters=2
+    LS-&gt;&gt;LS: Check existing holdings&lt;br/&gt;3 of 7 items in collection
+    LS-&gt;&gt;CC: Check copyright&lt;br/&gt;items for electronic reserve
+    CC--&gt;&gt;LS: Clearance obtained&lt;br/&gt;2 items require purchase
+    LIB-&gt;&gt;LS: Digitize materials&lt;br/&gt;scan, OCR, PDF creation
+    LS-&gt;&gt;LS: Create electronic reserve&lt;br/&gt;course=CS501, term=Fall2026
+    LS-&gt;&gt;RES: Link to course reserves
+    RES-&gt;&gt;LMS: Push to course shell&lt;br/&gt;LTI link, CS501 readings tab
+    LMS--&gt;&gt;RES: Reading list live&lt;br/&gt;CS501 - Week 1 readings
+    Student-&gt;&gt;LMS: Access course reading&lt;br/&gt;Deep Learning Ch.1-3
+    LMS-&gt;&gt;RES: Authenticate &amp; redirect
+    RES--&gt;&gt;LMS: Content served&lt;br/&gt;PDF stream, watermark applied
+    Student-&gt;&gt;LMS: Continue reading&lt;br/&gt;Chapter 4-6, highlight &amp; annotate
+    DIS-&gt;&gt;LS: Harvest metadata&lt;br/&gt;for discovery indexing
+    LS-&gt;&gt;LS: Track usage analytics&lt;br/&gt;CS501: 450 views, 120 downloads
+    LS-&gt;&gt;CC: Report usage for royalty&lt;br/&gt;pay-per-use: 120 downloads x $0.10
+    LIB-&gt;&gt;LS: Review reserve stats&lt;br/&gt;most accessed: Ch.3 (85 views)</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant STU as Student
+    participant POS as POS System
+    participant DINE as Dining Mgmt
+    participant PRINT as Print Mgmt
+    participant FIN as Finance&lt;br/&gt;(Oracle EBS)
+    Student-&gt;&gt;POS: Purchase meal&lt;br/&gt;student ID card, Adams Hall Cafeteria
+    POS-&gt;&gt;POS: Swipe student card&lt;br/&gt;STU-2026-001, meal plan swipe
+    POS-&gt;&gt;DINE: Record transaction&lt;br/&gt;item=Combo Meal, amount=$8.50
+    DINE-&gt;&gt;FIN: Daily settlement&lt;br/&gt;total=125 transactions, $1,062.50
+    Student-&gt;&gt;PRINT: Release print job&lt;br/&gt;student ID, 20 pages B&amp;W
+    PRINT-&gt;&gt;PRINT: Deduct print quota&lt;br/&gt;20 of 200 remaining
+    PRINT-&gt;&gt;FIN: Monthly billing&lt;br/&gt;dept=CS, 450 pages, $45.00
+    FIN-&gt;&gt;FIN: Internal chargeback&lt;br/&gt;dept cost center allocated
+    Ancillary Manager-&gt;&gt;DINE: Review sales report&lt;br/&gt;top items, revenue by day
+    DINE-&gt;&gt;DINE: Adjust menu pricing&lt;br/&gt;seasonal update, vendor costs
+    FIN-&gt;&gt;DINE: Monthly P&amp;L review&lt;br/&gt;revenue=$32,450, COGS=$18,200
+    Vendor-&gt;&gt;FIN: Submit invoice&lt;br/&gt;catering supplies, PO-2026-301</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

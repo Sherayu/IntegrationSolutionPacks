@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant STU as Student&lt;br/&gt;(John Doe)
+    participant CRM as Student Services CRM&lt;br/&gt;(Salesforce)
+    participant SCHED as Scheduling System
+    participant COUN as Counsellor
+    participant SIS as SIS&lt;br/&gt;(Ellucian Banner)
+    STU-&gt;&gt;CRM: Submit support request&lt;br/&gt;type=Academic Counselling, priority=Medium
+    CRM-&gt;&gt;CRM: Create case&lt;br/&gt;case_id=SC-2026-042, status=Open
+    CRM-&gt;&gt;SIS: Load student context&lt;br/&gt;STU-2026-001, GPA=3.75, program=B.Sc. CS
+    SIS--&gt;&gt;CRM: Student profile&lt;br/&gt;enrolled=15 credits, no holds
+    CRM-&gt;&gt;SCHED: Find available slot&lt;br/&gt;counsellor=next available, duration=45min
+    SCHED--&gt;&gt;CRM: Slot available&lt;br/&gt;2026-07-08 14:00, counsellor=Sarah
+    CRM-&gt;&gt;STU: Offer appointment&lt;br/&gt;Academic Counselling, 2026-07-08 14:00
+    STU-&gt;&gt;CRM: Confirm appointment
+    CRM-&gt;&gt;SCHED: Book slot&lt;br/&gt;case=SC-2026-042, confirmed
+    COUN-&gt;&gt;CRM: Prepare for session&lt;br/&gt;review case notes, student history
+    STU-&gt;&gt;COUN: Attend counselling session&lt;br/&gt;discuss course selection, career goals
+    COUN-&gt;&gt;CRM: Record case notes&lt;br/&gt;issues=workload mgmt, action=tutoring referral
+    COUN-&gt;&gt;CRM: Update case status&lt;br/&gt;status=In Progress, follow-up=2 weeks
+    COUN-&gt;&gt;CRM: Create referral&lt;br/&gt;service=Tutoring Centre, auto-approved
+    CRM-&gt;&gt;STU: Referral notification&lt;br/&gt;Tutoring Centre, Math block MWF 2-4pm
+    STU-&gt;&gt;CRM: Session feedback&lt;br/&gt;rating=4.5/5, helpful=Yes
+    COUN-&gt;&gt;CRM: Close case&lt;br/&gt;status=Resolved, outcome=Strategies provided</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

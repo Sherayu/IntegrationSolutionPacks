@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">participant EXEC as Executive&lt;br/&gt;(Dean / Provost)
+    participant BI as BI Tool&lt;br/&gt;(Tableau / Power BI)
+    participant DW as Data Warehouse&lt;br/&gt;(Snowflake)
+    participant DIST as Report Distribution&lt;br/&gt;(Email / Portal)
+    EXEC-&gt;&gt;BI: Open dashboard&lt;br/&gt;Institutional KPI Dashboard
+    BI-&gt;&gt;DW: Query metrics&lt;br/&gt;enrollment trends, retention, graduation
+    DW--&gt;&gt;BI: Metrics data
+    BI--&gt;&gt;EXEC: Dashboard rendered&lt;br/&gt;enrollment=12,500, retention=87%, grad=68%
+    Department Head-&gt;&gt;BI: Department drill-down&lt;br/&gt;CS dept: enrollment=1,250
+    BI-&gt;&gt;DW: Query department facts
+    DW--&gt;&gt;BI: Department data
+    Institutional Research-&gt;&gt;BI: Generate compliance report&lt;br/&gt;IPEDS, accreditation
+    BI-&gt;&gt;DW: Aggregate queries
+    DW--&gt;&gt;BI: Compliance data
+    BI-&gt;&gt;DIST: Distribute report&lt;br/&gt;PDF emailed to stakeholders</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>
