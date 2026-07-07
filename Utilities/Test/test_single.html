@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Single Diagram Test</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; margin: 20px; }
+  .mermaid { margin: 20px 0; max-width: 100%; }
+  .mermaid svg { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+<h2>Diagram Test: Paste a single mermaid block below</h2>
+<div class="mermaid">
+sequenceDiagram
+Operator->>DCS: Monitor plant overview<br/>Unit 1: 500 MW, 98% load
+DCS->>DCS: Scan boiler parameters<br/>steam_pressure=1800 psi, temp=1005°F
+DCS->>SCADA: Transmit telemetry<br/>GEN-2026-001: 250 MW, 3600 RPM
+Alarm->>DCS: Bearing temp high<br/>TRB-2026-001, 195°F, alarm=Warning
+DCS->>Operator: Alert operator<br/>bearing temp rising, trend=+2°F/hr
+</div>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", sequence: { showSequenceNumbers: false, mirrorActors: true }, securityLevel: "loose" });
+</script>
+</body>
+</html>
