@@ -487,16 +487,16 @@ DCS->>SCADA: Update historian<br/>PID=PT-2026-001, value=3600
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Thermal Plant | Boiler | MonitorBoilerParameters | DCS (ABB 800xA) | SCADA (Siemens Spectrum Power) | DCS OPC-UA | SCADA OPC-DA | API-led (Real-time) | High |
-| Thermal Plant | Turbine | AdjustGovernor | DCS (ABB 800xA) | Turbine Governor (Woodward) | DCS Modbus TCP | Governor Modbus RTU | API-led (Real-time) | High |
-| Thermal Plant | Generator | TransmitTelemetry | SCADA (Siemens Spectrum Power) | Plant Historian (OSIsoft PI) | SCADA API (ICCP) | PI Interface (OPC-DA) | API-led (Real-time) | Medium |
-| Thermal Plant | Alarm | AlertOperator | DCS (ABB 800xA) | Alarm Management System | DCS OPC-A&E | Alarm API (REST) | Event-driven | Medium |
-| Thermal Plant | Setpoint | AdjustBoilerFiringRate | Operator HMI | DCS (ABB 800xA) | HMI API (OAuth2) | DCS OPC-UA | API-led (Real-time) | Simple |
-| Thermal Plant | Trend | LogTrendData | Plant Historian (OSIsoft PI) | Reporting Database | PI API (REST) | SQL JDBC | Batch (Scheduled) | Simple |
-| Thermal Plant | Performance | CalculateEfficiency | DCS (ABB 800xA) | Plant Historian (OSIsoft PI) | DCS OPC-UA | PI API (REST) | API-led (Real-time) | Medium |
-| Thermal Plant | Vibration | MonitorVibration | DCS (ABB 800xA) | Condition Monitoring System | DCS OPC-UA | CMS API (Modbus TCP) | API-led (Real-time) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Thermal Plant | Boiler | MonitorBoilerParameters | DCS (ABB 800xA) | SCADA (Siemens Spectrum Power) | DCS OPC-UA | SCADA OPC-DA | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Thermal Plant | Turbine | AdjustGovernor | DCS (ABB 800xA) | Turbine Governor (Woodward) | DCS Modbus TCP | Governor Modbus RTU | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Thermal Plant | Generator | TransmitTelemetry | SCADA (Siemens Spectrum Power) | Plant Historian (OSIsoft PI) | SCADA API (ICCP) | PI Interface (OPC-DA) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Thermal Plant | Alarm | AlertOperator | DCS (ABB 800xA) | Alarm Management System | DCS OPC-A&E | Alarm API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Thermal Plant | Setpoint | AdjustBoilerFiringRate | Operator HMI | DCS (ABB 800xA) | HMI API (OAuth2) | DCS OPC-UA | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Thermal Plant | Trend | LogTrendData | Plant Historian (OSIsoft PI) | Reporting Database | PI API (REST) | SQL JDBC | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| Thermal Plant | Performance | CalculateEfficiency | DCS (ABB 800xA) | Plant Historian (OSIsoft PI) | DCS OPC-UA | PI API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Thermal Plant | Vibration | MonitorVibration | DCS (ABB 800xA) | Condition Monitoring System | DCS OPC-UA | CMS API (Modbus TCP) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
 
 #### Acceptance Criteria
 
@@ -539,15 +539,15 @@ REN_OP->>RMS: Review curtailment report<br/>solar curtailed 24 MW, wind curtaile
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Renewable | Forecast | FetchWeatherForecast | RMS (GE Renewable) | Weather Forecasting Service | RMS API (REST) | Weather API (REST) | API-led (Real-time) | Medium |
-| Renewable | Curtailment | ReceiveCurtailmentOrder | ISO Market Portal | SCADA (Siemens Spectrum Power) | ISO API (ICCP) | SCADA API (ICCP) | Event-driven | High |
-| Renewable | Dispatch | DispatchCurtailment | SCADA (Siemens Spectrum Power) | RMS (GE Renewable) | SCADA API (ICCP) | RMS API (Modbus TCP) | API-led (Real-time) | High |
-| Renewable | Solar | ReduceInverterOutput | RMS (GE Renewable) | Solar PV Inverters | RMS API (Modbus TCP) | Inverter API (SunSpec Modbus) | API-led (Real-time) | Medium |
-| Renewable | Wind | ActivatePitchControl | RMS (GE Renewable) | Wind Turbine Controllers | RMS API (OPC-UA) | Turbine API (IEC 61400-25) | API-led (Real-time) | Medium |
-| Renewable | Compliance | ConfirmCurtailment | SCADA (Siemens Spectrum Power) | ISO Market Portal | SCADA API (ICCP) | ISO API (REST) | API-led (Real-time) | Medium |
-| Renewable | Report | LogCurtailmentEvent | RMS (GE Renewable) | Plant Historian (OSIsoft PI) | RMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Renewable | Forecast | FetchWeatherForecast | RMS (GE Renewable) | Weather Forecasting Service | RMS API (REST) | Weather API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Renewable | Curtailment | ReceiveCurtailmentOrder | ISO Market Portal | SCADA (Siemens Spectrum Power) | ISO API (ICCP) | SCADA API (ICCP) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| Renewable | Dispatch | DispatchCurtailment | SCADA (Siemens Spectrum Power) | RMS (GE Renewable) | SCADA API (ICCP) | RMS API (Modbus TCP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Renewable | Solar | ReduceInverterOutput | RMS (GE Renewable) | Solar PV Inverters | RMS API (Modbus TCP) | Inverter API (SunSpec Modbus) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Renewable | Wind | ActivatePitchControl | RMS (GE Renewable) | Wind Turbine Controllers | RMS API (OPC-UA) | Turbine API (IEC 61400-25) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Renewable | Compliance | ConfirmCurtailment | SCADA (Siemens Spectrum Power) | ISO Market Portal | SCADA API (ICCP) | ISO API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Renewable | Report | LogCurtailmentEvent | RMS (GE Renewable) | Plant Historian (OSIsoft PI) | RMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -591,15 +591,15 @@ AGC->>ISO: LFC response confirmation<br/>regulation up: 50 MW, response time=4.5
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| AGC | ACE | ReceiveACESignal | EMS (GE/Alstom) | AGC System | EMS API (ICCP) | AGC Internal Bus | API-led (Real-time) | High |
-| AGC | Dispatch | CalculateGeneratorSetpoints | AGC System | SCADA (Siemens Spectrum Power) | AGC Internal Calc | SCADA API (ICCP) | API-led (Real-time) | High |
-| AGC | Setpoint | DispatchRaiseCommand | SCADA (Siemens Spectrum Power) | Plant DCS (ABB 800xA) | SCADA API (ICCP) | DCS Modbus TCP | API-led (Real-time) | High |
-| AGC | Response | MonitorRampResponse | AGC System | EMS (GE/Alstom) | AGC Internal | EMS API (ICCP) | API-led (Real-time) | Medium |
-| AGC | Compliance | VerifyACENERC | AGC System | EMS (GE/Alstom) | AGC Internal | EMS API (ICCP) | API-led (Real-time) | Medium |
-| AGC | Confirmation | SendLFCResponse | EMS (GE/Alstom) | ISO RTO System | EMS API (ICCP) | ISO API (ICCP) | API-led (Real-time) | High |
-| AGC | Log | LogDispatchEvent | AGC System | Plant Historian (OSIsoft PI) | AGC API (REST) | PI API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| AGC | ACE | ReceiveACESignal | EMS (GE/Alstom) | AGC System | EMS API (ICCP) | AGC Internal Bus | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| AGC | Dispatch | CalculateGeneratorSetpoints | AGC System | SCADA (Siemens Spectrum Power) | AGC Internal Calc | SCADA API (ICCP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| AGC | Setpoint | DispatchRaiseCommand | SCADA (Siemens Spectrum Power) | Plant DCS (ABB 800xA) | SCADA API (ICCP) | DCS Modbus TCP | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| AGC | Response | MonitorRampResponse | AGC System | EMS (GE/Alstom) | AGC Internal | EMS API (ICCP) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| AGC | Compliance | VerifyACENERC | AGC System | EMS (GE/Alstom) | AGC Internal | EMS API (ICCP) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| AGC | Confirmation | SendLFCResponse | EMS (GE/Alstom) | ISO RTO System | EMS API (ICCP) | ISO API (ICCP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| AGC | Log | LogDispatchEvent | AGC System | Plant Historian (OSIsoft PI) | AGC API (REST) | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -642,15 +642,15 @@ PlantMgr->>FMS: Fuel cost report<br/>YTD fuel cost=$187M, vs budget=$192M, varia
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Fuel | Inventory | CheckFuelInventory | Fuel Management System | DCS (ABB 800xA) | FMS API (REST) | DCS OPC-UA | API-led (Real-time) | Simple |
-| Fuel | Consumption | RecordDailyConsumption | DCS (ABB 800xA) | Fuel Management System | DCS OPC-UA | FMS API (REST) | Batch (Scheduled) | Medium |
-| Fuel | Order | PlaceFuelOrder | Fuel Management System | Vendor Portal | FMS API (REST) | Vendor EDI | API-led (Real-time) | Medium |
-| Emissions | CEMS | SampleStackEmissions | CEMS | Stack Analyzer | CEMS Serial (Modbus) | Analyzer 4-20mA | API-led (Real-time) | High |
-| Emissions | DCS | TransferEmissionsData | CEMS | DCS (ABB 800xA) | CEMS API (Modbus TCP) | DCS OPC-UA | API-led (Real-time) | Medium |
-| Emissions | EPA | ReportHourlyEmissions | CEMS | EPA CAMD Portal | CEMS API (REST) | EPA CAMD Web Services (SOAP) | Batch (Scheduled) | High |
-| Emissions | Compliance | LogEmissionsReport | CEMS | Plant Historian (OSIsoft PI) | CEMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Fuel | Inventory | CheckFuelInventory | Fuel Management System | DCS (ABB 800xA) | FMS API (REST) | DCS OPC-UA | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Fuel | Consumption | RecordDailyConsumption | DCS (ABB 800xA) | Fuel Management System | DCS OPC-UA | FMS API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Fuel | Order | PlaceFuelOrder | Fuel Management System | Vendor Portal | FMS API (REST) | Vendor EDI | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Emissions | CEMS | SampleStackEmissions | CEMS | Stack Analyzer | CEMS Serial (Modbus) | Analyzer 4-20mA | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Emissions | DCS | TransferEmissionsData | CEMS | DCS (ABB 800xA) | CEMS API (Modbus TCP) | DCS OPC-UA | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Emissions | EPA | ReportHourlyEmissions | CEMS | EPA CAMD Portal | CEMS API (REST) | EPA CAMD Web Services (SOAP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Emissions | Compliance | LogEmissionsReport | CEMS | Plant Historian (OSIsoft PI) | CEMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -697,15 +697,15 @@ Operator->>EMS: Log operator action<br/>tap change, reason: N-1 violation mitiga
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| EMS | Telemetry | ReceiveAnalogValues | RTU (SUB-MAIN-001) | SCADA (Siemens Spectrum Power) | RTU DNP3 | SCADA DNP3 | API-led (Real-time) | High |
-| EMS | StateEstimation | RunStateEstimation | EMS (Siemens Spectrum Power) | EMS (Siemens Spectrum Power) | Internal | Internal | Batch (Real-time) | High |
-| EMS | Alarm | ProcessLineAlarm | SCADA (Siemens Spectrum Power) | EMS (Siemens Spectrum Power) | SCADA API (ICCP) | EMS Internal | Event-driven | High |
-| EMS | Contingency | RunContingencyAnalysis | EMS (Siemens Spectrum Power) | EMS (Siemens Spectrum Power) | Internal | Internal | Batch (Real-time) | High |
-| EMS | Control | ExecuteTapChange | EMS (Siemens Spectrum Power) | SCADA (Siemens Spectrum Power) | EMS API (ICCP) | SCADA DNP3 | API-led (Real-time) | Medium |
-| EMS | Historian | LogSnapshot | EMS (Siemens Spectrum Power) | Plant Historian (OSIsoft PI) | EMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple |
-| EMS | Audit | LogOperatorAction | EMS (Siemens Spectrum Power) | Compliance Database | EMS API (REST) | SQL JDBC | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| EMS | Telemetry | ReceiveAnalogValues | RTU (SUB-MAIN-001) | SCADA (Siemens Spectrum Power) | RTU DNP3 | SCADA DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| EMS | StateEstimation | RunStateEstimation | EMS (Siemens Spectrum Power) | EMS (Siemens Spectrum Power) | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| EMS | Alarm | ProcessLineAlarm | SCADA (Siemens Spectrum Power) | EMS (Siemens Spectrum Power) | SCADA API (ICCP) | EMS Internal | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| EMS | Contingency | RunContingencyAnalysis | EMS (Siemens Spectrum Power) | EMS (Siemens Spectrum Power) | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| EMS | Control | ExecuteTapChange | EMS (Siemens Spectrum Power) | SCADA (Siemens Spectrum Power) | EMS API (ICCP) | SCADA DNP3 | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| EMS | Historian | LogSnapshot | EMS (Siemens Spectrum Power) | Plant Historian (OSIsoft PI) | EMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| EMS | Audit | LogOperatorAction | EMS (Siemens Spectrum Power) | Compliance Database | EMS API (REST) | SQL JDBC | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -748,15 +748,15 @@ Operator->>EMS: Document action<br/>N-1 violation: L-2045, action: redispatch GE
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| EMS | Estimation | InjectMeasurements | SCADA | EMS State Estimator | SCADA API (ICCP) | Estimator API (Internal) | API-led (Real-time) | High |
-| EMS | Topology | ProcessTopology | EMS State Estimator | EMS Network Model | Internal | Internal | Batch (Real-time) | High |
-| EMS | Contingency | EvaluateN-1Contingencies | EMS State Estimator | Contingency Analysis Module | Internal | Internal | Batch (Real-time) | High |
-| EMS | Violation | IdentifyViolations | Contingency Analysis Module | Operator HMI | Internal | HMI API (REST) | Event-driven | High |
-| EMS | Action | SelectRemedialAction | Operator HMI | Contingency Analysis Module | HMI API (REST) | Internal | API-led (Real-time) | Medium |
-| EMS | Dispatch | ImplementRedispatch | Operator HMI | SCADA | HMI API (REST) | SCADA API (ICCP) | API-led (Real-time) | Medium |
-| EMS | Log | LogSolvedState | EMS State Estimator | Plant Historian (OSIsoft PI) | EMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| EMS | Estimation | InjectMeasurements | SCADA | EMS State Estimator | SCADA API (ICCP) | Estimator API (Internal) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| EMS | Topology | ProcessTopology | EMS State Estimator | EMS Network Model | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| EMS | Contingency | EvaluateN-1Contingencies | EMS State Estimator | Contingency Analysis Module | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| EMS | Violation | IdentifyViolations | Contingency Analysis Module | Operator HMI | Internal | HMI API (REST) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| EMS | Action | SelectRemedialAction | Operator HMI | Contingency Analysis Module | HMI API (REST) | Internal | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| EMS | Dispatch | ImplementRedispatch | Operator HMI | SCADA | HMI API (REST) | SCADA API (ICCP) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| EMS | Log | LogSolvedState | EMS State Estimator | Plant Historian (OSIsoft PI) | EMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -799,15 +799,15 @@ WAMS->>Operator: Damping improving<br/>mode: 0.3 Hz, damping=6%, action effectiv
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| WAMS | PMU | StreamPhasorData | PMU (SEL-421) | PDC (Phasor Data Concentrator) | PMU C37.118 | PDC C37.118 | API-led (Real-time) | High |
-| WAMS | Alignment | TimeAlignPhasors | PDC (Phasor Data Concentrator) | PDC (Phasor Data Concentrator) | Internal | Internal | Batch (Real-time) | High |
-| WAMS | Stream | StreamAlignedPhasors | PDC (Phasor Data Concentrator) | WAMS (GE PhasorPoint) | PDC C37.118 | WAMS C37.118 | API-led (Real-time) | High |
-| WAMS | Oscillation | DetectOscillations | WAMS (GE PhasorPoint) | WAMS (GE PhasorPoint) | Internal | Internal | Batch (Real-time) | Medium |
-| WAMS | Alert | AlertOperatorOscillation | WAMS (GE PhasorPoint) | Operator HMI | WAMS API (REST) | HMI API (REST) | Event-driven | Medium |
-| WAMS | Historian | LogSynchrophasors | WAMS (GE PhasorPoint) | Plant Historian (OSIsoft PI) | WAMS API (REST) | PI API (REST) | Batch (Scheduled) | Medium |
-| WAMS | EMS | TransferWAMSData | WAMS (GE PhasorPoint) | EMS | WAMS API (ICCP) | EMS API (ICCP) | API-led (Real-time) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| WAMS | PMU | StreamPhasorData | PMU (SEL-421) | PDC (Phasor Data Concentrator) | PMU C37.118 | PDC C37.118 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| WAMS | Alignment | TimeAlignPhasors | PDC (Phasor Data Concentrator) | PDC (Phasor Data Concentrator) | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| WAMS | Stream | StreamAlignedPhasors | PDC (Phasor Data Concentrator) | WAMS (GE PhasorPoint) | PDC C37.118 | WAMS C37.118 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| WAMS | Oscillation | DetectOscillations | WAMS (GE PhasorPoint) | WAMS (GE PhasorPoint) | Internal | Internal | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| WAMS | Alert | AlertOperatorOscillation | WAMS (GE PhasorPoint) | Operator HMI | WAMS API (REST) | HMI API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| WAMS | Historian | LogSynchrophasors | WAMS (GE PhasorPoint) | Plant Historian (OSIsoft PI) | WAMS API (REST) | PI API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| WAMS | EMS | TransferWAMSData | WAMS (GE PhasorPoint) | EMS | WAMS API (ICCP) | EMS API (ICCP) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
 
 #### Acceptance Criteria
 
@@ -853,16 +853,16 @@ SMS->>Scheduler: Close switching order<br/>SWO-2026-042: complete, duration=3.5 
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Switching | Order | CreateSwitchingOrder | Switching Scheduler | Switching Management System | Scheduler UI | SMS API (REST) | API-led (Real-time) | Simple |
-| Switching | Approval | ApproveSwitchingOrder | Switching Management System | Operator HMI | SMS API (REST) | HMI API (REST) | API-led (Real-time) | Medium |
-| Switching | Clearance | RequestClearance | Operator HMI | Clearance & Tagging System | HMI API (REST) | Clearance API (REST) | API-led (Real-time) | High |
-| Switching | Tag | ApplyTag | Clearance & Tagging System | SCADA | Clearance API (REST) | SCADA API (ICCP) | Event-driven | High |
-| Switching | Breaker | OpenBreaker | Operator HMI | SCADA | HMI API (REST) | SCADA DNP3 | API-led (Real-time) | High |
-| Switching | Field | ReleaseToWork | Switching Management System | Mobile Field App | SMS API (REST) | Field App API (OAuth2) | API-led (Real-time) | Medium |
-| Switching | Restore | RestoreLine | Operator HMI | SCADA | HMI API (REST) | SCADA DNP3 | API-led (Real-time) | High |
-| Switching | Close | CloseSwitchingOrder | Switching Management System | Switching Scheduler | SMS API (REST) | Scheduler UI | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Switching | Order | CreateSwitchingOrder | Switching Scheduler | Switching Management System | Scheduler UI | SMS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Switching | Approval | ApproveSwitchingOrder | Switching Management System | Operator HMI | SMS API (REST) | HMI API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Switching | Clearance | RequestClearance | Operator HMI | Clearance & Tagging System | HMI API (REST) | Clearance API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Switching | Tag | ApplyTag | Clearance & Tagging System | SCADA | Clearance API (REST) | SCADA API (ICCP) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| Switching | Breaker | OpenBreaker | Operator HMI | SCADA | HMI API (REST) | SCADA DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Switching | Field | ReleaseToWork | Switching Management System | Mobile Field App | SMS API (REST) | Field App API (OAuth2) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Switching | Restore | RestoreLine | Operator HMI | SCADA | HMI API (REST) | SCADA DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Switching | Close | CloseSwitchingOrder | Switching Management System | Switching Scheduler | SMS API (REST) | Scheduler UI | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -909,15 +909,15 @@ SCADA_Concentrator->>Operator: Alarm<br/>SUB-MAIN-001: switchgear status changed
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Substation | Status | ReadBreakerStatus | RTU (SEL-3530) | Breaker Control | RTU I/O | Breaker Aux Contact | API-led (Real-time) | High |
-| Substation | Analog | ReadAnalogValues | RTU (SEL-3530) | CT/PT | RTU Analog Input | CT/PT Secondary | API-led (Real-time) | High |
-| Substation | SCADA | ReportByException | RTU (SEL-3530) | Substation SCADA Concentrator | RTU DNP3 | SCADA DNP3 | API-led (Real-time) | High |
-| Substation | EMS | TransmitToEMS | Substation SCADA Concentrator | EMS (Siemens Spectrum Power) | SCADA API (ICCP) | EMS API (ICCP) | API-led (Real-time) | High |
-| Substation | Control | SBOCommand | EMS (Siemens Spectrum Power) | Substation SCADA Concentrator | EMS API (ICCP) | SCADA DNP3 | API-led (Real-time) | High |
-| Substation | Event | LogSOEEvent | RTU (SEL-3530) | Substation SCADA Concentrator | RTU DNP3 | SCADA DNP3 | Event-driven | High |
-| Substation | Historian | StreamAnalogData | RTU (SEL-3530) | Plant Historian (OSIsoft PI) | RTU DNP3 | PI Interface (DNP3) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Substation | Status | ReadBreakerStatus | RTU (SEL-3530) | Breaker Control | RTU I/O | Breaker Aux Contact | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Substation | Analog | ReadAnalogValues | RTU (SEL-3530) | CT/PT | RTU Analog Input | CT/PT Secondary | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Substation | SCADA | ReportByException | RTU (SEL-3530) | Substation SCADA Concentrator | RTU DNP3 | SCADA DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Substation | EMS | TransmitToEMS | Substation SCADA Concentrator | EMS (Siemens Spectrum Power) | SCADA API (ICCP) | EMS API (ICCP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Substation | Control | SBOCommand | EMS (Siemens Spectrum Power) | Substation SCADA Concentrator | EMS API (ICCP) | SCADA DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Substation | Event | LogSOEEvent | RTU (SEL-3530) | Substation SCADA Concentrator | RTU DNP3 | SCADA DNP3 | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| Substation | Historian | StreamAnalogData | RTU (SEL-3530) | Plant Historian (OSIsoft PI) | RTU DNP3 | PI Interface (DNP3) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -960,15 +960,15 @@ Engineer->>Relay: Verify operation<br/>relay operated correctly, reclose success
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Protection | Settings | ReadRelaySettings | Protection Management System | Relay (SEL-421) | PMS API (REST) | Relay Serial (SEL Protocol) | API-led (Real-time) | Medium |
-| Protection | Validation | ValidateRelaySettings | Protection Management System | Protection Management System | Internal | Internal | Batch (Real-time) | High |
-| Protection | Write | WriteSettingsGroup | Protection Management System | Relay (SEL-421) | PMS API (REST) | Relay Serial (SEL Protocol) | API-led (Real-time) | High |
-| Protection | Events | RetrieveFaultRecords | Engineer HMI | Relay (SEL-421) | HMI API (REST) | Relay Serial (SEL Protocol) | API-led (Real-time) | Medium |
-| Protection | Disturbance | StoreCOMTRADE | Fault Recorder | Protection Management System | Fault Recorder API | PMS API (REST) | Event-driven | Medium |
-| Protection | Analysis | AnalyzeDisturbance | Protection Management System | Engineer HMI | PMS API (REST) | HMI API (REST) | Batch (Real-time) | Simple |
-| Protection | TimeSync | SyncRelayTime | Time Sync (GPS) | Relay (SEL-421) | GPS IRIG-B | Relay IRIG-B | API-led (Real-time) | High |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Protection | Settings | ReadRelaySettings | Protection Management System | Relay (SEL-421) | PMS API (REST) | Relay Serial (SEL Protocol) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Protection | Validation | ValidateRelaySettings | Protection Management System | Protection Management System | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| Protection | Write | WriteSettingsGroup | Protection Management System | Relay (SEL-421) | PMS API (REST) | Relay Serial (SEL Protocol) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Protection | Events | RetrieveFaultRecords | Engineer HMI | Relay (SEL-421) | HMI API (REST) | Relay Serial (SEL Protocol) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Protection | Disturbance | StoreCOMTRADE | Fault Recorder | Protection Management System | Fault Recorder API | PMS API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Protection | Analysis | AnalyzeDisturbance | Protection Management System | Engineer HMI | PMS API (REST) | HMI API (REST) | Batch (Real-time) | Simple | Minimal near-real-time batch with basic data pass-through |
+| Protection | TimeSync | SyncRelayTime | Time Sync (GPS) | Relay (SEL-421) | GPS IRIG-B | Relay IRIG-B | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
 
 #### Acceptance Criteria
 
@@ -1011,15 +1011,15 @@ Engineer->>SCADA_Gateway: Test mapping<br/>MMS to DNP3: 48 analogs, 64 status
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| IEC61850 | SV | StreamSampledValues | Merge Unit | Bay Controller | SV (IEC 61850-9-2) | SV (IEC 61850-9-2) | API-led (Real-time) | High |
-| IEC61850 | GOOSE | TripGOOSEMessage | Bay Controller | Relay | GOOSE (IEC 61850-8-1) | GOOSE (IEC 61850-8-1) | Event-driven | High |
-| IEC61850 | MMS | ReportMMSData | Bay Controller | SCADA Gateway | MMS (IEC 61850-8-1) | MMS (IEC 61850-8-1) | API-led (Real-time) | High |
-| IEC61850 | Gateway | ConvertToDNP3 | SCADA Gateway | EMS | Gateway Internal | DNP3 (IEC 61850 to DNP3) | API-led (Real-time) | Medium |
-| IEC61850 | Config | ConfigureGOOSE | Engineer Workstation | Network Switch | Engineering Tool | Switch CLI/SNMP | API-led (Real-time) | Simple |
-| IEC61850 | PTP | SyncPTPTime | PTP Grandmaster | Merge Unit | PTP (IEEE 1588) | PTP (IEEE 1588) | API-led (Real-time) | High |
-| IEC61850 | Health | MonitorNetworkHealth | Network Switch | Substation HMI | SNMP | HMI API (REST) | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| IEC61850 | SV | StreamSampledValues | Merge Unit | Bay Controller | SV (IEC 61850-9-2) | SV (IEC 61850-9-2) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| IEC61850 | GOOSE | TripGOOSEMessage | Bay Controller | Relay | GOOSE (IEC 61850-8-1) | GOOSE (IEC 61850-8-1) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| IEC61850 | MMS | ReportMMSData | Bay Controller | SCADA Gateway | MMS (IEC 61850-8-1) | MMS (IEC 61850-8-1) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| IEC61850 | Gateway | ConvertToDNP3 | SCADA Gateway | EMS | Gateway Internal | DNP3 (IEC 61850 to DNP3) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| IEC61850 | Config | ConfigureGOOSE | Engineer Workstation | Network Switch | Engineering Tool | Switch CLI/SNMP | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| IEC61850 | PTP | SyncPTPTime | PTP Grandmaster | Merge Unit | PTP (IEEE 1588) | PTP (IEEE 1588) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| IEC61850 | Health | MonitorNetworkHealth | Network Switch | Substation HMI | SNMP | HMI API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -1062,15 +1062,15 @@ Compliance->>Analyst: CIP evidence ready<br/>NERC CIP-005, CIP-006, CIP-007 comp
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Security | Physical | BadgeAccess | Badge Reader | Access Control System | Badge Reader Wiegand | ACS API (REST) | API-led (Real-time) | High |
-| Security | Video | RecordMotionEvent | Camera (IP) | Video Management System | Camera RTSP | VMS API (ONVIF) | API-led (Real-time) | Medium |
-| Security | Cyber | RequestVPNAccess | Remote Technician | Cyber Access Gateway | VPN Client | Gateway API (RADIUS) | API-led (Real-time) | High |
-| Security | MFA | ChallengeMFA | Cyber Access Gateway | MFA Server (RSA) | Gateway API (RADIUS) | MFA API (RADIUS/HTTP) | API-led (Real-time) | High |
-| Security | SIEM | LogAccessEvent | Relay (SEL-421) | SIEM (Splunk) | Syslog | SIEM API (Syslog) | Event-driven | Medium |
-| Security | CIP | AuditAccessLogs | Compliance Lead | CIP Compliance Database | CIP UI | CIP DB API (REST) | Batch (Scheduled) | Medium |
-| Security | Report | GenerateCIPReport | CIP Compliance Database | Compliance Lead | CIP DB API (REST) | CIP UI | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Security | Physical | BadgeAccess | Badge Reader | Access Control System | Badge Reader Wiegand | ACS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Security | Video | RecordMotionEvent | Camera (IP) | Video Management System | Camera RTSP | VMS API (ONVIF) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Security | Cyber | RequestVPNAccess | Remote Technician | Cyber Access Gateway | VPN Client | Gateway API (RADIUS) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Security | MFA | ChallengeMFA | Cyber Access Gateway | MFA Server (RSA) | Gateway API (RADIUS) | MFA API (RADIUS/HTTP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Security | SIEM | LogAccessEvent | Relay (SEL-421) | SIEM (Splunk) | Syslog | SIEM API (Syslog) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Security | CIP | AuditAccessLogs | Compliance Lead | CIP Compliance Database | CIP UI | CIP DB API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Security | Report | GenerateCIPReport | CIP Compliance Database | Compliance Lead | CIP DB API (REST) | CIP UI | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -1118,15 +1118,15 @@ ADMS->>PI: Log distribution state<br/>all feeders, capacitors, regulators, 15-mi
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Distribution | Telemetry | ReportFeederValues | RTU (Feeder) | ADMS (GE Grid Solutions) | RTU DNP3 | ADMS DNP3 | API-led (Real-time) | High |
-| Distribution | SCADA | UpdateTopology | ADMS (GE Grid Solutions) | ADMS (GE Grid Solutions) | Internal | Internal | Batch (Real-time) | High |
-| Distribution | Capacitor | MonitorCapacitorBank | Capacitor Bank Controller | ADMS (GE Grid Solutions) | Capacitor DNP3 | ADMS DNP3 | API-led (Real-time) | Medium |
-| Distribution | Regulator | ReadRegulatorTap | Voltage Regulator Control | ADMS (GE Grid Solutions) | Regulator DNP3 | ADMS DNP3 | API-led (Real-time) | Medium |
-| Distribution | VoltVAR | ExecuteVoltVARControl | ADMS (GE Grid Solutions) | Capacitor Bank Controller | ADMS DNP3 | Capacitor DNP3 | API-led (Real-time) | Medium |
-| Distribution | Optimize | OptimizePowerFactor | ADMS (GE Grid Solutions) | ADMS (GE Grid Solutions) | Internal | Internal | Batch (Real-time) | Medium |
-| Distribution | Historian | LogDistributionState | ADMS (GE Grid Solutions) | Plant Historian (OSIsoft PI) | ADMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Distribution | Telemetry | ReportFeederValues | RTU (Feeder) | ADMS (GE Grid Solutions) | RTU DNP3 | ADMS DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Distribution | SCADA | UpdateTopology | ADMS (GE Grid Solutions) | ADMS (GE Grid Solutions) | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| Distribution | Capacitor | MonitorCapacitorBank | Capacitor Bank Controller | ADMS (GE Grid Solutions) | Capacitor DNP3 | ADMS DNP3 | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Distribution | Regulator | ReadRegulatorTap | Voltage Regulator Control | ADMS (GE Grid Solutions) | Regulator DNP3 | ADMS DNP3 | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Distribution | VoltVAR | ExecuteVoltVARControl | ADMS (GE Grid Solutions) | Capacitor Bank Controller | ADMS DNP3 | Capacitor DNP3 | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Distribution | Optimize | OptimizePowerFactor | ADMS (GE Grid Solutions) | ADMS (GE Grid Solutions) | Internal | Internal | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| Distribution | Historian | LogDistributionState | ADMS (GE Grid Solutions) | Plant Historian (OSIsoft PI) | ADMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -1169,15 +1169,15 @@ DERMS->>DER_Customer: Payment notification<br/>$500 incentive, peak shave progra
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| DER | Register | RegisterDERSite | DER Customer Portal | DERMS (Generac) | Customer UI | DERMS API (REST) | API-led (Real-time) | Simple |
-| DER | Poll | PollInverterFleet | DERMS (Generac) | DER Inverters | DERMS API (Modbus TCP) | Inverter API (SunSpec) | API-led (Real-time) | Medium |
-| DER | Dispatch | ReceiveDispatchRequest | ADMS (GE Grid Solutions) | DERMS (Generac) | ADMS API (ICCP) | DERMS API (REST) | API-led (Real-time) | High |
-| DER | Battery | DischargeBattery | DERMS (Generac) | Battery Inverters | DERMS API (Modbus TCP) | Inverter API (SunSpec) | API-led (Real-time) | High |
-| DER | Meter | VerifyLoadReduction | DERMS (Generac) | Meter Data System | DERMS API (REST) | Meter API (REST) | Batch (Scheduled) | Medium |
-| DER | Settlement | SubmitSettlementData | DERMS (Generac) | ISO Market Portal | DERMS API (REST) | ISO API (REST) | Batch (Scheduled) | Medium |
-| DER | Payment | NotifyDERPayment | DERMS (Generac) | DER Customer Portal | DERMS API (REST) | Customer UI | Event-driven | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| DER | Register | RegisterDERSite | DER Customer Portal | DERMS (Generac) | Customer UI | DERMS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| DER | Poll | PollInverterFleet | DERMS (Generac) | DER Inverters | DERMS API (Modbus TCP) | Inverter API (SunSpec) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DER | Dispatch | ReceiveDispatchRequest | ADMS (GE Grid Solutions) | DERMS (Generac) | ADMS API (ICCP) | DERMS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| DER | Battery | DischargeBattery | DERMS (Generac) | Battery Inverters | DERMS API (Modbus TCP) | Inverter API (SunSpec) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| DER | Meter | VerifyLoadReduction | DERMS (Generac) | Meter Data System | DERMS API (REST) | Meter API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| DER | Settlement | SubmitSettlementData | DERMS (Generac) | ISO Market Portal | DERMS API (REST) | ISO API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| DER | Payment | NotifyDERPayment | DERMS (Generac) | DER Customer Portal | DERMS API (REST) | Customer UI | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
 
 #### Acceptance Criteria
 
@@ -1221,15 +1221,15 @@ ADMS->>Operator: All restored<br/>FDR-MAIN-001: normal configuration, 0 customer
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| FLISR | Fault | DetectFaultAlarm | SCADA RTU | ADMS (GE Grid Solutions) | RTU DNP3 | ADMS DNP3 | Event-driven | High |
-| FLISR | Analysis | RunFLISRAnalysis | ADMS (GE Grid Solutions) | ADMS (GE Grid Solutions) | Internal | Internal | Batch (Real-time) | High |
-| FLISR | Isolate | OpenIsolationSwitch | ADMS (GE Grid Solutions) | SCADA RTU | ADMS DNP3 | RTU DNP3 | API-led (Real-time) | High |
-| FLISR | Restore | CloseTieSwitch | ADMS (GE Grid Solutions) | SCADA RTU | ADMS DNP3 | RTU DNP3 | API-led (Real-time) | High |
-| FLISR | OMS | CreateOutageEvent | ADMS (GE Grid Solutions) | Outage Management System | ADMS API (REST) | OMS API (REST) | Event-driven | Medium |
-| FLISR | Dispatch | DispatchCrew | Outage Management System | Mobile Field Crew App | OMS API (REST) | Field App API (OAuth2) | API-led (Real-time) | Medium |
-| FLISR | Restore | RestoreNormalConfig | Operator HMI | ADMS (GE Grid Solutions) | HMI API (REST) | ADMS DNP3 | API-led (Real-time) | High |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| FLISR | Fault | DetectFaultAlarm | SCADA RTU | ADMS (GE Grid Solutions) | RTU DNP3 | ADMS DNP3 | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| FLISR | Analysis | RunFLISRAnalysis | ADMS (GE Grid Solutions) | ADMS (GE Grid Solutions) | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| FLISR | Isolate | OpenIsolationSwitch | ADMS (GE Grid Solutions) | SCADA RTU | ADMS DNP3 | RTU DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| FLISR | Restore | CloseTieSwitch | ADMS (GE Grid Solutions) | SCADA RTU | ADMS DNP3 | RTU DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| FLISR | OMS | CreateOutageEvent | ADMS (GE Grid Solutions) | Outage Management System | ADMS API (REST) | OMS API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| FLISR | Dispatch | DispatchCrew | Outage Management System | Mobile Field Crew App | OMS API (REST) | Field App API (OAuth2) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| FLISR | Restore | RestoreNormalConfig | Operator HMI | ADMS (GE Grid Solutions) | HMI API (REST) | ADMS DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
 
 #### Acceptance Criteria
 
@@ -1272,15 +1272,15 @@ Planning->>Planning: Final report<br/>Capacity Plan 2027-2031: 15 projects, $45M
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Planning | Model | ExportNetworkModel | GIS (ArcGIS Utility Network) | Distribution Planning System | GIS API (REST) | Planning API (REST) | Batch (Scheduled) | Medium |
-| Planning | Forecast | ImportPeakForecast | Load Forecasting System | Distribution Planning System | Forecast API (REST) | Planning API (REST) | Batch (Scheduled) | Medium |
-| Planning | Flow | RunLoadFlowAnalysis | Distribution Planning System | Distribution Planning System | Internal | Internal | Batch (Real-time) | Medium |
-| Planning | Options | AnalyzeMitigationOptions | Distribution Planning System | Distribution Planning System | Internal | Internal | Batch (Real-time) | Medium |
-| Planning | GIS | UpdatePlanningModel | Distribution Planning System | GIS (ArcGIS Utility Network) | Planning API (REST) | GIS API (REST) | Batch (Scheduled) | Simple |
-| Planning | ADMS | DeployVoltVARSettings | Distribution Planning System | ADMS (GE Grid Solutions) | Planning API (REST) | ADMS API (ICCP) | API-led (Real-time) | Simple |
-| Planning | Budget | SubmitBudgetRequest | Planning Engineer | Asset Management System | Planning UI | Asset API (REST) | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Planning | Model | ExportNetworkModel | GIS (ArcGIS Utility Network) | Distribution Planning System | GIS API (REST) | Planning API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Planning | Forecast | ImportPeakForecast | Load Forecasting System | Distribution Planning System | Forecast API (REST) | Planning API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Planning | Flow | RunLoadFlowAnalysis | Distribution Planning System | Distribution Planning System | Internal | Internal | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| Planning | Options | AnalyzeMitigationOptions | Distribution Planning System | Distribution Planning System | Internal | Internal | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| Planning | GIS | UpdatePlanningModel | Distribution Planning System | GIS (ArcGIS Utility Network) | Planning API (REST) | GIS API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| Planning | ADMS | DeployVoltVARSettings | Distribution Planning System | ADMS (GE Grid Solutions) | Planning API (REST) | ADMS API (ICCP) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Planning | Budget | SubmitBudgetRequest | Planning Engineer | Asset Management System | Planning UI | Asset API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -1328,15 +1328,15 @@ Operator->>DCS: Fine-tune dose<br/>set alum=24 mg/L, confirm settled turbidity=2
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Water Treatment | Raw Water | SampleRawWater | Water Quality Analyzer | SCADA (EcoStruxure) | Analyzer Modbus RTU | SCADA Modbus TCP | API-led (Real-time) | Medium |
-| Water Treatment | Dosing | SetChemicalDose | DCS (Rockwell PlantPAx) | Chemical Dosing System | DCS OPC-UA | Dosing Pump PLC | API-led (Real-time) | Medium |
-| Water Treatment | Mixing | AdjustFlashMixerSpeed | DCS (Rockwell PlantPAx) | Flash Mixer VFD | DCS OPC-UA | VFD Modbus RTU | API-led (Real-time) | Simple |
-| Water Treatment | Settled | MonitorSettledWater | SCADA (EcoStruxure) | DCS (Rockwell PlantPAx) | SCADA OPC-DA | DCS OPC-UA | API-led (Real-time) | Medium |
-| Water Treatment | Lab | AnalyzeJarTest | Lab Information System | SCADA (EcoStruxure) | LIS API (REST) | SCADA API (REST) | API-led (Real-time) | Simple |
-| Water Treatment | Chemical | LogChemicalUsage | DCS (Rockwell PlantPAx) | Plant Historian (OSIsoft PI) | DCS OPC-UA | PI API (REST) | Batch (Scheduled) | Simple |
-| Water Treatment | Compliance | RecordRawWaterQuality | SCADA (EcoStruxure) | Compliance Database | SCADA API (REST) | SQL JDBC | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Water Treatment | Raw Water | SampleRawWater | Water Quality Analyzer | SCADA (EcoStruxure) | Analyzer Modbus RTU | SCADA Modbus TCP | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Water Treatment | Dosing | SetChemicalDose | DCS (Rockwell PlantPAx) | Chemical Dosing System | DCS OPC-UA | Dosing Pump PLC | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Water Treatment | Mixing | AdjustFlashMixerSpeed | DCS (Rockwell PlantPAx) | Flash Mixer VFD | DCS OPC-UA | VFD Modbus RTU | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Water Treatment | Settled | MonitorSettledWater | SCADA (EcoStruxure) | DCS (Rockwell PlantPAx) | SCADA OPC-DA | DCS OPC-UA | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Water Treatment | Lab | AnalyzeJarTest | Lab Information System | SCADA (EcoStruxure) | LIS API (REST) | SCADA API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Water Treatment | Chemical | LogChemicalUsage | DCS (Rockwell PlantPAx) | Plant Historian (OSIsoft PI) | DCS OPC-UA | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| Water Treatment | Compliance | RecordRawWaterQuality | SCADA (EcoStruxure) | Compliance Database | SCADA API (REST) | SQL JDBC | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -1380,15 +1380,15 @@ DCS->>Operator: Finished water quality<br/>turbidity=0.08 NTU, pH=7.4, Cl2=0.85 
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Filtration | Filter | MonitorFilterPerformance | SCADA (EcoStruxure) | DCS (Rockwell PlantPAx) | SCADA OPC-DA | DCS OPC-UA | API-led (Real-time) | Medium |
-| Filtration | Backwash | InitiateBackwashSequence | DCS (Rockwell PlantPAx) | Filter Control System | DCS OPC-UA | Filter PLC | API-led (Real-time) | High |
-| Filtration | Chlorine | AnalyzeChlorineResidual | Chlorine Analyzer | SCADA (EcoStruxure) | Analyzer 4-20mA | SCADA Modbus TCP | API-led (Real-time) | Medium |
-| Filtration | CT | CalculateCTValue | SCADA (EcoStruxure) | DCS (Rockwell PlantPAx) | SCADA API (REST) | DCS OPC-UA | API-led (Real-time) | High |
-| Filtration | Clearwell | MonitorClearwellLevel | Clearwell Level Sensor | SCADA (EcoStruxure) | Sensor 4-20mA | SCADA Modbus RTU | API-led (Real-time) | Simple |
-| Filtration | pH | AdjustFinishedWaterpH | DCS (Rockwell PlantPAx) | Chemical Dosing System | DCS OPC-UA | Dosing Pump PLC | API-led (Real-time) | Simple |
-| Filtration | Compliance | LogFinishedWaterQuality | SCADA (EcoStruxure) | Compliance Database | SCADA API (REST) | SQL JDBC | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Filtration | Filter | MonitorFilterPerformance | SCADA (EcoStruxure) | DCS (Rockwell PlantPAx) | SCADA OPC-DA | DCS OPC-UA | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Filtration | Backwash | InitiateBackwashSequence | DCS (Rockwell PlantPAx) | Filter Control System | DCS OPC-UA | Filter PLC | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Filtration | Chlorine | AnalyzeChlorineResidual | Chlorine Analyzer | SCADA (EcoStruxure) | Analyzer 4-20mA | SCADA Modbus TCP | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Filtration | CT | CalculateCTValue | SCADA (EcoStruxure) | DCS (Rockwell PlantPAx) | SCADA API (REST) | DCS OPC-UA | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Filtration | Clearwell | MonitorClearwellLevel | Clearwell Level Sensor | SCADA (EcoStruxure) | Sensor 4-20mA | SCADA Modbus RTU | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Filtration | pH | AdjustFinishedWaterpH | DCS (Rockwell PlantPAx) | Chemical Dosing System | DCS OPC-UA | Dosing Pump PLC | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Filtration | Compliance | LogFinishedWaterQuality | SCADA (EcoStruxure) | Compliance Database | SCADA API (REST) | SQL JDBC | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -1431,15 +1431,15 @@ MaintMgr->>CMMS: Close WO<br/>PUMP-001 returned to service, runtime reset=0
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Maintenance | PM | CheckPMPriority | CMMS (IBM Maximo) | SCADA (EcoStruxure) | Maximo API (REST) | SCADA API (REST) | API-led (Real-time) | Simple |
-| Maintenance | WO | CreateWorkOrder | CMMS (IBM Maximo) | CMMS (IBM Maximo) | Internal | Internal | API-led (Real-time) | Simple |
-| Maintenance | Parts | ReserveSpareParts | CMMS (IBM Maximo) | Inventory System | Maximo API (REST) | Inventory API (SOAP) | API-led (Real-time) | Simple |
-| Maintenance | Shutdown | CoordinatePumpShutdown | CMMS (IBM Maximo) | DCS (Rockwell PlantPAx) | Maximo API (REST) | DCS OPC-UA | Event-driven | Medium |
-| Maintenance | Isolation | IsolateEquipment | Operator HMI | DCS (Rockwell PlantPAx) | HMI API | DCS OPC-UA | API-led (Real-time) | High |
-| Maintenance | Vendor | DispatchTech | CMMS (IBM Maximo) | Vendor Portal | Maximo API (REST) | Vendor API (REST) | Event-driven | Medium |
-| Maintenance | Close | CloseWorkOrder | Tech Mobile App | CMMS (IBM Maximo) | Mobile API (OAuth2) | Maximo API (REST) | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Maintenance | PM | CheckPMPriority | CMMS (IBM Maximo) | SCADA (EcoStruxure) | Maximo API (REST) | SCADA API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Maintenance | WO | CreateWorkOrder | CMMS (IBM Maximo) | CMMS (IBM Maximo) | Internal | Internal | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Maintenance | Parts | ReserveSpareParts | CMMS (IBM Maximo) | Inventory System | Maximo API (REST) | Inventory API (SOAP) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Maintenance | Shutdown | CoordinatePumpShutdown | CMMS (IBM Maximo) | DCS (Rockwell PlantPAx) | Maximo API (REST) | DCS OPC-UA | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Maintenance | Isolation | IsolateEquipment | Operator HMI | DCS (Rockwell PlantPAx) | HMI API | DCS OPC-UA | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Maintenance | Vendor | DispatchTech | CMMS (IBM Maximo) | Vendor Portal | Maximo API (REST) | Vendor API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Maintenance | Close | CloseWorkOrder | Tech Mobile App | CMMS (IBM Maximo) | Mobile API (OAuth2) | Maximo API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -1483,15 +1483,15 @@ Compliance->>SCADA: Update control limits<br/>Cl2 min=0.2 mg/L, max=4.0 mg/L
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Water Quality | Sample | EnterLabResults | LIMS | SCADA (EcoStruxure) | LIMS API (REST) | SCADA API (REST) | API-led (Real-time) | Simple |
-| Water Quality | Correlation | CrossReferenceOnline | SCADA (EcoStruxure) | LIMS | SCADA API (REST) | LIMS API (REST) | API-led (Real-time) | Medium |
-| Water Quality | Sampling | CollectDistributionSample | Operator Mobile App | SCADA (EcoStruxure) | Mobile API (OAuth2) | SCADA API (REST) | API-led (Real-time) | Simple |
-| Water Quality | Bacteriological | AnalyzeColiformSample | LIMS | LIMS | Internal | Internal | API-led (Real-time) | High |
-| Water Quality | Reporting | SubmitSDWISReport | Compliance System | State Drinking Water Portal (SDWIS) | Compliance API (REST) | SDWIS API (SOAP) | Batch (Scheduled) | High |
-| Water Quality | Archive | ArchiveComplianceData | Compliance System | LIMS | Compliance API (REST) | LIMS API (REST) | Batch (Scheduled) | Simple |
-| Water Quality | Limits | UpdateControlLimits | Compliance System | SCADA (EcoStruxure) | Compliance API (REST) | SCADA API (REST) | Event-driven | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Water Quality | Sample | EnterLabResults | LIMS | SCADA (EcoStruxure) | LIMS API (REST) | SCADA API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Water Quality | Correlation | CrossReferenceOnline | SCADA (EcoStruxure) | LIMS | SCADA API (REST) | LIMS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Water Quality | Sampling | CollectDistributionSample | Operator Mobile App | SCADA (EcoStruxure) | Mobile API (OAuth2) | SCADA API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Water Quality | Bacteriological | AnalyzeColiformSample | LIMS | LIMS | Internal | Internal | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Water Quality | Reporting | SubmitSDWISReport | Compliance System | State Drinking Water Portal (SDWIS) | Compliance API (REST) | SDWIS API (SOAP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Water Quality | Archive | ArchiveComplianceData | Compliance System | LIMS | Compliance API (REST) | LIMS API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| Water Quality | Limits | UpdateControlLimits | Compliance System | SCADA (EcoStruxure) | Compliance API (REST) | SCADA API (REST) | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
 
 #### Acceptance Criteria
 
@@ -1539,15 +1539,15 @@ FieldTech->>SCADA: Field check complete<br/>PRV-2026-001: mechanical OK, no leak
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Pressure | PRV | MonitorPRVDownstream | SCADA (EcoStruxure) | PRV Controller (Zone 3) | SCADA Modbus RTU | PRV Modbus RTU | API-led (Real-time) | Medium |
-| Pressure | Booster | StartBoosterPump | SCADA (EcoStruxure) | Pump Station PLC | SCADA Modbus TCP | PLC Modbus RTU | API-led (Real-time) | Medium |
-| Pressure | Monitoring | MonitorZonePressure | SCADA (EcoStruxure) | Operator HMI | SCADA API (REST) | HMI Display | API-led (Real-time) | Simple |
-| Pressure | PRV | AdjustPRVSetpoint | SCADA (EcoStruxure) | PRV Controller (Zone 5) | SCADA Modbus RTU | PRV Modbus RTU | API-led (Real-time) | Medium |
-| Pressure | Model | ValidateHydraulicModel | Hydraulic Model Software | SCADA (EcoStruxure) | Model API (REST) | SCADA API (REST) | Batch (Real-time) | Medium |
-| Pressure | Log | LogPressureEvent | SCADA (EcoStruxure) | Plant Historian (OSIsoft PI) | SCADA API (REST) | PI API (REST) | Event-driven | Simple |
-| Pressure | Field | ConfirmFieldCheck | Field Tech Mobile App | SCADA (EcoStruxure) | Mobile API (OAuth2) | SCADA API (REST) | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Pressure | PRV | MonitorPRVDownstream | SCADA (EcoStruxure) | PRV Controller (Zone 3) | SCADA Modbus RTU | PRV Modbus RTU | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Pressure | Booster | StartBoosterPump | SCADA (EcoStruxure) | Pump Station PLC | SCADA Modbus TCP | PLC Modbus RTU | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Pressure | Monitoring | MonitorZonePressure | SCADA (EcoStruxure) | Operator HMI | SCADA API (REST) | HMI Display | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Pressure | PRV | AdjustPRVSetpoint | SCADA (EcoStruxure) | PRV Controller (Zone 5) | SCADA Modbus RTU | PRV Modbus RTU | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Pressure | Model | ValidateHydraulicModel | Hydraulic Model Software | SCADA (EcoStruxure) | Model API (REST) | SCADA API (REST) | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| Pressure | Log | LogPressureEvent | SCADA (EcoStruxure) | Plant Historian (OSIsoft PI) | SCADA API (REST) | PI API (REST) | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
+| Pressure | Field | ConfirmFieldCheck | Field Tech Mobile App | SCADA (EcoStruxure) | Mobile API (OAuth2) | SCADA API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -1590,15 +1590,15 @@ DMA->>Operator: Leak resolved<br/>NRW reduction: 25 GPM, 13 MG/year saved
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Leak | DMA | AnalyzeMinimumNightFlow | SCADA (EcoStruxure) | DMA Flow Analyzer | SCADA API (REST) | DMA API (REST) | Batch (Scheduled) | High |
-| Leak | Alert | FlagLeakCandidate | DMA Flow Analyzer | Operator Console | DMA API (REST) | SCADA HMI | Event-driven | High |
-| Leak | GIS | IdentifyPipeAsset | GIS (ArcGIS) | Operator Console | GIS API (REST) | SCADA HMI | API-led (Real-time) | Simple |
-| Leak | Acoustic | DeployLeakSensors | Acoustic Leak Detection System | Field Tech Mobile App | Acoustic API (REST) | Mobile API (OAuth2) | API-led (Real-time) | Medium |
-| Leak | Isolation | IsolateLeakZone | SCADA (EcoStruxure) | Valve Controllers | SCADA Modbus RTU | Valve PLC Modbus | API-led (Real-time) | Medium |
-| Leak | Repair | CreateRepairWorkOrder | Operator Console | CMMS (IBM Maximo) | SCADA API (REST) | Maximo API (REST) | Event-driven | Simple |
-| Leak | NRW | CalculateNRWReduction | DMA Flow Analyzer | Water Loss System | DMA API (REST) | Water Loss API | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Leak | DMA | AnalyzeMinimumNightFlow | SCADA (EcoStruxure) | DMA Flow Analyzer | SCADA API (REST) | DMA API (REST) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Leak | Alert | FlagLeakCandidate | DMA Flow Analyzer | Operator Console | DMA API (REST) | SCADA HMI | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| Leak | GIS | IdentifyPipeAsset | GIS (ArcGIS) | Operator Console | GIS API (REST) | SCADA HMI | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Leak | Acoustic | DeployLeakSensors | Acoustic Leak Detection System | Field Tech Mobile App | Acoustic API (REST) | Mobile API (OAuth2) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Leak | Isolation | IsolateLeakZone | SCADA (EcoStruxure) | Valve Controllers | SCADA Modbus RTU | Valve PLC Modbus | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Leak | Repair | CreateRepairWorkOrder | Operator Console | CMMS (IBM Maximo) | SCADA API (REST) | Maximo API (REST) | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
+| Leak | NRW | CalculateNRWReduction | DMA Flow Analyzer | Water Loss System | DMA API (REST) | Water Loss API | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -1641,15 +1641,15 @@ SCADA->>Operator: Tank cycle complete<br/>Tank-1: max=90% (05:00), min=40% (18:0
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Tank | Level | ReadTankLevel | Tank Level Sensor | SCADA (EcoStruxure) | Sensor 4-20mA | SCADA Modbus RTU | API-led (Real-time) | Simple |
-| Tank | Fill | StartNightFillPump | SCADA (EcoStruxure) | Pump Station PLC | SCADA Modbus TCP | PLC Modbus RTU | API-led (Real-time) | Medium |
-| Tank | Energy | CheckOffPeakRates | Energy Management System | SCADA (EcoStruxure) | EMS API (REST) | SCADA API (REST) | API-led (Real-time) | Simple |
-| Tank | Optimization | AdjustPumpCombo | SCADA (EcoStruxure) | Pump VFD | SCADA Modbus TCP | VFD Modbus RTU | API-led (Real-time) | Medium |
-| Tank | Schedule | MonitorFillProgress | SCADA (EcoStruxure) | Operator HMI | SCADA API (REST) | HMI Display | API-led (Real-time) | Simple |
-| Tank | Draw | MonitorMorningDraw | SCADA (EcoStruxure) | Plant Historian (OSIsoft PI) | SCADA API (REST) | PI API (REST) | API-led (Real-time) | Simple |
-| Tank | Optimization | CalculateEnergySavings | Energy Management System | Plant Historian (OSIsoft PI) | EMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Tank | Level | ReadTankLevel | Tank Level Sensor | SCADA (EcoStruxure) | Sensor 4-20mA | SCADA Modbus RTU | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Tank | Fill | StartNightFillPump | SCADA (EcoStruxure) | Pump Station PLC | SCADA Modbus TCP | PLC Modbus RTU | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Tank | Energy | CheckOffPeakRates | Energy Management System | SCADA (EcoStruxure) | EMS API (REST) | SCADA API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Tank | Optimization | AdjustPumpCombo | SCADA (EcoStruxure) | Pump VFD | SCADA Modbus TCP | VFD Modbus RTU | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Tank | Schedule | MonitorFillProgress | SCADA (EcoStruxure) | Operator HMI | SCADA API (REST) | HMI Display | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Tank | Draw | MonitorMorningDraw | SCADA (EcoStruxure) | Plant Historian (OSIsoft PI) | SCADA API (REST) | PI API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Tank | Optimization | CalculateEnergySavings | Energy Management System | Plant Historian (OSIsoft PI) | EMS API (REST) | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -1692,15 +1692,15 @@ FieldCrew->>CMMS: Create emergency WO<br/>WO-2026-004, pipe repair, damage asses
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Hydrant | Valve | ExerciseValve | Field Crew Mobile App | GIS (ArcGIS) | Mobile API (OAuth2) | GIS API (REST) | API-led (Real-time) | Simple |
-| Hydrant | Exercise | LogValveExercise | Field Crew Mobile App | CMMS (IBM Maximo) | Mobile API (OAuth2) | Maximo API (REST) | API-led (Real-time) | Simple |
-| Hydrant | FlowTest | RecordHydrantFlowTest | Field Crew Mobile App | SCADA (EcoStruxure) | Mobile API (OAuth2) | SCADA API (REST) | API-led (Real-time) | Medium |
-| Hydrant | CFactor | UpdatePipeCFactor | Hydrant Management System | GIS (ArcGIS) | Hydrant API (REST) | GIS API (REST) | API-led (Real-time) | Simple |
-| Hydrant | MainBreak | AlertMainBreak | Field Crew Mobile App | SCADA (EcoStruxure) | Mobile API (OAuth2) | SCADA API (REST) | Event-driven | High |
-| Hydrant | Isolation | IsolateMainBreak | SCADA (EcoStruxure) | Valve Controllers | SCADA Modbus RTU | Valve PLC Modbus | API-led (Real-time) | High |
-| Hydrant | WO | CreateEmergencyWorkOrder | Field Crew Mobile App | CMMS (IBM Maximo) | Mobile API (OAuth2) | Maximo API (REST) | Event-driven | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Hydrant | Valve | ExerciseValve | Field Crew Mobile App | GIS (ArcGIS) | Mobile API (OAuth2) | GIS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Hydrant | Exercise | LogValveExercise | Field Crew Mobile App | CMMS (IBM Maximo) | Mobile API (OAuth2) | Maximo API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Hydrant | FlowTest | RecordHydrantFlowTest | Field Crew Mobile App | SCADA (EcoStruxure) | Mobile API (OAuth2) | SCADA API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Hydrant | CFactor | UpdatePipeCFactor | Hydrant Management System | GIS (ArcGIS) | Hydrant API (REST) | GIS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Hydrant | MainBreak | AlertMainBreak | Field Crew Mobile App | SCADA (EcoStruxure) | Mobile API (OAuth2) | SCADA API (REST) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| Hydrant | Isolation | IsolateMainBreak | SCADA (EcoStruxure) | Valve Controllers | SCADA Modbus RTU | Valve PLC Modbus | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Hydrant | WO | CreateEmergencyWorkOrder | Field Crew Mobile App | CMMS (IBM Maximo) | Mobile API (OAuth2) | Maximo API (REST) | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
 
 #### Acceptance Criteria
 
@@ -1748,15 +1748,15 @@ SCADA->>Historian: Log event<br/>LS-007 high level, duration=22 min, cause=pump 
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| LiftStation | Level | ReadWetWellLevel | Level Sensor (LS-001) | Lift Station PLC (LS-001) | Sensor 4-20mA | PLC Analog Input | API-led (Real-time) | Simple |
-| LiftStation | Pump | StartLiftStationPump | SCADA (EcoStruxure) | Lift Station PLC (LS-001) | SCADA Modbus TCP | PLC Modbus RTU | API-led (Real-time) | Medium |
-| LiftStation | Alarm | MonitorHighLevelAlarm | Lift Station PLC (LS-007) | SCADA (EcoStruxure) | PLC Modbus RTU | SCADA Modbus TCP | Event-driven | High |
-| LiftStation | Dispatch | DispatchCrew | SCADA (EcoStruxure) | CMMS (IBM Maximo) | SCADA API (REST) | Maximo API (REST) | Event-driven | Medium |
-| LiftStation | Field | OnsiteAssessment | Field Tech Mobile App | CMMS (IBM Maximo) | Mobile API (OAuth2) | Maximo API (REST) | API-led (Real-time) | Simple |
-| LiftStation | PM | CreatePmWorkOrder | SCADA (EcoStruxure) | CMMS (IBM Maximo) | SCADA API (REST) | Maximo API (REST) | Event-driven | Simple |
-| LiftStation | Log | LogAlarmEvent | SCADA (EcoStruxure) | Plant Historian (OSIsoft PI) | SCADA API (REST) | PI API (REST) | Event-driven | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| LiftStation | Level | ReadWetWellLevel | Level Sensor (LS-001) | Lift Station PLC (LS-001) | Sensor 4-20mA | PLC Analog Input | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| LiftStation | Pump | StartLiftStationPump | SCADA (EcoStruxure) | Lift Station PLC (LS-001) | SCADA Modbus TCP | PLC Modbus RTU | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| LiftStation | Alarm | MonitorHighLevelAlarm | Lift Station PLC (LS-007) | SCADA (EcoStruxure) | PLC Modbus RTU | SCADA Modbus TCP | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| LiftStation | Dispatch | DispatchCrew | SCADA (EcoStruxure) | CMMS (IBM Maximo) | SCADA API (REST) | Maximo API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| LiftStation | Field | OnsiteAssessment | Field Tech Mobile App | CMMS (IBM Maximo) | Mobile API (OAuth2) | Maximo API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| LiftStation | PM | CreatePmWorkOrder | SCADA (EcoStruxure) | CMMS (IBM Maximo) | SCADA API (REST) | Maximo API (REST) | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
+| LiftStation | Log | LogAlarmEvent | SCADA (EcoStruxure) | Plant Historian (OSIsoft PI) | SCADA API (REST) | PI API (REST) | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
 
 #### Acceptance Criteria
 
@@ -1800,15 +1800,15 @@ Operator->>Effluent: Final effluent quality<br/>CBOD=5 mg/L, TSS=8 mg/L, NH3=0.5
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Treatment | Influent | MonitorPlantInfluent | SCADA (EcoStruxure) | DCS (Rockwell PlantPAx) | SCADA OPC-DA | DCS OPC-UA | API-led (Real-time) | Medium |
-| Treatment | DO | AdjustAerationDO | DCS (Rockwell PlantPAx) | Aeration Control System | DCS OPC-UA | Blower PLC Modbus | API-led (Real-time) | High |
-| Treatment | SVI | MeasureSludgeSettleability | Biological Process Analyzer | DCS (Rockwell PlantPAx) | Analyzer Modbus RTU | DCS OPC-UA | API-led (Real-time) | Medium |
-| Treatment | WAS | AdjustWasteActivatedSludge | DCS (Rockwell PlantPAx) | WAS Valve Actuator | DCS OPC-UA | Valve Modbus RTU | API-led (Real-time) | Medium |
-| Treatment | UV | SetUvDose | SCADA (EcoStruxure) | UV Disinfection System | SCADA Modbus TCP | UV System Modbus | API-led (Real-time) | Medium |
-| Treatment | Effluent | MonitorFinalEffluent | SCADA (EcoStruxure) | Effluent Analyzers | SCADA Modbus TCP | Analyzer 4-20mA | API-led (Real-time) | High |
-| Treatment | Compliance | LogEffluentQuality | DCS (Rockwell PlantPAx) | Plant Historian (OSIsoft PI) | DCS OPC-UA | PI API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Treatment | Influent | MonitorPlantInfluent | SCADA (EcoStruxure) | DCS (Rockwell PlantPAx) | SCADA OPC-DA | DCS OPC-UA | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Treatment | DO | AdjustAerationDO | DCS (Rockwell PlantPAx) | Aeration Control System | DCS OPC-UA | Blower PLC Modbus | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Treatment | SVI | MeasureSludgeSettleability | Biological Process Analyzer | DCS (Rockwell PlantPAx) | Analyzer Modbus RTU | DCS OPC-UA | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Treatment | WAS | AdjustWasteActivatedSludge | DCS (Rockwell PlantPAx) | WAS Valve Actuator | DCS OPC-UA | Valve Modbus RTU | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Treatment | UV | SetUvDose | SCADA (EcoStruxure) | UV Disinfection System | SCADA Modbus TCP | UV System Modbus | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Treatment | Effluent | MonitorFinalEffluent | SCADA (EcoStruxure) | Effluent Analyzers | SCADA Modbus TCP | Analyzer 4-20mA | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Treatment | Compliance | LogEffluentQuality | DCS (Rockwell PlantPAx) | Plant Historian (OSIsoft PI) | DCS OPC-UA | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -1851,15 +1851,15 @@ Compliance->>State: Submit annual report<br/>2026: 100% compliant, 0 violations
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Effluent | Analyzer | ReadEffluentParameters | Online Analyzers | SCADA (EcoStruxure) | Analyzer Modbus RTU | SCADA Modbus TCP | API-led (Real-time) | Medium |
-| Effluent | Composite | CollectCompositeSample | Auto-Sampler | SCADA (EcoStruxure) | Sampler Modbus | SCADA Modbus TCP | Batch (Scheduled) | Simple |
-| Effluent | Lab | AnalyzeLabComposite | LIMS | SCADA (EcoStruxure) | LIMS API (REST) | SCADA API (REST) | API-led (Real-time) | Simple |
-| Effluent | DMR | SubmitMonthlyDMR | Compliance System | EPA ICIS-NPDES Portal | Compliance API (REST) | EPA CDX (SOAP) | Batch (Scheduled) | High |
-| Effluent | Bypass | MonitorWetWeatherFlow | SCADA (EcoStruxure) | Equalization Basin System | SCADA Modbus TCP | EQ Basin PLC Modbus | API-led (Real-time) | Medium |
-| Effluent | Permit | UpdatePermitLimits | Compliance System | SCADA (EcoStruxure) | Compliance API (REST) | SCADA API (REST) | Event-driven | Medium |
-| Effluent | Archive | ArchiveNpdesData | SCADA (EcoStruxure) | Plant Historian (OSIsoft PI) | SCADA API (REST) | PI API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Effluent | Analyzer | ReadEffluentParameters | Online Analyzers | SCADA (EcoStruxure) | Analyzer Modbus RTU | SCADA Modbus TCP | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Effluent | Composite | CollectCompositeSample | Auto-Sampler | SCADA (EcoStruxure) | Sampler Modbus | SCADA Modbus TCP | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| Effluent | Lab | AnalyzeLabComposite | LIMS | SCADA (EcoStruxure) | LIMS API (REST) | SCADA API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Effluent | DMR | SubmitMonthlyDMR | Compliance System | EPA ICIS-NPDES Portal | Compliance API (REST) | EPA CDX (SOAP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Effluent | Bypass | MonitorWetWeatherFlow | SCADA (EcoStruxure) | Equalization Basin System | SCADA Modbus TCP | EQ Basin PLC Modbus | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Effluent | Permit | UpdatePermitLimits | Compliance System | SCADA (EcoStruxure) | Compliance API (REST) | SCADA API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Effluent | Archive | ArchiveNpdesData | SCADA (EcoStruxure) | Plant Historian (OSIsoft PI) | SCADA API (REST) | PI API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -1903,15 +1903,15 @@ Operator->>Digester: Adjust feed rate<br/>reduce to 35 GPM, stabilize VFA/ALK
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Biosolids | Thickening | StartGravityBeltThickener | DCS (Rockwell PlantPAx) | Sludge Thickener PLC | DCS OPC-UA | Thickener PLC Modbus | API-led (Real-time) | Medium |
-| Biosolids | Digester | FeedAnaerobicDigester | DCS (Rockwell PlantPAx) | Digester Control System | DCS OPC-UA | Digester PLC Modbus | API-led (Real-time) | High |
-| Biosolids | Gas | MonitorBiogasProduction | Digester Control System | SCADA (EcoStruxure) | Digester Modbus | SCADA Modbus TCP | API-led (Real-time) | Medium |
-| Biosolids | Dewatering | StartCentrifuge | DCS (Rockwell PlantPAx) | Centrifuge PLC | DCS OPC-UA | Centrifuge Modbus RTU | API-led (Real-time) | Medium |
-| Biosolids | Loadout | RecordBiosolidsLoadout | Biosolids Tracking System | Weigh Scale System | Biosolids API (REST) | Scale API (Serial) | API-led (Real-time) | Simple |
-| Biosolids | Compliance | ReportBiosolids503 | SCADA (EcoStruxure) | Compliance System | SCADA API (REST) | Compliance API (REST) | Batch (Scheduled) | High |
-| Biosolids | Optimization | AdjustDigesterFeedRate | DCS (Rockwell PlantPAx) | Digester Control System | DCS OPC-UA | Digester PLC Modbus | API-led (Real-time) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Biosolids | Thickening | StartGravityBeltThickener | DCS (Rockwell PlantPAx) | Sludge Thickener PLC | DCS OPC-UA | Thickener PLC Modbus | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Biosolids | Digester | FeedAnaerobicDigester | DCS (Rockwell PlantPAx) | Digester Control System | DCS OPC-UA | Digester PLC Modbus | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Biosolids | Gas | MonitorBiogasProduction | Digester Control System | SCADA (EcoStruxure) | Digester Modbus | SCADA Modbus TCP | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Biosolids | Dewatering | StartCentrifuge | DCS (Rockwell PlantPAx) | Centrifuge PLC | DCS OPC-UA | Centrifuge Modbus RTU | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Biosolids | Loadout | RecordBiosolidsLoadout | Biosolids Tracking System | Weigh Scale System | Biosolids API (REST) | Scale API (Serial) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Biosolids | Compliance | ReportBiosolids503 | SCADA (EcoStruxure) | Compliance System | SCADA API (REST) | Compliance API (REST) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Biosolids | Optimization | AdjustDigesterFeedRate | DCS (Rockwell PlantPAx) | Digester Control System | DCS OPC-UA | Digester PLC Modbus | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
 
 #### Acceptance Criteria
 
@@ -1959,15 +1959,15 @@ HeadEnd->>MDM: Daily read summary<br/>10,423 meters, 99.3% reads collected
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| AMI | Interval | CollectIntervalRead | Smart Meter (Itron OpenWay) | AMI Head-End (Itron OMS/IEE) | RF Mesh | Head-End WAN | Batch (Scheduled) | High |
-| AMI | VEE | ValidateMeterReading | AMI Head-End (Itron OMS/IEE) | MDM | Head-End API (SOAP) | MDM API (REST) | API-led (Real-time) | Medium |
-| AMI | Alarm | ProcessTamperAlarm | Smart Meter (Itron OpenWay) | AMI Head-End (Itron OMS/IEE) | RF Mesh | Head-End Event Bus | Event-driven | High |
-| AMI | Diagnostics | QueryMeterDiagnostics | AMI Head-End (Itron OMS/IEE) | Smart Meter (Itron OpenWay) | Head-End API (SOAP) | RF Mesh | API-led (Real-time) | Simple |
-| AMI | Firmware | PushFirmwareUpdate | AMI Head-End (Itron OMS/IEE) | Smart Meter (Itron OpenWay) | Head-End FW Server | RF Mesh (Over-the-Air) | Batch (Scheduled) | Medium |
-| AMI | Network | MonitorNetworkHealth | Network Management System | Operator Console | NetMgmt API (SNMP) | SCADA HMI | API-led (Real-time) | Simple |
-| AMI | Summary | GenerateDailyReadSummary | AMI Head-End (Itron OMS/IEE) | MDM | Head-End API (SOAP) | MDM API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| AMI | Interval | CollectIntervalRead | Smart Meter (Itron OpenWay) | AMI Head-End (Itron OMS/IEE) | RF Mesh | Head-End WAN | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| AMI | VEE | ValidateMeterReading | AMI Head-End (Itron OMS/IEE) | MDM | Head-End API (SOAP) | MDM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| AMI | Alarm | ProcessTamperAlarm | Smart Meter (Itron OpenWay) | AMI Head-End (Itron OMS/IEE) | RF Mesh | Head-End Event Bus | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| AMI | Diagnostics | QueryMeterDiagnostics | AMI Head-End (Itron OMS/IEE) | Smart Meter (Itron OpenWay) | Head-End API (SOAP) | RF Mesh | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| AMI | Firmware | PushFirmwareUpdate | AMI Head-End (Itron OMS/IEE) | Smart Meter (Itron OpenWay) | Head-End FW Server | RF Mesh (Over-the-Air) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| AMI | Network | MonitorNetworkHealth | Network Management System | Operator Console | NetMgmt API (SNMP) | SCADA HMI | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| AMI | Summary | GenerateDailyReadSummary | AMI Head-End (Itron OMS/IEE) | MDM | Head-End API (SOAP) | MDM API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -2014,15 +2014,15 @@ Portal->>Customer: CSAT survey<br/>rating=5/5, feedback=Good, comment=Resolved q
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Customer Portal | Login | AuthenticateCustomer | Customer Portal | CIS (Oracle Utilities) | Portal API (OAuth2) | CIS API (REST) | API-led (Real-time) | Medium |
-| Customer Portal | Usage | FetchUsageData | Customer Portal | MDM | Portal API (OAuth2) | MDM API (REST) | API-led (Real-time) | Medium |
-| Customer Portal | Outage | CheckOutageStatus | Customer Portal | OMS | Portal API (OAuth2) | OMS API (REST) | API-led (Real-time) | Medium |
-| Customer Portal | Payment | ProcessBillPayment | Customer Portal | Payment Gateway (CyberSource) | Portal API (OAuth2) | Payment GW API (REST/SOAP) | API-led (Real-time) | High |
-| Customer Portal | Balance | UpdateCustomerBalance | Customer Portal | CIS (Oracle Utilities) | Portal API (OAuth2) | CIS API (REST) | API-led (Real-time) | High |
-| Customer Portal | Ticket | CreateTroubleTicket | Customer Portal | OMS | Portal API (OAuth2) | OMS API (REST) | Event-driven | Medium |
-| Customer Portal | Survey | SubmitCSATSurvey | Customer Portal | Analytics Platform | Portal API (OAuth2) | Analytics API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Customer Portal | Login | AuthenticateCustomer | Customer Portal | CIS (Oracle Utilities) | Portal API (OAuth2) | CIS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Customer Portal | Usage | FetchUsageData | Customer Portal | MDM | Portal API (OAuth2) | MDM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Customer Portal | Outage | CheckOutageStatus | Customer Portal | OMS | Portal API (OAuth2) | OMS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Customer Portal | Payment | ProcessBillPayment | Customer Portal | Payment Gateway (CyberSource) | Portal API (OAuth2) | Payment GW API (REST/SOAP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Customer Portal | Balance | UpdateCustomerBalance | Customer Portal | CIS (Oracle Utilities) | Portal API (OAuth2) | CIS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Customer Portal | Ticket | CreateTroubleTicket | Customer Portal | OMS | Portal API (OAuth2) | OMS API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Customer Portal | Survey | SubmitCSATSurvey | Customer Portal | Analytics Platform | Portal API (OAuth2) | Analytics API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -2066,15 +2066,15 @@ VTN->>Operator: Post-event report<br/>EVENT-2026-042, participation=85%, reducti
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| OpenADR | Event | CreateDREvent | DR Operator HMI | OpenADR VTN (EPRI OpenADR) | Operator UI (REST) | VTN API (REST) | API-led (Real-time) | Medium |
-| OpenADR | Publish | PublishDREvent | OpenADR VTN (EPRI OpenADR) | VEN (Customer) | VTN OpenADR 2.0b | VEN OpenADR 2.0b | Event-driven | High |
-| OpenADR | Opt | ProcessOptInOut | VEN (Customer) | OpenADR VTN (EPRI OpenADR) | VEN OpenADR 2.0b | VTN OpenADR 2.0b | Event-driven | Medium |
-| OpenADR | Telemetry | ReportVENLoad | VEN (Customer) | OpenADR VTN (EPRI OpenADR) | VEN OpenADR 2.0b | VTN OpenADR 2.0b | API-led (Real-time) | Medium |
-| OpenADR | Meter | FetchIntervalData | OpenADR VTN (EPRI OpenADR) | MDM | VTN API (REST) | MDM API (REST) | Batch (Scheduled) | Medium |
-| OpenADR | Settlement | SubmitSettlementData | OpenADR VTN (EPRI OpenADR) | ISO Market System | VTN API (REST) | ISO API (REST) | Batch (Scheduled) | High |
-| OpenADR | Report | GeneratePostEventReport | OpenADR VTN (EPRI OpenADR) | DRMS | VTN API (REST) | DRMS API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| OpenADR | Event | CreateDREvent | DR Operator HMI | OpenADR VTN (EPRI OpenADR) | Operator UI (REST) | VTN API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| OpenADR | Publish | PublishDREvent | OpenADR VTN (EPRI OpenADR) | VEN (Customer) | VTN OpenADR 2.0b | VEN OpenADR 2.0b | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| OpenADR | Opt | ProcessOptInOut | VEN (Customer) | OpenADR VTN (EPRI OpenADR) | VEN OpenADR 2.0b | VTN OpenADR 2.0b | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| OpenADR | Telemetry | ReportVENLoad | VEN (Customer) | OpenADR VTN (EPRI OpenADR) | VEN OpenADR 2.0b | VTN OpenADR 2.0b | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| OpenADR | Meter | FetchIntervalData | OpenADR VTN (EPRI OpenADR) | MDM | VTN API (REST) | MDM API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| OpenADR | Settlement | SubmitSettlementData | OpenADR VTN (EPRI OpenADR) | ISO Market System | VTN API (REST) | ISO API (REST) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| OpenADR | Report | GeneratePostEventReport | OpenADR VTN (EPRI OpenADR) | DRMS | VTN API (REST) | DRMS API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -2118,15 +2118,15 @@ DRMS->>Mgr: Program evaluation<br/>3.0 MW reduction, 85% target, $20K incentives
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| DRMS | Design | DesignDRProgram | DR Program Manager | DRMS | Manager UI (REST) | DRMS API (REST) | API-led (Real-time) | Simple |
-| DRMS | Eligibility | IdentifyEligibleCustomers | DRMS | CRM (Salesforce) | DRMS API (REST) | CRM API (REST) | Batch (Scheduled) | Medium |
-| DRMS | Enroll | EnrollCustomerProgram | Customer Portal | DRMS | Portal API (OAuth2) | DRMS API (REST) | API-led (Real-time) | Simple |
-| DRMS | Validate | ValidateCustomerAccount | DRMS | CIS (Oracle Utilities) | DRMS API (REST) | CIS API (REST) | API-led (Real-time) | Medium |
-| DRMS | Event | TriggerDREvent | DR Program Manager | DRMS | Manager UI (REST) | DRMS API (REST) | API-led (Real-time) | Medium |
-| DRMS | Measurement | VerifyLoadReduction | DRMS | MDM | DRMS API (REST) | MDM API (REST) | Batch (Scheduled) | High |
-| DRMS | Incentive | ApplyIncentiveCredit | DRMS | CIS (Oracle Utilities) | DRMS API (REST) | CIS API (REST) | Batch (Scheduled) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| DRMS | Design | DesignDRProgram | DR Program Manager | DRMS | Manager UI (REST) | DRMS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| DRMS | Eligibility | IdentifyEligibleCustomers | DRMS | CRM (Salesforce) | DRMS API (REST) | CRM API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| DRMS | Enroll | EnrollCustomerProgram | Customer Portal | DRMS | Portal API (OAuth2) | DRMS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| DRMS | Validate | ValidateCustomerAccount | DRMS | CIS (Oracle Utilities) | DRMS API (REST) | CIS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DRMS | Event | TriggerDREvent | DR Program Manager | DRMS | Manager UI (REST) | DRMS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DRMS | Measurement | VerifyLoadReduction | DRMS | MDM | DRMS API (REST) | MDM API (REST) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| DRMS | Incentive | ApplyIncentiveCredit | DRMS | CIS (Oracle Utilities) | DRMS API (REST) | CIS API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
 
 #### Acceptance Criteria
 
@@ -2170,15 +2170,15 @@ DER_Portal->>Customer: Welcome notification<br/>system=10 kW solar, enrollment=N
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| DER Enrollment | Apply | SubmitDERApplication | DER Portal | CIS (Oracle Utilities) | Portal API (OAuth2) | CIS API (REST) | API-led (Real-time) | Medium |
-| DER Enrollment | Lead | CreateCRMLead | DER Portal | CRM (Salesforce) | Portal API (OAuth2) | CRM API (REST) | API-led (Real-time) | Simple |
-| DER Enrollment | Review | CheckTransformerCapacity | GIS (ArcGIS) | DER Portal | GIS API (REST) | Portal API (REST) | API-led (Real-time) | Medium |
-| DER Enrollment | Inspect | ScheduleSiteInspection | DER Portal | Inspector Mobile App | Portal API (REST) | Field App API (OAuth2) | API-led (Real-time) | Medium |
-| DER Enrollment | Meter | ExchangeNetMeter | DER Portal | MDM | Portal API (REST) | MDM API (REST) | API-led (Real-time) | High |
-| DER Enrollment | DerMs | EnrollCustomerDERMS | DER Portal | DERMS | Portal API (REST) | DERMS API (REST) | API-led (Real-time) | Medium |
-| DER Enrollment | Notify | SendWelcomeNotification | DER Portal | Notification Service | Portal API (REST) | Notification API (Email/SMS) | Event-driven | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| DER Enrollment | Apply | SubmitDERApplication | DER Portal | CIS (Oracle Utilities) | Portal API (OAuth2) | CIS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DER Enrollment | Lead | CreateCRMLead | DER Portal | CRM (Salesforce) | Portal API (OAuth2) | CRM API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| DER Enrollment | Review | CheckTransformerCapacity | GIS (ArcGIS) | DER Portal | GIS API (REST) | Portal API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DER Enrollment | Inspect | ScheduleSiteInspection | DER Portal | Inspector Mobile App | Portal API (REST) | Field App API (OAuth2) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DER Enrollment | Meter | ExchangeNetMeter | DER Portal | MDM | Portal API (REST) | MDM API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| DER Enrollment | DerMs | EnrollCustomerDERMS | DER Portal | DERMS | Portal API (REST) | DERMS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DER Enrollment | Notify | SendWelcomeNotification | DER Portal | Notification Service | Portal API (REST) | Notification API (Email/SMS) | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
 
 #### Acceptance Criteria
 
@@ -2225,15 +2225,15 @@ CIS->>Customer: Confirmation email<br/>name change confirmed, account=ACCT-002, 
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| CIM | Validation | ValidatePremiseAddress | IVR | CIS (Oracle Utilities) | IVR API (SOAP) | CIS API (REST) | API-led (Real-time) | Medium |
-| CIM | Account | CreateCustomerAccount | CSR HMI | CIS (Oracle Utilities) | CSR UI | CIS API (REST) | API-led (Real-time) | High |
-| CIM | Contact | CreateCRMContact | CIS (Oracle Utilities) | CRM (Salesforce) | CIS API (REST) | CRM API (REST) | API-led (Real-time) | Simple |
-| CIM | Service | CreateServiceOrder | CIS (Oracle Utilities) | Field Service Management | CIS API (REST) | FSM API (REST) | API-led (Real-time) | Medium |
-| CIM | Dispatch | DispatchFieldTech | Field Service Management | Tech Mobile App | FSM API (REST) | Mobile App API (OAuth2) | API-led (Real-time) | Medium |
-| CIM | Meter | ActivateMeterMDM | CIS (Oracle Utilities) | MDM | CIS API (REST) | MDM API (REST) | API-led (Real-time) | High |
-| CIM | Update | ProcessNameChange | CSR HMI | CIS (Oracle Utilities) | CSR UI | CIS API (REST) | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| CIM | Validation | ValidatePremiseAddress | IVR | CIS (Oracle Utilities) | IVR API (SOAP) | CIS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CIM | Account | CreateCustomerAccount | CSR HMI | CIS (Oracle Utilities) | CSR UI | CIS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| CIM | Contact | CreateCRMContact | CIS (Oracle Utilities) | CRM (Salesforce) | CIS API (REST) | CRM API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| CIM | Service | CreateServiceOrder | CIS (Oracle Utilities) | Field Service Management | CIS API (REST) | FSM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CIM | Dispatch | DispatchFieldTech | Field Service Management | Tech Mobile App | FSM API (REST) | Mobile App API (OAuth2) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CIM | Meter | ActivateMeterMDM | CIS (Oracle Utilities) | MDM | CIS API (REST) | MDM API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| CIM | Update | ProcessNameChange | CSR HMI | CIS (Oracle Utilities) | CSR UI | CIS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -2277,15 +2277,15 @@ CSR->>CIS: Adjust bill<br/>ACCT-042: billing_error, correction=-$12.50, ref=ADJ-
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Billing | Data | PullIntervalData | CIS Billing Engine | MDM | Billing API (REST) | MDM API (REST) | Batch (Scheduled) | High |
-| Billing | Rate | FetchRateTariff | CIS Billing Engine | Rate/Tariff System | Billing API (REST) | Rate API (REST) | API-led (Real-time) | High |
-| Billing | Calc | CalculateCharges | CIS Billing Engine | CIS Billing Engine | Internal | Internal | Batch (Scheduled) | High |
-| Billing | GL | PostGLEntries | CIS Billing Engine | ERP (SAP) | CIS API (REST) | ERP API (SOAP/IDoc) | Batch (Scheduled) | High |
-| Billing | Present | GenerateBillPDF | CIS Billing Engine | Bill Print Vendor | CIS API (REST) | Print Vendor API (SFTP) | Batch (Scheduled) | Medium |
-| Billing | Ebill | PostElectronicBill | CIS Billing Engine | Customer Portal | CIS API (REST) | Portal API (REST) | Batch (Scheduled) | Medium |
-| Billing | Exception | ReviewBillingExceptions | CIS Billing Engine | Billing Analyst UI | CIS API (REST) | Analyst UI | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Billing | Data | PullIntervalData | CIS Billing Engine | MDM | Billing API (REST) | MDM API (REST) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Billing | Rate | FetchRateTariff | CIS Billing Engine | Rate/Tariff System | Billing API (REST) | Rate API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Billing | Calc | CalculateCharges | CIS Billing Engine | CIS Billing Engine | Internal | Internal | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Billing | GL | PostGLEntries | CIS Billing Engine | ERP (SAP) | CIS API (REST) | ERP API (SOAP/IDoc) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Billing | Present | GenerateBillPDF | CIS Billing Engine | Bill Print Vendor | CIS API (REST) | Print Vendor API (SFTP) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Billing | Ebill | PostElectronicBill | CIS Billing Engine | Customer Portal | CIS API (REST) | Portal API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Billing | Exception | ReviewBillingExceptions | CIS Billing Engine | Billing Analyst UI | CIS API (REST) | Analyst UI | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -2329,15 +2329,15 @@ Customer->>CIS: Pay reinstatement<br/>ACCT-089: $450+$75 reconnect, card, reinst
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Payment | Online | ProcessOnlinePayment | Customer Portal | Payment Gateway (CyberSource) | Portal API (OAuth2) | Payment GW API (REST/SOAP) | API-led (Real-time) | High |
-| Payment | Posting | RecordPaymentCIS | Customer Portal | CIS (Oracle Utilities) | Portal API (OAuth2) | CIS API (REST) | API-led (Real-time) | High |
-| Payment | Lockbox | ProcessCheckBatch | Lockbox | CIS (Oracle Utilities) | Lockbox BAI2 | CIS API (REST) | Batch (Scheduled) | Medium |
-| Payment | NSF | ProcessNSFCheck | CIS (Oracle Utilities) | Collections System | CIS API (REST) | Collections API (REST) | Event-driven | Medium |
-| Payment | Plan | CreatePaymentPlan | IVR | CIS (Oracle Utilities) | IVR API (SOAP) | CIS API (REST) | API-led (Real-time) | Medium |
-| Payment | Disconnect | IssueDisconnectOrder | CIS (Oracle Utilities) | Field Service Management | CIS API (REST) | FSM API (REST) | API-led (Real-time) | High |
-| Payment | Reconnect | ProcessReconnection | CIS (Oracle Utilities) | Field Service Management | CIS API (REST) | FSM API (REST) | API-led (Real-time) | High |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Payment | Online | ProcessOnlinePayment | Customer Portal | Payment Gateway (CyberSource) | Portal API (OAuth2) | Payment GW API (REST/SOAP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Payment | Posting | RecordPaymentCIS | Customer Portal | CIS (Oracle Utilities) | Portal API (OAuth2) | CIS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Payment | Lockbox | ProcessCheckBatch | Lockbox | CIS (Oracle Utilities) | Lockbox BAI2 | CIS API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Payment | NSF | ProcessNSFCheck | CIS (Oracle Utilities) | Collections System | CIS API (REST) | Collections API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Payment | Plan | CreatePaymentPlan | IVR | CIS (Oracle Utilities) | IVR API (SOAP) | CIS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Payment | Disconnect | IssueDisconnectOrder | CIS (Oracle Utilities) | Field Service Management | CIS API (REST) | FSM API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Payment | Reconnect | ProcessReconnection | CIS (Oracle Utilities) | Field Service Management | CIS API (REST) | FSM API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
 
 #### Acceptance Criteria
 
@@ -2380,15 +2380,15 @@ Compliance->>RA: Regulatory report<br/>July 2026: $18.2M billed, 99.5% accuracy,
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Revenue | Audit | RunRevenueAssuranceAudit | Revenue Assurance Analyst | Revenue Assurance System | Analyst UI | RA API (REST) | Batch (Scheduled) | Medium |
-| Revenue | Extract | ExtractBillingData | Revenue Assurance System | CIS (Oracle Utilities) | RA API (REST) | CIS API (REST) | Batch (Scheduled) | Medium |
-| Revenue | Leakage | DetectRevenueLeakage | Revenue Assurance System | Revenue Assurance System | Internal | Internal | Batch (Scheduled) | High |
-| Revenue | Tariff | DeployRateChange | Rate/Tariff System | CIS (Oracle Utilities) | Rate API (REST) | CIS API (REST) | API-led (Real-time) | High |
-| Revenue | GreenButton | ExportGreenButtonXML | Revenue Assurance System | Green Button Platform | RA API (REST) | Green Button API (REST) | API-led (Real-time) | Medium |
-| Revenue | WriteOff | ProcessWriteOffs | Revenue Assurance System | CIS (Oracle Utilities) | RA API (REST) | CIS API (REST) | Batch (Scheduled) | Medium |
-| Revenue | Report | GenerateRegulatoryReport | Revenue Assurance System | Compliance Officer | RA API (REST) | Compliance UI | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Revenue | Audit | RunRevenueAssuranceAudit | Revenue Assurance Analyst | Revenue Assurance System | Analyst UI | RA API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Revenue | Extract | ExtractBillingData | Revenue Assurance System | CIS (Oracle Utilities) | RA API (REST) | CIS API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Revenue | Leakage | DetectRevenueLeakage | Revenue Assurance System | Revenue Assurance System | Internal | Internal | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Revenue | Tariff | DeployRateChange | Rate/Tariff System | CIS (Oracle Utilities) | Rate API (REST) | CIS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Revenue | GreenButton | ExportGreenButtonXML | Revenue Assurance System | Green Button Platform | RA API (REST) | Green Button API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Revenue | WriteOff | ProcessWriteOffs | Revenue Assurance System | CIS (Oracle Utilities) | RA API (REST) | CIS API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Revenue | Report | GenerateRegulatoryReport | Revenue Assurance System | Compliance Officer | RA API (REST) | Compliance UI | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -2436,15 +2436,15 @@ Analyst->>OMS: Review detection summary<br/>AMI last gasp + SCADA trip: detected
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| ODI | AMILastGasp | ProcessLastGaspAlert | AMI Head-End | OMS (Oracle Utilities) | AMI API (REST) | OMS API (REST) | Event-driven | High |
-| ODI | SCADATrip | ProcessBreakerTrip | SCADA | OMS (Oracle Utilities) | SCADA API (ICCP) | OMS API (REST) | Event-driven | High |
-| ODI | Correlation | CorrelateOutageEvents | OMS (Oracle Utilities) | OMS (Oracle Utilities) | Internal | Internal | Batch (Real-time) | High |
-| ODI | IVR | UpdateIVROutageStatus | OMS (OracleUtilities) | IVR | OMS API (REST) | IVR API (SOAP) | Event-driven | Medium |
-| ODI | Customer | LogCustomerOutageCall | IVR | OMS (Oracle Utilities) | IVR API (SOAP) | OMS API (REST) | API-led (Real-time) | Medium |
-| ODI | Notification | SendOutageNotifications | OMS (Oracle Utilities) | Outage Notification System | OMS API (REST) | Notification API (Email/SMS) | Event-driven | Medium |
-| ODI | Priority | UpdateMedicalPriority | Call Center Agent | OMS (Oracle Utilities) | Agent HMI | OMS API (REST) | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| ODI | AMILastGasp | ProcessLastGaspAlert | AMI Head-End | OMS (Oracle Utilities) | AMI API (REST) | OMS API (REST) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| ODI | SCADATrip | ProcessBreakerTrip | SCADA | OMS (Oracle Utilities) | SCADA API (ICCP) | OMS API (REST) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| ODI | Correlation | CorrelateOutageEvents | OMS (Oracle Utilities) | OMS (Oracle Utilities) | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| ODI | IVR | UpdateIVROutageStatus | OMS (OracleUtilities) | IVR | OMS API (REST) | IVR API (SOAP) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| ODI | Customer | LogCustomerOutageCall | IVR | OMS (Oracle Utilities) | IVR API (SOAP) | OMS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| ODI | Notification | SendOutageNotifications | OMS (Oracle Utilities) | Outage Notification System | OMS API (REST) | Notification API (Email/SMS) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| ODI | Priority | UpdateMedicalPriority | Call Center Agent | OMS (Oracle Utilities) | Agent HMI | OMS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -2488,15 +2488,15 @@ Operator->>OMS: Log action<br/>switching order SWO-2026-043, isolation complete,
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| DAS | Scope | ReviewOutageScope | System Operator HMI | OMS (Oracle Utilities) | Operator UI | OMS API (REST) | API-led (Real-time) | Simple |
-| DAS | Status | CheckBreakerStatus | System Operator HMI | SCADA | Operator UI | SCADA API (ICCP) | API-led (Real-time) | Medium |
-| DAS | GIS | AnalyzeFaultArea | System Operator HMI | GIS (ArcGIS) | Operator UI | GIS API (REST) | API-led (Real-time) | Medium |
-| DAS | Assessment | DispatchDamageAssessment | OMS (Oracle Utilities) | Mobile Crew App | OMS API (REST) | Mobile App API (OAuth2) | API-led (Real-time) | Medium |
-| DAS | Switching | CreateSwitchingOrder | System Operator HMI | Switching Order Management | Operator UI | Switching API (REST) | API-led (Real-time) | High |
-| DAS | Isolate | ExecuteSwitchingIsolation | Switching Order Management | SCADA | Switching API (REST) | SCADA DNP3 | API-led (Real-time) | High |
-| DAS | Restore | CloseTieSwitchRestore | Switching Order Management | SCADA | Switching API (REST) | SCADA DNP3 | API-led (Real-time) | High |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| DAS | Scope | ReviewOutageScope | System Operator HMI | OMS (Oracle Utilities) | Operator UI | OMS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| DAS | Status | CheckBreakerStatus | System Operator HMI | SCADA | Operator UI | SCADA API (ICCP) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DAS | GIS | AnalyzeFaultArea | System Operator HMI | GIS (ArcGIS) | Operator UI | GIS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DAS | Assessment | DispatchDamageAssessment | OMS (Oracle Utilities) | Mobile Crew App | OMS API (REST) | Mobile App API (OAuth2) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| DAS | Switching | CreateSwitchingOrder | System Operator HMI | Switching Order Management | Operator UI | Switching API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| DAS | Isolate | ExecuteSwitchingIsolation | Switching Order Management | SCADA | Switching API (REST) | SCADA DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| DAS | Restore | CloseTieSwitchRestore | Switching Order Management | SCADA | Switching API (REST) | SCADA DNP3 | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
 
 #### Acceptance Criteria
 
@@ -2542,15 +2542,15 @@ Crew->>WFM: End shift report<br/>C-ALPHA: restoration complete, 2 OT hrs, truck=
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| CDR | Order | CreateRestorationOrder | OMS (Oracle Utilities) | WFM (Mobile Workforce) | OMS API (REST) | WFM API (REST) | Event-driven | High |
-| CDR | Dispatch | AssignCrewToJob | WFM (Mobile Workforce) | Mobile Crew App | WFM API (REST) | Mobile App API (OAuth2) | API-led (Real-time) | High |
-| CDR | Tracking | TrackCrewETA | Mobile Crew App (GPS) | WFM (Mobile Workforce) | Mobile GPS (AVL) | WFM API (REST) | API-led (Real-time) | Medium |
-| CDR | Materials | CheckMaterialAvailability | Mobile Crew App | CMMS (Maximo) | Mobile App API (OAuth2) | CMMS API (REST) | API-led (Real-time) | Medium |
-| CDR | Inventory | ReserveAndIssueMaterial | CMMS (Maximo) | Inventory System | CMMS API (REST) | Inventory API (REST) | API-led (Real-time) | Medium |
-| CDR | Restore | NotifyRestorationReady | Mobile Crew App | OMS (Oracle Utilities) | Mobile App API (OAuth2) | OMS API (REST) | API-led (Real-time) | High |
-| CDR | Report | CloseRestorationOrder | OMS (OracleUtilities) | WFM (Mobile Workforce) | OMS API (REST) | WFM API (REST) | Event-driven | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| CDR | Order | CreateRestorationOrder | OMS (Oracle Utilities) | WFM (Mobile Workforce) | OMS API (REST) | WFM API (REST) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| CDR | Dispatch | AssignCrewToJob | WFM (Mobile Workforce) | Mobile Crew App | WFM API (REST) | Mobile App API (OAuth2) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| CDR | Tracking | TrackCrewETA | Mobile Crew App (GPS) | WFM (Mobile Workforce) | Mobile GPS (AVL) | WFM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CDR | Materials | CheckMaterialAvailability | Mobile Crew App | CMMS (Maximo) | Mobile App API (OAuth2) | CMMS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CDR | Inventory | ReserveAndIssueMaterial | CMMS (Maximo) | Inventory System | CMMS API (REST) | Inventory API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CDR | Restore | NotifyRestorationReady | Mobile Crew App | OMS (Oracle Utilities) | Mobile App API (OAuth2) | OMS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| CDR | Report | CloseRestorationOrder | OMS (OracleUtilities) | WFM (Mobile Workforce) | OMS API (REST) | WFM API (REST) | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
 
 #### Acceptance Criteria
 
@@ -2593,15 +2593,15 @@ Engineer->>Analytics: Trend analysis<br/>2019: SAIDI=0.82, 2020: 0.75, 2021: 0.6
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| OAR | Data | ExportOutageData | OMS (Oracle Utilities) | Analytics Platform | OMS API (REST) | Analytics API (REST) | Batch (Scheduled) | Medium |
-| OAR | Metrics | CalculateReliabilityMetrics | Analytics Platform | Analytics Platform | Internal | Internal | Batch (Scheduled) | High |
-| OAR | RootCause | AnalyzeRootCause | Analytics Platform | Reliability Engineer | Analytics API (REST) | Engineer UI | Batch (Scheduled) | Medium |
-| OAR | Spatial | ExportOutageGISMap | GIS (ArcGIS) | Analytics Platform | GIS API (REST) | Analytics API (REST) | Batch (Scheduled) | Simple |
-| OAR | Plan | UpdateCapitalPlan | Reliability Engineer | Planning System | Engineer UI | Planning API (REST) | API-led (Real-time) | Simple |
-| OAR | Compliance | GenerateRegulatoryReport | Analytics Platform | Compliance Reporting | Analytics API (REST) | Compliance API (REST) | Batch (Scheduled) | High |
-| OAR | Submit | SubmitToRegulatoryPortal | Compliance Manager | Regulatory Portal | Compliance UI | Reg Portal API (REST/SOAP) | Batch (Scheduled) | High |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| OAR | Data | ExportOutageData | OMS (Oracle Utilities) | Analytics Platform | OMS API (REST) | Analytics API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| OAR | Metrics | CalculateReliabilityMetrics | Analytics Platform | Analytics Platform | Internal | Internal | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| OAR | RootCause | AnalyzeRootCause | Analytics Platform | Reliability Engineer | Analytics API (REST) | Engineer UI | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| OAR | Spatial | ExportOutageGISMap | GIS (ArcGIS) | Analytics Platform | GIS API (REST) | Analytics API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| OAR | Plan | UpdateCapitalPlan | Reliability Engineer | Planning System | Engineer UI | Planning API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| OAR | Compliance | GenerateRegulatoryReport | Analytics Platform | Compliance Reporting | Analytics API (REST) | Compliance API (REST) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| OAR | Submit | SubmitToRegulatoryPortal | Compliance Manager | Regulatory Portal | Compliance UI | Reg Portal API (REST/SOAP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
 
 #### Acceptance Criteria
 
@@ -2648,15 +2648,15 @@ Manager->>EAM: Review registry<br/>TX-001 to TX-150: all critical, 3 assets miss
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| ARH | Create | CreateAssetRecord | Mobile Field App | EAM (IBM Maximo) | Mobile App API (OAuth2) | EAM API (REST) | API-led (Real-time) | Medium |
-| ARH | Hierarchy | BuildAssetHierarchy | EAM (IBM Maximo) | EAM (IBM Maximo) | Internal | Internal | Batch (Real-time) | Medium |
-| ARH | Criticality | AssessAssetCriticality | Engineer HMI | EAM (IBM Maximo) | Engineer UI | EAM API (REST) | API-led (Real-time) | Medium |
-| ARH | GIS | SyncAssetToGIS | EAM (IBM Maximo) | GIS (ArcGIS) | EAM API (REST) | GIS API (REST) | API-led (Real-time) | Medium |
-| ARH | Financial | CapitalizeAssetERP | EAM (IBM Maximo) | ERP (SAP) | EAM API (REST) | ERP API (SOAP/IDoc) | Batch (Scheduled) | High |
-| ARH | Field | VerifyAssetLocation | Mobile Field App | EAM (IBM Maximo) | Mobile App API (OAuth2) | EAM API (REST) | API-led (Real-time) | Medium |
-| ARH | Report | GenerateAssetRegistryReport | EAM (IBM Maximo) | Asset Manager UI | EAM API (REST) | Manager UI | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| ARH | Create | CreateAssetRecord | Mobile Field App | EAM (IBM Maximo) | Mobile App API (OAuth2) | EAM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| ARH | Hierarchy | BuildAssetHierarchy | EAM (IBM Maximo) | EAM (IBM Maximo) | Internal | Internal | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| ARH | Criticality | AssessAssetCriticality | Engineer HMI | EAM (IBM Maximo) | Engineer UI | EAM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| ARH | GIS | SyncAssetToGIS | EAM (IBM Maximo) | GIS (ArcGIS) | EAM API (REST) | GIS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| ARH | Financial | CapitalizeAssetERP | EAM (IBM Maximo) | ERP (SAP) | EAM API (REST) | ERP API (SOAP/IDoc) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| ARH | Field | VerifyAssetLocation | Mobile Field App | EAM (IBM Maximo) | Mobile App API (OAuth2) | EAM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| ARH | Report | GenerateAssetRegistryReport | EAM (IBM Maximo) | Asset Manager UI | EAM API (REST) | Manager UI | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -2700,15 +2700,15 @@ Analyst->>SCADA: Export network model<br/>FDR-MAIN-001 to FDR-050: node-breaker,
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| GIS | Survey | UploadFieldSurvey | Mobile Data Collector | GIS (ArcGIS Utility Network) | Mobile App API (OAuth2) | GIS API (REST) | API-led (Real-time) | Medium |
-| GIS | Topology | ValidateNetworkTopology | GIS (ArcGIS Utility Network) | GIS (ArcGIS Utility Network) | Internal | Internal | Batch (Real-time) | High |
-| GIS | Asset | CreateGISAsset | GIS (ArcGIS Utility Network) | EAM (IBM Maximo) | GIS API (REST) | EAM API (REST) | API-led (Real-time) | Medium |
-| GIS | Trace | TraceFeederSource | GIS Analyst HMI | GIS (ArcGIS Utility Network) | Analyst UI | GIS API (REST) | API-led (Real-time) | Simple |
-| GIS | OMS | ExportNetworkToOMS | GIS (ArcGIS Utility Network) | OMS | GIS API (REST) | OMS API (REST) | Batch (Scheduled) | Medium |
-| GIS | SCADA | ExportNetworkToSCADA | GIS (ArcGIS Utility Network) | SCADA | GIS API (REST) | SCADA API (ICCP) | Batch (Scheduled) | Medium |
-| GIS | Report | GenerateNetworkReport | GIS (ArcGIS Utility Network) | GIS Analyst HMI | GIS API (REST) | Analyst UI | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| GIS | Survey | UploadFieldSurvey | Mobile Data Collector | GIS (ArcGIS Utility Network) | Mobile App API (OAuth2) | GIS API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| GIS | Topology | ValidateNetworkTopology | GIS (ArcGIS Utility Network) | GIS (ArcGIS Utility Network) | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| GIS | Asset | CreateGISAsset | GIS (ArcGIS Utility Network) | EAM (IBM Maximo) | GIS API (REST) | EAM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| GIS | Trace | TraceFeederSource | GIS Analyst HMI | GIS (ArcGIS Utility Network) | Analyst UI | GIS API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| GIS | OMS | ExportNetworkToOMS | GIS (ArcGIS Utility Network) | OMS | GIS API (REST) | OMS API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| GIS | SCADA | ExportNetworkToSCADA | GIS (ArcGIS Utility Network) | SCADA | GIS API (REST) | SCADA API (ICCP) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| GIS | Report | GenerateNetworkReport | GIS (ArcGIS Utility Network) | GIS Analyst HMI | GIS API (REST) | Analyst UI | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -2752,15 +2752,15 @@ Analytics->>Engineer: Recommendation<br/>replace cooling fan FAN-001, priority=H
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| CMI | Sensor | PublishSensorReading | Sensor (IoT) | IoT Platform (C3 AI / AWS IoT) | MQTT (JSON) | IoT API (MQTT/HTTP) | API-led (Real-time) | High |
-| CMI | DGA | PublishDGAData | DGA Monitor | IoT Platform (C3 AI / AWS IoT) | DGA Serial (Modbus) | IoT API (MQTT/HTTP) | API-led (Real-time) | High |
-| CMI | PD | PublishPartialDischarge | PD Sensor (HVPD) | IoT Platform (C3 AI / AWS IoT) | PD Sensor (IEC 61850) | IoT API (MQTT/HTTP) | API-led (Real-time) | High |
-| CMI | Analytics | StreamConditionData | IoT Platform (C3 AI / AWS IoT) | Analytics Platform | IoT API (REST) | Analytics API (REST) | API-led (Real-time) | Medium |
-| CMI | Alert | GenerateConditionAlert | Analytics Platform | Condition Monitoring Engineer | Analytics API (REST) | Engineer HMI | Event-driven | Medium |
-| CMI | WorkOrder | CreateInspectionWorkOrder | Condition Monitoring Engineer | EAM (IBM Maximo) | Engineer UI | EAM API (REST) | API-led (Real-time) | Medium |
-| CMI | Field | LogFieldInspectionData | Field Technician (Mobile) | IoT Platform (C3 AI / AWS IoT) | Mobile App API (OAuth2) | IoT API (REST) | API-led (Real-time) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| CMI | Sensor | PublishSensorReading | Sensor (IoT) | IoT Platform (C3 AI / AWS IoT) | MQTT (JSON) | IoT API (MQTT/HTTP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| CMI | DGA | PublishDGAData | DGA Monitor | IoT Platform (C3 AI / AWS IoT) | DGA Serial (Modbus) | IoT API (MQTT/HTTP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| CMI | PD | PublishPartialDischarge | PD Sensor (HVPD) | IoT Platform (C3 AI / AWS IoT) | PD Sensor (IEC 61850) | IoT API (MQTT/HTTP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| CMI | Analytics | StreamConditionData | IoT Platform (C3 AI / AWS IoT) | Analytics Platform | IoT API (REST) | Analytics API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CMI | Alert | GenerateConditionAlert | Analytics Platform | Condition Monitoring Engineer | Analytics API (REST) | Engineer HMI | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| CMI | WorkOrder | CreateInspectionWorkOrder | Condition Monitoring Engineer | EAM (IBM Maximo) | Engineer UI | EAM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CMI | Field | LogFieldInspectionData | Field Technician (Mobile) | IoT Platform (C3 AI / AWS IoT) | Mobile App API (OAuth2) | IoT API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
 
 #### Acceptance Criteria
 
@@ -2804,15 +2804,15 @@ Engineer->>Manager: CBM program review<br/>50 assets on CBM, $450K savings, expa
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| PMC | Model | TrainRULModel | Analytics Platform (SAS / Azure ML) | Analytics Platform (SAS / Azure ML) | Internal | Internal | Batch (Scheduled) | High |
-| PMC | Data | RequestTrainingData | Analytics Platform (SAS / Azure ML) | IoT Platform (C3 AI / AWS IoT) | Analytics API (REST) | IoT API (REST) | Batch (Scheduled) | Medium |
-| PMC | Deploy | DeployInferenceModel | Analytics Platform (SAS / Azure ML) | IoT Platform (C3 AI / AWS IoT) | Analytics API (REST) | IoT API (REST) | API-led (Real-time) | High |
-| PMC | Inference | RunLiveInference | IoT Platform (C3 AI / AWS IoT) | Analytics Platform (SAS / Azure ML) | IoT API (REST) | Analytics API (REST) | API-led (Real-time) | Medium |
-| PMC | Alert | AlertRULCritical | Analytics Platform (SAS / Azure ML) | Reliability Engineer | Analytics API (REST) | Engineer HMI | Event-driven | High |
-| PMC | Schedule | UpdateCBMSchedule | Maintenance Planner | EAM (IBM Maximo) | Planner UI | EAM API (REST) | API-led (Real-time) | Medium |
-| PMC | Report | GenerateCBMSavingsReport | Analytics Platform (SAS / Azure ML) | Asset Manager | Analytics API (REST) | Manager UI | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| PMC | Model | TrainRULModel | Analytics Platform (SAS / Azure ML) | Analytics Platform (SAS / Azure ML) | Internal | Internal | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| PMC | Data | RequestTrainingData | Analytics Platform (SAS / Azure ML) | IoT Platform (C3 AI / AWS IoT) | Analytics API (REST) | IoT API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| PMC | Deploy | DeployInferenceModel | Analytics Platform (SAS / Azure ML) | IoT Platform (C3 AI / AWS IoT) | Analytics API (REST) | IoT API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| PMC | Inference | RunLiveInference | IoT Platform (C3 AI / AWS IoT) | Analytics Platform (SAS / Azure ML) | IoT API (REST) | Analytics API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| PMC | Alert | AlertRULCritical | Analytics Platform (SAS / Azure ML) | Reliability Engineer | Analytics API (REST) | Engineer HMI | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| PMC | Schedule | UpdateCBMSchedule | Maintenance Planner | EAM (IBM Maximo) | Planner UI | EAM API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| PMC | Report | GenerateCBMSavingsReport | Analytics Platform (SAS / Azure ML) | Asset Manager | Analytics API (REST) | Manager UI | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -2860,15 +2860,15 @@ Treasury->>ERP: Reconcile entries<br/>variance=$0.00, uncleared items=$20K, reco
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Financial | AP | MatchInvoiceToPO | ERP (SAP S/4HANA) | CIS (Oracle Utilities) | SAP SOAP | CIS SOAP | API-led (Real-time) | Medium |
-| Financial | AR | ReceiveARBatch | CIS (Oracle Utilities) | ERP (SAP S/4HANA) | CIS REST API | SAP REST API | Batch (Scheduled) | High |
-| Financial | GL | PostJournalEntry | ERP (SAP S/4HANA) | ERP (SAP S/4HANA) | Internal | Internal | Batch (Real-time) | Medium |
-| Financial | Budget | SubmitBudgetRequest | Department Budget Owner | Budget System (SAP BPC) | Budget Web UI | SAP BPC API (REST) | API-led (Real-time) | Simple |
-| Financial | Cash | ReconcileCash | ERP (SAP S/4HANA) | Bank Portal (BoA) | SAP SFTP | Bank Portal SFTP | Batch (Scheduled) | Medium |
-| Financial | Payment | ExecutePaymentRun | ERP (SAP S/4HANA) | Bank Portal (BoA) | SAP EDI | Bank Portal EDI | Batch (Scheduled) | High |
-| Financial | Close | RunMonthlyClose | ERP (SAP S/4HANA) | Reporting Database | SAP JDBC | Reporting SQL JDBC | Batch (Scheduled) | High |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Financial | AP | MatchInvoiceToPO | ERP (SAP S/4HANA) | CIS (Oracle Utilities) | SAP SOAP | CIS SOAP | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Financial | AR | ReceiveARBatch | CIS (Oracle Utilities) | ERP (SAP S/4HANA) | CIS REST API | SAP REST API | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Financial | GL | PostJournalEntry | ERP (SAP S/4HANA) | ERP (SAP S/4HANA) | Internal | Internal | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| Financial | Budget | SubmitBudgetRequest | Department Budget Owner | Budget System (SAP BPC) | Budget Web UI | SAP BPC API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Financial | Cash | ReconcileCash | ERP (SAP S/4HANA) | Bank Portal (BoA) | SAP SFTP | Bank Portal SFTP | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Financial | Payment | ExecutePaymentRun | ERP (SAP S/4HANA) | Bank Portal (BoA) | SAP EDI | Bank Portal EDI | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Financial | Close | RunMonthlyClose | ERP (SAP S/4HANA) | Reporting Database | SAP JDBC | Reporting SQL JDBC | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
 
 #### Acceptance Criteria
 
@@ -2912,15 +2912,15 @@ HR_Mgr->>SuccessFactors: Extend offer<br/>SCADA Engineer, salary=$120K, start=Au
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| HR | Time | ImportTimeSheet | Time System (Kronos) | ERP (SAP SuccessFactors) | Kronos OData | SuccessFactors OData | API-led (Real-time) | Medium |
-| HR | Payroll | CalculatePayroll | ERP (SAP SuccessFactors) | Payroll (ADP) | SuccessFactors SFTP | ADP SFTP | Batch (Scheduled) | High |
-| HR | Disbursement | DisburseNetPay | Payroll (ADP) | Bank | ADP EDI | Bank EDI | Batch (Scheduled) | High |
-| HR | Benefits | EnrollBenefits | ERP (SAP SuccessFactors) | Benefit Carrier Portal | SuccessFactors API (REST) | Carrier API (REST) | API-led (Real-time) | Medium |
-| HR | Recruiting | PostJobRequistion | LinkedIn | ERP (SAP SuccessFactors) | LinkedIn API (REST) | SuccessFactors API (REST) | API-led (Real-time) | Simple |
-| HR | Training | EnrollInTraining | ERP (SAP SuccessFactors) | LMS (Cornerstone) | SuccessFactors SCORM | LMS SCORM | API-led (Real-time) | Simple |
-| HR | OrgChart | MaintainOrgChart | ERP (SAP SuccessFactors) | ERP (SAP SuccessFactors) | Internal | Internal | Batch (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| HR | Time | ImportTimeSheet | Time System (Kronos) | ERP (SAP SuccessFactors) | Kronos OData | SuccessFactors OData | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| HR | Payroll | CalculatePayroll | ERP (SAP SuccessFactors) | Payroll (ADP) | SuccessFactors SFTP | ADP SFTP | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| HR | Disbursement | DisburseNetPay | Payroll (ADP) | Bank | ADP EDI | Bank EDI | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| HR | Benefits | EnrollBenefits | ERP (SAP SuccessFactors) | Benefit Carrier Portal | SuccessFactors API (REST) | Carrier API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| HR | Recruiting | PostJobRequistion | LinkedIn | ERP (SAP SuccessFactors) | LinkedIn API (REST) | SuccessFactors API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| HR | Training | EnrollInTraining | ERP (SAP SuccessFactors) | LMS (Cornerstone) | SuccessFactors SCORM | LMS SCORM | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| HR | OrgChart | MaintainOrgChart | ERP (SAP SuccessFactors) | ERP (SAP SuccessFactors) | Internal | Internal | Batch (Real-time) | Simple | Minimal near-real-time batch with basic data pass-through |
 
 #### Acceptance Criteria
 
@@ -2964,15 +2964,15 @@ SAP_MM->>ProcMgr: Contract renewal alert<br/>VEN-ACME-ELEC: rating=4.5/5, on-tim
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Procurement | Requisition | CreateRequisition | Requisitioner | ERP (SAP MM/SRM) | SAP Web UI | SAP Internal | API-led (Real-time) | Simple |
-| Procurement | PO | SendPurchaseOrder | ERP (SAP MM/SRM) | Vendor Portal (Ariba) | SAP cXML | Ariba cXML | API-led (Real-time) | High |
-| Procurement | ASN | ReceiveAdvancedShipNotice | Vendor Portal (Ariba) | ERP (SAP MM/SRM) | Ariba EDI 856 | SAP EDI | Event-driven | Medium |
-| Procurement | Receipt | ReceiveGoods | Receiving Clerk (RF Scan) | ERP (SAP MM/SRM) | RF Scanner API | SAP REST API | API-led (Real-time) | Medium |
-| Procurement | Invoice | MatchInvoiceGRIR | ERP (SAP MM/SRM) | ERP (SAP MM/SRM) | Internal | Internal | Batch (Real-time) | High |
-| Procurement | Contract | CreateContract | ERP (SAP MM/SRM) | ERP (SAP MM/SRM) | Internal | Internal | API-led (Real-time) | Simple |
-| Procurement | Eval | EvaluateVendor | ERP (SAP MM/SRM) | Supplier Portal | SAP REST API | Supplier Portal API (REST) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Procurement | Requisition | CreateRequisition | Requisitioner | ERP (SAP MM/SRM) | SAP Web UI | SAP Internal | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Procurement | PO | SendPurchaseOrder | ERP (SAP MM/SRM) | Vendor Portal (Ariba) | SAP cXML | Ariba cXML | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Procurement | ASN | ReceiveAdvancedShipNotice | Vendor Portal (Ariba) | ERP (SAP MM/SRM) | Ariba EDI 856 | SAP EDI | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Procurement | Receipt | ReceiveGoods | Receiving Clerk (RF Scan) | ERP (SAP MM/SRM) | RF Scanner API | SAP REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Procurement | Invoice | MatchInvoiceGRIR | ERP (SAP MM/SRM) | ERP (SAP MM/SRM) | Internal | Internal | Batch (Real-time) | High | High-frequency near-real-time batch processing with minimal latency tolerance |
+| Procurement | Contract | CreateContract | ERP (SAP MM/SRM) | ERP (SAP MM/SRM) | Internal | Internal | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Procurement | Eval | EvaluateVendor | ERP (SAP MM/SRM) | Supplier Portal | SAP REST API | Supplier Portal API (REST) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -3016,15 +3016,15 @@ SAP_WM->>SAP_WM: Min/max review<br/>BI report: 15 slow-moving items flagged, 20 
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Inventory | Stock | ExecuteStockTransfer | ERP (SAP WM) | ERP (SAP WM) | SAP Internal | SAP Internal | API-led (Real-time) | Simple |
-| Inventory | Count | PerformCycleCount | Barcode/RF Scanner | ERP (SAP WM) | Scanner API (REST) | SAP REST API | API-led (Real-time) | Medium |
-| Inventory | Reorder | TriggerReorderPoint | ERP (SAP WM) | Inventory Planning | SAP Internal | Planning API (REST) | Event-driven | Medium |
-| Inventory | Issue | IssueMaterialToWO | ERP (SAP WM) | EAM (Maximo) | SAP REST API | Maximo REST API | API-led (Real-time) | High |
-| Inventory | Review | RunMinMaxReview | ERP (SAP WM) | BI Reporting | SAP JDBC | BI SQL JDBC | Batch (Scheduled) | Simple |
-| Inventory | PhysInv | ConfirmPhysicalInventory | Barcode/RF Scanner | ERP (SAP WM) | Scanner RF API | SAP REST API | Batch (Scheduled) | Medium |
-| Inventory | Reserve | CreateStockReservation | EAM (Maximo) | ERP (SAP WM) | Maximo REST API | SAP REST API | API-led (Real-time) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Inventory | Stock | ExecuteStockTransfer | ERP (SAP WM) | ERP (SAP WM) | SAP Internal | SAP Internal | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| Inventory | Count | PerformCycleCount | Barcode/RF Scanner | ERP (SAP WM) | Scanner API (REST) | SAP REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Inventory | Reorder | TriggerReorderPoint | ERP (SAP WM) | Inventory Planning | SAP Internal | Planning API (REST) | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| Inventory | Issue | IssueMaterialToWO | ERP (SAP WM) | EAM (Maximo) | SAP REST API | Maximo REST API | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Inventory | Review | RunMinMaxReview | ERP (SAP WM) | BI Reporting | SAP JDBC | BI SQL JDBC | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| Inventory | PhysInv | ConfirmPhysicalInventory | Barcode/RF Scanner | ERP (SAP WM) | Scanner RF API | SAP REST API | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Inventory | Reserve | CreateStockReservation | EAM (Maximo) | ERP (SAP WM) | Maximo REST API | SAP REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
 
 #### Acceptance Criteria
 
@@ -3072,15 +3072,15 @@ IAM_Admin->>IAM: Audit report<br/>Q2 2026: 150 users cert'd, 0 exceptions, 2 ter
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| IAM | Provision | ProvisionUserFromHR | HRIS (SuccessFactors) | IAM (Okta/SailPoint) | SuccessFactors SCIM | IAM SCIM | Event-driven | High |
-| IAM | Access | AssignApplicationAccess | IAM (Okta/SailPoint) | Okta | IAM REST API | Okta REST API | API-led (Real-time) | Medium |
-| IAM | PAM | CheckoutPrivilegedAccount | PAM (CyberArk) | SCADA AD | CyberArk RDP Proxy | SCADA RDP | API-led (Real-time) | High |
-| IAM | Recert | RunAccessRecertification | IAM (Okta/SailPoint) | Manager Email | IAM REST API | Email Webhook (SMTP) | Batch (Scheduled) | Medium |
-| IAM | Deprovision | DeprovisionOnTermination | IAM (Okta/SailPoint) | AD/Azure AD | IAM REST API | AD LDAP | Event-driven | High |
-| IAM | Session | RecordPrivilegedSession | PAM (CyberArk) | SIEM (Splunk) | CyberArk Syslog | SIEM Syslog | API-led (Real-time) | Medium |
-| IAM | RoleMining | AnalyzeRoleAssignments | IAM (Okta/SailPoint) | AD/Azure AD | IAM LDAP | AD LDAP | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| IAM | Provision | ProvisionUserFromHR | HRIS (SuccessFactors) | IAM (Okta/SailPoint) | SuccessFactors SCIM | IAM SCIM | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| IAM | Access | AssignApplicationAccess | IAM (Okta/SailPoint) | Okta | IAM REST API | Okta REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| IAM | PAM | CheckoutPrivilegedAccount | PAM (CyberArk) | SCADA AD | CyberArk RDP Proxy | SCADA RDP | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| IAM | Recert | RunAccessRecertification | IAM (Okta/SailPoint) | Manager Email | IAM REST API | Email Webhook (SMTP) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| IAM | Deprovision | DeprovisionOnTermination | IAM (Okta/SailPoint) | AD/Azure AD | IAM REST API | AD LDAP | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| IAM | Session | RecordPrivilegedSession | PAM (CyberArk) | SIEM (Splunk) | CyberArk Syslog | SIEM Syslog | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| IAM | RoleMining | AnalyzeRoleAssignments | IAM (Okta/SailPoint) | AD/Azure AD | IAM LDAP | AD LDAP | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -3124,15 +3124,15 @@ SIEM->>CISO: Weekly report<br/>7 incidents: 3 phishing, 2 brute force, 1 malware
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| SIEM | OT | IngestOTLogs | OT Monitoring (Nozomi/Claroty) | SIEM (Splunk/ArcSight) | Nozomi Syslog | SIEM Syslog | API-led (Real-time) | High |
-| SIEM | IT | IngestITLogs | Windows Event Collector | SIEM (Splunk/ArcSight) | WinCollect | SIEM Syslog | API-led (Real-time) | High |
-| SIEM | ThreatIntel | ReceiveThreatIntelligence | Threat Feed (AlienVault) | SIEM (Splunk/ArcSight) | Threat Feed API (STIX) | SIEM API (REST) | Batch (Scheduled) | Medium |
-| SIEM | Alert | CreateSOARAlert | SIEM (Splunk/ArcSight) | SOAR | SIEM REST API | SOAR REST API | Event-driven | High |
-| SIEM | Ticket | CreateIncidentTicket | SOAR | ServiceNow | SOAR REST API | ServiceNow REST API | Event-driven | Medium |
-| SIEM | Block | BlockIndicators | SOAR | Firewall (Palo Alto) | SOAR REST API | PAN-OS REST API | API-led (Real-time) | High |
-| SIEM | Report | GenerateComplianceReport | SIEM (Splunk/ArcSight) | Compliance Email | SIEM REST API | SMTP Email | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| SIEM | OT | IngestOTLogs | OT Monitoring (Nozomi/Claroty) | SIEM (Splunk/ArcSight) | Nozomi Syslog | SIEM Syslog | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| SIEM | IT | IngestITLogs | Windows Event Collector | SIEM (Splunk/ArcSight) | WinCollect | SIEM Syslog | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| SIEM | ThreatIntel | ReceiveThreatIntelligence | Threat Feed (AlienVault) | SIEM (Splunk/ArcSight) | Threat Feed API (STIX) | SIEM API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| SIEM | Alert | CreateSOARAlert | SIEM (Splunk/ArcSight) | SOAR | SIEM REST API | SOAR REST API | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| SIEM | Ticket | CreateIncidentTicket | SOAR | ServiceNow | SOAR REST API | ServiceNow REST API | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| SIEM | Block | BlockIndicators | SOAR | Firewall (Palo Alto) | SOAR REST API | PAN-OS REST API | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| SIEM | Report | GenerateComplianceReport | SIEM (Splunk/ArcSight) | Compliance Email | SIEM REST API | SMTP Email | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -3176,15 +3176,15 @@ Scanner->>ServiceNow: Compliance report<br/>CVE-2026-042: 98.3% patched, 2 excep
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| VulnMgmt | Scan | ScheduleVulnerabilityScan | Vulnerability Scanner (Tenable/Qualys) | IT/OT Assets | Scanner API (REST) | Asset Agent | Batch (Scheduled) | Medium |
-| VulnMgmt | Report | ImportVulnerabilityReport | Vulnerability Scanner (Tenable/Qualys) | ServiceNow Change Mgmt | Scanner REST API | ServiceNow REST API | Batch (Scheduled) | High |
-| VulnMgmt | Patch | DeployPatchSCCM | Patch Mgmt (WSUS/SCCM) | Windows Servers | SCCM GPO | Windows Update Agent | Batch (Scheduled) | High |
-| VulnMgmt | OTTest | TestOTPatchSandbox | Vulnerability Scanner (Tenable/Qualys) | OT Sandbox Environment | Scanner REST API (restricted) | OT Sandbox Agent | API-led (Real-time) | High |
-| VulnMgmt | Change | CreateChangeTicket | ServiceNow Change Mgmt | ServiceNow Change Mgmt | Internal | Internal | API-led (Real-time) | Medium |
-| VulnMgmt | Approval | ApprovePatchDeployment | ServiceNow Change Mgmt | Manager Email | ServiceNow Email | SMTP Email | API-led (Real-time) | Simple |
-| VulnMgmt | Compliance | GenerateComplianceReport | Vulnerability Scanner (Tenable/Qualys) | GRC System | Scanner JDBC | GRC SQL JDBC | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| VulnMgmt | Scan | ScheduleVulnerabilityScan | Vulnerability Scanner (Tenable/Qualys) | IT/OT Assets | Scanner API (REST) | Asset Agent | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| VulnMgmt | Report | ImportVulnerabilityReport | Vulnerability Scanner (Tenable/Qualys) | ServiceNow Change Mgmt | Scanner REST API | ServiceNow REST API | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| VulnMgmt | Patch | DeployPatchSCCM | Patch Mgmt (WSUS/SCCM) | Windows Servers | SCCM GPO | Windows Update Agent | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| VulnMgmt | OTTest | TestOTPatchSandbox | Vulnerability Scanner (Tenable/Qualys) | OT Sandbox Environment | Scanner REST API (restricted) | OT Sandbox Agent | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| VulnMgmt | Change | CreateChangeTicket | ServiceNow Change Mgmt | ServiceNow Change Mgmt | Internal | Internal | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| VulnMgmt | Approval | ApprovePatchDeployment | ServiceNow Change Mgmt | Manager Email | ServiceNow Email | SMTP Email | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| VulnMgmt | Compliance | GenerateComplianceReport | Vulnerability Scanner (Tenable/Qualys) | GRC System | Scanner JDBC | GRC SQL JDBC | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -3228,15 +3228,15 @@ Compliance->>GRC: Remediation plan<br/>OBS-001: update ESP docs by Aug 1, OBS-00
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| CIP | Inventory | RegisterBESAssets | OT Asset Inventory | GRC (Archer/ServiceNow IRM) | Asset DB REST API | GRC REST API | Batch (Scheduled) | High |
-| CIP | ESP | ManageESPBoundary | OT Network | Firewall (Palo Alto) | OT REST API | PAN-OS API (REST) | API-led (Real-time) | High |
-| CIP | Evidence | CollectAuditEvidence | ARC (Asset/Log Source) | GRC (Archer/ServiceNow IRM) | ARC REST API | GRC REST API | Batch (Scheduled) | Medium |
-| CIP | Violation | TrackViolations | GRC (Archer/ServiceNow IRM) | NERC Portal | GRC REST API | NERC Web Portal | Batch (Scheduled) | High |
-| CIP | Training | ReportTrainingRecords | Training System (LMS) | GRC (Archer/ServiceNow IRM) | LMS SCORM | GRC REST API | Batch (Scheduled) | Simple |
-| CIP | Remediation | TrackRemediation | ServiceNow | GRC (Archer/ServiceNow IRM) | ServiceNow REST API | GRC REST API | Event-driven | Medium |
-| CIP | Report | GenerateComplianceReport | GRC (Archer/ServiceNow IRM) | Management Email | GRC REST API | SMTP Email | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| CIP | Inventory | RegisterBESAssets | OT Asset Inventory | GRC (Archer/ServiceNow IRM) | Asset DB REST API | GRC REST API | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| CIP | ESP | ManageESPBoundary | OT Network | Firewall (Palo Alto) | OT REST API | PAN-OS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| CIP | Evidence | CollectAuditEvidence | ARC (Asset/Log Source) | GRC (Archer/ServiceNow IRM) | ARC REST API | GRC REST API | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| CIP | Violation | TrackViolations | GRC (Archer/ServiceNow IRM) | NERC Portal | GRC REST API | NERC Web Portal | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| CIP | Training | ReportTrainingRecords | Training System (LMS) | GRC (Archer/ServiceNow IRM) | LMS SCORM | GRC REST API | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
+| CIP | Remediation | TrackRemediation | ServiceNow | GRC (Archer/ServiceNow IRM) | ServiceNow REST API | GRC REST API | Event-driven | Medium | Event-driven integration with intermediate complexity in event routing and state management |
+| CIP | Report | GenerateComplianceReport | GRC (Archer/ServiceNow IRM) | Management Email | GRC REST API | SMTP Email | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -3284,15 +3284,15 @@ PI_Admin->>PI_Interface: Restart interface node<br/>IIN-SCADA-001: reconnected, 
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| DataLake | SCADA | IngestSCADAData | SCADA (Siemens Spectrum Power) | PI Interface Node | SCADA API (ICCP) | PI Interface (OPC-DA) | API-led (Real-time) | High |
-| DataLake | DCS | IngestDCSProcessData | DCS (ABB 800xA) | PI Interface Node | DCS OPC-UA | PI Interface (OPC-UA) | API-led (Real-time) | High |
-| DataLake | AF | MapAssetFramework | PI Interface Node | PI Asset Framework | PI API (REST) | PI AF SDK | Batch (Real-time) | Medium |
-| DataLake | Lake | ExtractToDataLake | PI Data Archive | Data Lake (Snowflake) | PI ODBC/JDBC | Snowflake SQL | Batch (Scheduled) | High |
-| DataLake | Quality | MonitorDataQuality | Data Lake (Snowflake) | Data Catalog (Collibra) | Snowflake SQL | Collibra REST API | Batch (Scheduled) | Medium |
-| DataLake | Catalog | RegisterDataset | Data Lake (Snowflake) | Data Catalog (Collibra) | Snowflake SQL | Collibra REST API | API-led (Real-time) | Simple |
-| DataLake | PI_Admin | ManagePIConnections | PI Administrator | PI Interface Node | PI Admin Console | PI API (REST) | API-led (Real-time) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| DataLake | SCADA | IngestSCADAData | SCADA (Siemens Spectrum Power) | PI Interface Node | SCADA API (ICCP) | PI Interface (OPC-DA) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| DataLake | DCS | IngestDCSProcessData | DCS (ABB 800xA) | PI Interface Node | DCS OPC-UA | PI Interface (OPC-UA) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| DataLake | AF | MapAssetFramework | PI Interface Node | PI Asset Framework | PI API (REST) | PI AF SDK | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| DataLake | Lake | ExtractToDataLake | PI Data Archive | Data Lake (Snowflake) | PI ODBC/JDBC | Snowflake SQL | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| DataLake | Quality | MonitorDataQuality | Data Lake (Snowflake) | Data Catalog (Collibra) | Snowflake SQL | Collibra REST API | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| DataLake | Catalog | RegisterDataset | Data Lake (Snowflake) | Data Catalog (Collibra) | Snowflake SQL | Collibra REST API | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| DataLake | PI_Admin | ManagePIConnections | PI Administrator | PI Interface Node | PI Admin Console | PI API (REST) | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
 
 #### Acceptance Criteria
 
@@ -3336,15 +3336,15 @@ Analyst->>ISO: HA forecast update<br/>hour-ahead: revised 455 MW (cloud cover in
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| GridAnalytics | Data | QueryHistoricalLoad | Data Lake (Snowflake) | Analytics Platform (Azure ML) | Snowflake SQL | Azure ML SDK (Python) | Batch (Scheduled) | Medium |
-| GridAnalytics | Weather | FetchWeatherForecast | Weather Service (DTN/The Weather Co) | Analytics Platform (Azure ML) | Weather API (REST) | Azure ML REST API | API-led (Real-time) | Medium |
-| GridAnalytics | Model | TrainLoadForecastModel | Analytics Platform (Azure ML) | Analytics Platform (Azure ML) | Azure ML Internal | Azure ML Internal | Batch (Scheduled) | High |
-| GridAnalytics | Forecast | SendDAForecast | Analytics Platform (Azure ML) | EMS | Azure ML REST API | EMS API (REST) | API-led (Real-time) | High |
-| GridAnalytics | ISO | SubmitDASchedule | EMS | ISO Portal (PJM/MISO/CAISO) | EMS API (ICCP) | ISO API (ICCP) | Batch (Scheduled) | High |
-| GridAnalytics | DER | AnalyzeDERPenetration | Analytics Platform (Azure ML) | DERMS | Azure ML REST API | DERMS API (REST) | Batch (Real-time) | Medium |
-| GridAnalytics | Archive | ArchiveForecastResults | Analytics Platform (Azure ML) | Data Lake (Snowflake) | Azure ML SDK | Snowflake SQL | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| GridAnalytics | Data | QueryHistoricalLoad | Data Lake (Snowflake) | Analytics Platform (Azure ML) | Snowflake SQL | Azure ML SDK (Python) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| GridAnalytics | Weather | FetchWeatherForecast | Weather Service (DTN/The Weather Co) | Analytics Platform (Azure ML) | Weather API (REST) | Azure ML REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| GridAnalytics | Model | TrainLoadForecastModel | Analytics Platform (Azure ML) | Analytics Platform (Azure ML) | Azure ML Internal | Azure ML Internal | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| GridAnalytics | Forecast | SendDAForecast | Analytics Platform (Azure ML) | EMS | Azure ML REST API | EMS API (REST) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| GridAnalytics | ISO | SubmitDASchedule | EMS | ISO Portal (PJM/MISO/CAISO) | EMS API (ICCP) | ISO API (ICCP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| GridAnalytics | DER | AnalyzeDERPenetration | Analytics Platform (Azure ML) | DERMS | Azure ML REST API | DERMS API (REST) | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| GridAnalytics | Archive | ArchiveForecastResults | Analytics Platform (Azure ML) | Data Lake (Snowflake) | Azure ML SDK | Snowflake SQL | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -3388,15 +3388,15 @@ EE_Mgr->>Regulator: Submit EE report<br/>IL EE Portfolio: Q2 2026, 21,675 kWh sa
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| CustAnalytics | Data | LoadCustomerUsage | Data Lake (Snowflake) | Analytics Platform (Python/R) | Snowflake SQL | Python JDBC | Batch (Scheduled) | Medium |
-| CustAnalytics | Cluster | RunKMeansSegmentation | Analytics Platform (Python/R) | Analytics Platform (Python/R) | Internal | Internal | Batch (Scheduled) | Medium |
-| CustAnalytics | CRM | PushSegmentsToCRM | Analytics Platform (Python/R) | CRM (Salesforce) | Python REST API | Salesforce REST API | Batch (Scheduled) | High |
-| CustAnalytics | Campaign | LaunchEECampaign | CRM (Salesforce) | Campaign Mgmt (Marketo) | Salesforce REST API | Marketo REST API | API-led (Real-time) | Medium |
-| CustAnalytics | Enroll | TrackProgramEnrollment | CRM (Salesforce) | CIS | Salesforce REST API | CIS REST API | Event-driven | Simple |
-| CustAnalytics | M&V | CalculateEnergySavings | Analytics Platform (Python/R) | CIS | Python REST API | CIS REST API | Batch (Scheduled) | Medium |
-| CustAnalytics | Report | GenerateEEReport | Analytics Platform (Python/R) | Regulatory Portal | Python REST API | Reg Portal (REST/SOAP) | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| CustAnalytics | Data | LoadCustomerUsage | Data Lake (Snowflake) | Analytics Platform (Python/R) | Snowflake SQL | Python JDBC | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| CustAnalytics | Cluster | RunKMeansSegmentation | Analytics Platform (Python/R) | Analytics Platform (Python/R) | Internal | Internal | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| CustAnalytics | CRM | PushSegmentsToCRM | Analytics Platform (Python/R) | CRM (Salesforce) | Python REST API | Salesforce REST API | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| CustAnalytics | Campaign | LaunchEECampaign | CRM (Salesforce) | Campaign Mgmt (Marketo) | Salesforce REST API | Marketo REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| CustAnalytics | Enroll | TrackProgramEnrollment | CRM (Salesforce) | CIS | Salesforce REST API | CIS REST API | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
+| CustAnalytics | M&V | CalculateEnergySavings | Analytics Platform (Python/R) | CIS | Python REST API | CIS REST API | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| CustAnalytics | Report | GenerateEEReport | Analytics Platform (Python/R) | Regulatory Portal | Python REST API | Reg Portal (REST/SOAP) | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -3440,15 +3440,15 @@ DataScientist->>Tableau: Cost avoidance report<br/>TRB-2026-001: avoided catastr
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| AssetHealth | Sensors | IngestSensorData | SCADA Historian (PI) | IoT Platform (C3 AI / AWS IoT) | PI API (REST) | IoT Platform API (MQTT) | API-led (Real-time) | High |
-| AssetHealth | Features | EngineerFeatures | IoT Platform (C3 AI / AWS IoT) | Analytics Platform (Azure ML) | IoT API (REST) | Azure ML SDK | Batch (Scheduled) | Medium |
-| AssetHealth | Model | RunPredictiveModel | Analytics Platform (Azure ML / DataBricks) | Analytics Platform (Azure ML / DataBricks) | Internal | Internal | Batch (Scheduled) | High |
-| AssetHealth | Risk | GenerateRiskMatrix | Analytics Platform (Azure ML / DataBricks) | Visualization (Tableau) | Analytics REST API | Tableau REST API | Batch (Real-time) | Medium |
-| AssetHealth | WO | CreateMaintenanceWO | Analytics Platform (Azure ML / DataBricks) | EAM (Maximo) | Analytics REST API | Maximo REST API | Event-driven | High |
-| AssetHealth | Retrain | RetrainPredictiveModel | Analytics Platform (Azure ML / DataBricks) | Analytics Platform (Azure ML / DataBricks) | Internal | Internal | Batch (Scheduled) | Medium |
-| AssetHealth | Report | ReportCostAvoidance | Visualization (Tableau) | Maintenance Manager Email | Tableau REST API | SMTP Email | Batch (Scheduled) | Simple |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| AssetHealth | Sensors | IngestSensorData | SCADA Historian (PI) | IoT Platform (C3 AI / AWS IoT) | PI API (REST) | IoT Platform API (MQTT) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| AssetHealth | Features | EngineerFeatures | IoT Platform (C3 AI / AWS IoT) | Analytics Platform (Azure ML) | IoT API (REST) | Azure ML SDK | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| AssetHealth | Model | RunPredictiveModel | Analytics Platform (Azure ML / DataBricks) | Analytics Platform (Azure ML / DataBricks) | Internal | Internal | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| AssetHealth | Risk | GenerateRiskMatrix | Analytics Platform (Azure ML / DataBricks) | Visualization (Tableau) | Analytics REST API | Tableau REST API | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| AssetHealth | WO | CreateMaintenanceWO | Analytics Platform (Azure ML / DataBricks) | EAM (Maximo) | Analytics REST API | Maximo REST API | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| AssetHealth | Retrain | RetrainPredictiveModel | Analytics Platform (Azure ML / DataBricks) | Analytics Platform (Azure ML / DataBricks) | Internal | Internal | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| AssetHealth | Report | ReportCostAvoidance | Visualization (Tableau) | Maintenance Manager Email | Tableau REST API | SMTP Email | Batch (Scheduled) | Simple | Straightforward periodic data transfer with no real-time constraints |
 
 #### Acceptance Criteria
 
@@ -3496,15 +3496,15 @@ GRC->>Auditor: Evidence package<br/>all 25 items: documents, data, procedures, o
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| RegReporting | Financial | ExtractFERCForm1Data | ERP (SAP) | Regulatory Analyst | SAP JDBC | Analyst Excel/SQL | Batch (Scheduled) | Medium |
-| RegReporting | Reliability | ExtractReliabilityData | OMS | Regulatory Analyst | OMS REST API | Analyst REST API | Batch (Scheduled) | Medium |
-| RegReporting | GADS | GenerateGADSReport | EMS Historian | NERC Compliance Portal | EMS SQL JDBC | NERC Portal Web | Batch (Scheduled) | High |
-| RegReporting | FERC | SubmitFERCForm1 | Regulatory Analyst | FERC eForms Portal | Analyst Portal UI | FERC eForms API (SOAP) | Batch (Scheduled) | High |
-| RegReporting | PUC | RespondToDataRequest | Regulatory Analyst | GRC (Archer) | Analyst REST API | GRC REST API | API-led (Real-time) | Medium |
-| RegReporting | Evidence | ArchiveAuditEvidence | Regulatory Analyst | GRC (Archer) | Analyst REST API | GRC REST API | API-led (Real-time) | Medium |
-| RegReporting | Audit | SubmitAuditEvidence | GRC (Archer) | Auditor Portal | GRC REST API | Auditor Portal (REST) | Event-driven | High |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| RegReporting | Financial | ExtractFERCForm1Data | ERP (SAP) | Regulatory Analyst | SAP JDBC | Analyst Excel/SQL | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| RegReporting | Reliability | ExtractReliabilityData | OMS | Regulatory Analyst | OMS REST API | Analyst REST API | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| RegReporting | GADS | GenerateGADSReport | EMS Historian | NERC Compliance Portal | EMS SQL JDBC | NERC Portal Web | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| RegReporting | FERC | SubmitFERCForm1 | Regulatory Analyst | FERC eForms Portal | Analyst Portal UI | FERC eForms API (SOAP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| RegReporting | PUC | RespondToDataRequest | Regulatory Analyst | GRC (Archer) | Analyst REST API | GRC REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| RegReporting | Evidence | ArchiveAuditEvidence | Regulatory Analyst | GRC (Archer) | Analyst REST API | GRC REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| RegReporting | Audit | SubmitAuditEvidence | GRC (Archer) | Auditor Portal | GRC REST API | Auditor Portal (REST) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
 
 #### Acceptance Criteria
 
@@ -3548,15 +3548,15 @@ Operator->>ISO: Submit ancillary offer<br/>next day: regulation=55 MW, spin=35 M
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Market | Offer | SubmitDAOffer | Market System (ABB Promod) | ISO Portal (PJM/MISO/CAISO) | Market Sys API (ICCP) | ISO API (ICCP) | Batch (Scheduled) | High |
-| Market | Clear | ReceiveDAClearing | ISO Portal (PJM/MISO/CAISO) | Market System (ABB Promod) | ISO API (ICCP) | Market Sys API (ICCP) | Event-driven | High |
-| Market | Dispatch | SendDispatchInstruction | ISO Portal (PJM/MISO/CAISO) | EMS | ISO API (ICCP) | EMS API (ICCP) | API-led (Real-time) | High |
-| Market | Settlement | ImportSettlementStatement | ISO Portal (PJM/MISO/CAISO) | Market System (ABB Promod) | ISO API (REST) | Market Sys API (REST) | Batch (Scheduled) | High |
-| Market | Reconcile | ReconcileSettlement | Market System (ABB Promod) | ERP (SAP) | Market Sys JDBC | SAP JDBC | Batch (Scheduled) | Medium |
-| Market | Trade | LogTradeCapture | Market System (ABB Promod) | Trade Capture System | Market Sys API (REST) | Trade Capture API (REST) | API-led (Real-time) | Medium |
-| Market | Invoice | PostSettlementInvoice | Market System (ABB Promod) | ERP (SAP) | Market Sys REST API | SAP REST API | Batch (Scheduled) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Market | Offer | SubmitDAOffer | Market System (ABB Promod) | ISO Portal (PJM/MISO/CAISO) | Market Sys API (ICCP) | ISO API (ICCP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Market | Clear | ReceiveDAClearing | ISO Portal (PJM/MISO/CAISO) | Market System (ABB Promod) | ISO API (ICCP) | Market Sys API (ICCP) | Event-driven | High | Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail |
+| Market | Dispatch | SendDispatchInstruction | ISO Portal (PJM/MISO/CAISO) | EMS | ISO API (ICCP) | EMS API (ICCP) | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Market | Settlement | ImportSettlementStatement | ISO Portal (PJM/MISO/CAISO) | Market System (ABB Promod) | ISO API (REST) | Market Sys API (REST) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Market | Reconcile | ReconcileSettlement | Market System (ABB Promod) | ERP (SAP) | Market Sys JDBC | SAP JDBC | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Market | Trade | LogTradeCapture | Market System (ABB Promod) | Trade Capture System | Market Sys API (REST) | Trade Capture API (REST) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Market | Invoice | PostSettlementInvoice | Market System (ABB Promod) | ERP (SAP) | Market Sys REST API | SAP REST API | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
 
 #### Acceptance Criteria
 
@@ -3600,15 +3600,15 @@ EPA_CAMD->>Environmental: Annual accepted<br/>GHGRP ID=GHG-2026-042, facility=Sp
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| Emissions | CEMS | SendHourlyEmissions | DCS (ABB) | CEMS Data System | DCS OPC-UA | CEMS Modbus TCP | API-led (Real-time) | High |
-| Emissions | QA | PerformQualityAssurance | CEMS Data System | CEMS Data System | Internal | Internal | API-led (Real-time) | High |
-| Emissions | EPA | SubmitECMPSCAMD | CEMS Data System | EPA CAMD Portal | CEMS API (REST) | EPA CAMD Web Services (SOAP) | Batch (Scheduled) | High |
-| Emissions | Permit | VerifyPermitCompliance | CEMS Data System | Emissions Management | CEMS REST API | Emissions Mgmt REST API | API-led (Real-time) | Medium |
-| Emissions | Allowance | TrackRGGIAllowances | Allowance Tracking System | RGGI/CARB Portal | Allowance API (REST) | RGGI Portal API (SOAP) | Batch (Scheduled) | Medium |
-| Emissions | GHG | SubmitGHGReport | Emissions Management | EPA CAMD Portal | Emissions REST API | EPA CAMD Web Services | Batch (Scheduled) | High |
-| Emissions | Verification | CompleteThirdPartyVerification | Third-Party Verifier | Emissions Management | Verifier Portal API | Emissions API (REST) | Batch (Scheduled) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| Emissions | CEMS | SendHourlyEmissions | DCS (ABB) | CEMS Data System | DCS OPC-UA | CEMS Modbus TCP | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Emissions | QA | PerformQualityAssurance | CEMS Data System | CEMS Data System | Internal | Internal | API-led (Real-time) | High | OT/IT boundary crossing with sub-second latency and strict data fidelity requirements |
+| Emissions | EPA | SubmitECMPSCAMD | CEMS Data System | EPA CAMD Portal | CEMS API (REST) | EPA CAMD Web Services (SOAP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Emissions | Permit | VerifyPermitCompliance | CEMS Data System | Emissions Management | CEMS REST API | Emissions Mgmt REST API | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| Emissions | Allowance | TrackRGGIAllowances | Allowance Tracking System | RGGI/CARB Portal | Allowance API (REST) | RGGI Portal API (SOAP) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
+| Emissions | GHG | SubmitGHGReport | Emissions Management | EPA CAMD Portal | Emissions REST API | EPA CAMD Web Services | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| Emissions | Verification | CompleteThirdPartyVerification | Third-Party Verifier | Emissions Management | Verifier Portal API | Emissions API (REST) | Batch (Scheduled) | Medium | Scheduled batch transfer requiring field mapping, validation, and exception handling |
 
 #### Acceptance Criteria
 
@@ -3652,15 +3652,15 @@ EHS_System->>Dashboard: Leadership review<br/>safety: 42 days since last recorda
 
 #### Integration Details
 
-| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |
-|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|
-| EHS | Incident | ReportNearMiss | Employee Mobile App | EHS System (Intelex/Enablon) | Mobile API (OAuth2) | EHS REST API | API-led (Real-time) | Simple |
-| EHS | Investigation | PerformRootCauseAnalysis | EHS System (Intelex/Enablon) | EHS System (Intelex/Enablon) | Internal | Internal | API-led (Real-time) | Medium |
-| EHS | CAPA | TrackCorrectiveAction | EHS System (Intelex/Enablon) | EHS System (Intelex/Enablon) | Internal | Internal | API-led (Real-time) | Medium |
-| EHS | Training | ScheduleSafetyTraining | EHS System (Intelex/Enablon) | Training System (LMS) | EHS REST API | LMS SCORM | Event-driven | Simple |
-| EHS | OSHA | SubmitOSHA300Log | EHS System (Intelex/Enablon) | OSHA Portal | EHS REST API | OSHA Portal API (SOAP) | Batch (Scheduled) | High |
-| EHS | Dashboard | GenerateSafetyDashboard | EHS System (Intelex/Enablon) | HRIS (SuccessFactors) | EHS SQL JDBC | SuccessFactors REST API | Batch (Real-time) | Medium |
-| EHS | IoT | MonitorIoTSafetySensors | IoT Safety Sensors (gas/arc flash) | EHS System (Intelex/Enablon) | Sensor MQTT | EHS API (MQTT) | API-led (Real-time) | Medium |
+| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |
+|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|
+| EHS | Incident | ReportNearMiss | Employee Mobile App | EHS System (Intelex/Enablon) | Mobile API (OAuth2) | EHS REST API | API-led (Real-time) | Simple | Direct API integration with minimal transformation and single-system lookup |
+| EHS | Investigation | PerformRootCauseAnalysis | EHS System (Intelex/Enablon) | EHS System (Intelex/Enablon) | Internal | Internal | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| EHS | CAPA | TrackCorrectiveAction | EHS System (Intelex/Enablon) | EHS System (Intelex/Enablon) | Internal | Internal | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
+| EHS | Training | ScheduleSafetyTraining | EHS System (Intelex/Enablon) | Training System (LMS) | EHS REST API | LMS SCORM | Event-driven | Simple | Simple event notification with fire-and-forget delivery semantics |
+| EHS | OSHA | SubmitOSHA300Log | EHS System (Intelex/Enablon) | OSHA Portal | EHS REST API | OSHA Portal API (SOAP) | Batch (Scheduled) | High | Large-volume scheduled processing with data integrity validation and reconciliation |
+| EHS | Dashboard | GenerateSafetyDashboard | EHS System (Intelex/Enablon) | HRIS (SuccessFactors) | EHS SQL JDBC | SuccessFactors REST API | Batch (Real-time) | Medium | Periodic near-real-time batch with data validation and transformation needs |
+| EHS | IoT | MonitorIoTSafetySensors | IoT Safety Sensors (gas/arc flash) | EHS System (Intelex/Enablon) | Sensor MQTT | EHS API (MQTT) | API-led (Real-time) | Medium | API integration requiring moderate transformation, error handling, and data reconciliation |
 
 #### Acceptance Criteria
 

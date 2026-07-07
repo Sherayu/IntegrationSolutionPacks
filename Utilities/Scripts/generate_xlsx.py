@@ -8,7 +8,7 @@ README = ROOT / "README.md"
 out_path = ROOT / "Catalogue" / "integration-details.xlsx"
 
 headers = ["Flow Name", "Entity", "Info Flow Name", "Source System", "Target System",
-           "Source Connector", "Target Connector", "Integration Pattern", "Complexity"]
+           "Source Connector", "Target Connector", "Integration Pattern", "Complexity", "Complexity Reason"]
 
 wb = Workbook()
 wb.remove(wb.active)
@@ -54,7 +54,7 @@ for line in lines:
             continue
         if stripped.startswith("|"):
             parts = [p.strip() for p in stripped.split("|")[1:-1]]
-            if len(parts) == 9:
+            if len(parts) in (9, 10):
                 current_rows.append(tuple(parts))
         else:
             in_integration = False
@@ -88,8 +88,9 @@ for sheet_title, rows in sections_data.items():
     ws.column_dimensions["G"].width = 22
     ws.column_dimensions["H"].width = 22
     ws.column_dimensions["I"].width = 14
+    ws.column_dimensions["J"].width = 40
 
-    ws.auto_filter.ref = f"A1:I{len(rows)+1}"
+    ws.auto_filter.ref = f"A1:J{len(rows)+1}"
     ws.freeze_panes = "A2"
     total_rows += len(rows)
 

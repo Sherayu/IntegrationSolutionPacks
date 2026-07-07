@@ -11,8 +11,27 @@ from definitions import FRAMEWORK, CAPABILITY_MODEL, TEST_DATA
 
 SECTION_FILES = ["defs_s1", "defs_s2", "defs_s3", "defs_s4"]
 
-INT_HEADER = "| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity |"
-INT_SEP    = "|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|"
+INT_HEADER = "| Flow | Entity | Info Flow | Source | Target | Source Conn | Target Conn | Pattern | Complexity | Complexity Reason |"
+INT_SEP    = "|------|--------|-----------|--------|--------|-------------|-------------|---------|------------|--------------------|"
+
+REASON_MAP = {
+    ("High", "API-led (Real-time)"):     "OT/IT boundary crossing with sub-second latency and strict data fidelity requirements",
+    ("High", "Event-driven"):           "Mission-critical event processing requiring guaranteed delivery, sequencing, and audit trail",
+    ("High", "Batch (Real-time)"):      "High-frequency near-real-time batch processing with minimal latency tolerance",
+    ("High", "Batch (Scheduled)"):      "Large-volume scheduled processing with data integrity validation and reconciliation",
+    ("Medium", "API-led (Real-time)"):  "API integration requiring moderate transformation, error handling, and data reconciliation",
+    ("Medium", "Event-driven"):         "Event-driven integration with intermediate complexity in event routing and state management",
+    ("Medium", "Batch (Real-time)"):    "Periodic near-real-time batch with data validation and transformation needs",
+    ("Medium", "Batch (Scheduled)"):    "Scheduled batch transfer requiring field mapping, validation, and exception handling",
+    ("Simple", "API-led (Real-time)"):  "Direct API integration with minimal transformation and single-system lookup",
+    ("Simple", "Event-driven"):         "Simple event notification with fire-and-forget delivery semantics",
+    ("Simple", "Batch (Scheduled)"):    "Straightforward periodic data transfer with no real-time constraints",
+    ("Simple", "Batch (Real-time)"):    "Minimal near-real-time batch with basic data pass-through",
+}
+
+
+def complexity_reason(pattern, complexity):
+    return REASON_MAP.get((complexity, pattern), f"{complexity} complexity for {pattern} integration")
 AC_HEADER  = "| AC ID | Description | Related Info Flow | Expected Outcome | Priority |"
 AC_SEP     = "|-------|------------|-------------------|------------------|----------|"
 
@@ -106,7 +125,9 @@ def build_subflow(sf_id, sf):
     lines.append(INT_HEADER)
     lines.append(INT_SEP)
     for row in sf["integrations"]:
-        lines.append(fmt(row))
+        flow, entity, info, source, target, src_conn, tgt_conn, pattern, complexity = row
+        reason = complexity_reason(pattern, complexity)
+        lines.append(fmt((flow, entity, info, source, target, src_conn, tgt_conn, pattern, complexity, reason)))
     if sf.get("acceptance_criteria"):
         lines.append("")
         lines.append("#### Acceptance Criteria")
