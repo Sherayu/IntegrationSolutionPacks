@@ -20,8 +20,8 @@ For the given `business_domain`, perform web research to determine:
 
 1. **Industry reference model** — Search for standard capability/reference models for this domain (e.g. for Higher Education: CAUDIT HERM; for Healthcare: APQC Healthcare PCF; for Banking: BIAN; for Government: FEA BRM). If `framework_name` is provided, look up its official capability catalog. Use the `capability_prefix` for code formatting.
 
-2. **Domain sections** — Identify the primary functional areas (8-12 sections) that cover the domain end-to-end. Each section should have 1-4 sub-flows. For each sub-flow, define:
-   - A sequence of 10-20 realistic system-to-system interactions
+2. **Domain sections** — Identify the primary functional areas (8-20 sections) that cover the domain end-to-end. Each section should have 1-10 sub-flows. For each sub-flow, define:
+   - A sequence of 10-30 realistic system-to-system interactions
    - Source and target systems (use well-known vendor products for the domain)
    - Connector protocols (REST, SOAP, OData, SFTP, CDC, JDBC, GraphQL, etc.)
    - Integration patterns (API-led Real-time, Event-driven, Batch Scheduled, Batch ETL, Database Replication CDC)
@@ -29,7 +29,7 @@ For the given `business_domain`, perform web research to determine:
 
 3. **Capability model** — If `framework_name` is provided, look up the official capability catalog and include all levels. Otherwise, derive a reasonable capability model from standard domain taxonomies.
 
-4. **Test data** — Generate 5-8 entity types with realistic field names and values that are used consistently across all diagrams (e.g. for a Student entity: id, name, email, program, etc.).
+4. **Test data** — Generate 5-50 entity types with realistic field names and values that are used consistently across all diagrams (e.g. for a Student entity: id, name, email, program, etc.).
 
 5. **Public domain-overview diagram** — Find a publicly available diagram/image that shows the capability model overview for this domain. Use it in the README and credit the source.
 
