@@ -193,7 +193,9 @@ with sync_playwright() as p:
     """)
     print(f"Mermaid render: {result}")
 
-    out_pdf = str(ROOT / "Document" / "banking-process-flows.pdf")
+    out_pdf = str(ROOT / "Document" / "banking-process-flows_v2.pdf")
+    # NOTE: Previous file banking-process-flows.pdf is locked by another process.
+    # Once unlocked, rename v2 to remove the suffix or update this path.
     page.pdf(
         path=out_pdf,
         format="A4",
