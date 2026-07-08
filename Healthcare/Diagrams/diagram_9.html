@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant DOC as Physician
+    participant CPOE as CPOE<br/>(Epic)
+    participant RIS as RIS<br/>(GE PACS)
+    participant PACS as PACS<br/>(GE PACS)
+    participant SR as Speech Recognition<br/>(PowerScribe)
+    participant EHR as EHR<br/>(Epic)
+    DOC->>CPOE: Order chest X-Ray<br/>reason: SOB, cough
+    CPOE->>RIS: Create imaging order<br/>ORM^O01 (HL7 v2.5.1)
+    RIS-->>CPOE: Scheduled: Jun 15 10:00<br/>modality: X-Ray (XR)
+    Rad Tech->>RIS: Patient arrived for study<br/>scan PT-2026-001 wristband
+    RIS->>PACS: Query worklist<br/>modality worklist (MWL)
+    PACS-->>RIS: Study details<br/>IMG-2026-001: Chest X-Ray
+    Rad Tech->>PACS: Acquire images<br/>2 views: PA, Lateral
+    PACS->>RIS: Study completed<br/>images available
+    Radiologist->>PACS: Open study for interpretation<br/>view images
+    Radiologist->>SR: Dictate report<br/>natural language: normal findings
+    SR-->>RIS: Transcribed report<br/>draft report text
+    Radiologist->>RIS: Sign report<br/>electronic signature
+    RIS->>EHR: Send final report<br/>ORU^R01 (HL7 v2.5.1)
+    EHR-->>RIS: Report acknowledged
+    EHR-->>DOC: Result notification<br/>chest X-Ray normal</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

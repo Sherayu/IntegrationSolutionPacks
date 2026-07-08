@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant COMP as Compliance Officer
+    participant CMS as Compliance Mgmt<br/>(Cerner)
+    participant EHR as EHR<br/>(Epic)
+    participant DOC as Document Mgmt<br/>(OnBase)
+    participant JCAHO as Accreditation Portal<br/>(The Joint Commission)
+    COMP->>CMS: Initiate audit preparation<br/>survey type: TJC Accreditation
+    CMS->>DOC: Gather compliance documents<br/>policies, procedures, records
+    DOC-->>CMS: Documents compiled<br/>25 policies, 50 training records
+    CMS->>EHR: Audit clinical records<br/>random sampling of 50 charts
+    EHR-->>CMS: Audit results<br/>98.5% documentation compliance
+    COMP->>CMS: Track corrective actions<br/>findings from mock survey
+    CMS->>CMS: Assign remediation tasks<br/>dept: Medicine, due: 30 days
+    Department Head->>CMS: Complete remedial actions<br/>evidence uploaded
+    CMS-->>COMP: Corrective actions closed
+    COMP->>JCAHO: Submit accreditation documents<br/>portal upload
+    JCAHO-->>COMP: Documents received
+    Auditor->>CMS: Conduct on-site survey<br/>review evidence
+    CMS-->>Auditor: Survey complete<br/>preliminary findings</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant NURSE as Nurse
+    participant INC as Incident Mgmt<br/>(RL Solutions)
+    participant EHR as EHR<br/>(Epic)
+    participant RISK as Risk Management<br/>(Origami Risk)
+    participant QA as Quality Analytics<br/>(Cerner HealtheIntent)
+    NURSE->>INC: Report patient safety incident<br/>INC-2026-001: Medication Error
+    INC->>INC: Classify incident<br/>type: Medication, severity: Moderate
+    INC->>EHR: Flag patient record<br/>PT-2026-001: incident reported
+    EHR-->>INC: Patient flagged
+    Risk Manager->>INC: Investigate incident<br/>review details, interview staff
+    INC->>RISK: Perform root cause analysis<br/>RCA framework
+    RISK-->>INC: RCA findings<br/>cause: look-alike packaging
+    Patient Safety Officer->>INC: Define corrective actions<br/>implement barcode scanning
+    INC->>EHR: Update patient safety plan<br/>add monitoring requirements
+    EHR-->>INC: Safety plan updated
+    INC->>QA: Submit incident for trending<br/>aggregate incident data
+    QA-->>INC: Incident registered
+    Risk Manager->>INC: Close incident loop<br/>actions verified, report finalized</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

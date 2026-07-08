@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant DOC as Physician<br/>(Dr. Williams)
+    participant EHR as EHR<br/>(Epic)
+    participant SR as Speech Recognition<br/>(Nuance Dragon)
+    participant CDR as Clinical Data Repository
+    participant COD as Coding Workflow<br/>(3M 360)
+    DOC->>EHR: Select patient encounter<br/>ENC-2026-001: Inpatient
+    DOC->>SR: Dictate H&P note<br/>natural language dictation
+    SR-->>EHR: Transcribed text<br/>draft H&P note
+    DOC->>EHR: Review & edit note<br/>add assessment & plan
+    EHR->>EHR: Apply clinical decision support<br/>CDS rules, drug-allergy checks
+    DOC->>EHR: Sign note electronically<br/>digital signature applied
+    EHR->>CDR: Store finalized note<br/>POST /DocumentReference
+    CDR-->>EHR: Document stored<br/>DocID: DOC-2026-001
+    EHR->>COD: Notify coding workflow<br/>new encounter ready for coding
+    COD-->>EHR: Acknowledged
+    EHR-->>DOC: Note signed & filed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

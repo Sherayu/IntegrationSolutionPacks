@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant PCP as PCP<br/>(Dr. Williams)
+    participant EHR as EHR<br/>(Epic)
+    participant REF as Referral Mgmt<br/>(Epic)
+    participant PAYER as Payer Portal<br/>(BCBS)
+    participant SCH as Scheduling<br/>(Epic Cadence)
+    PCP->>EHR: Identify need for specialist<br/>PT-2026-001: Cardiology consult
+    PCP->>REF: Create referral order<br/>REF-2026-001: Cardiology
+    REF->>PAYER: Submit prior authorization<br/>electronic prior auth (ePA)
+    PAYER-->>REF: Auth pending medical review
+    PAYER->>PAYER: Medical necessity review<br/>clinical guidelines applied
+    PAYER-->>REF: Authorization approved<br/>AUTH-2026-001: 3 visits
+    REF-->>EHR: Auth received<br/>status: Approved
+    Scheduling Staff->>SCH: Schedule specialist visit<br/>Dr. Smith (Cardiology)
+    SCH-->>REF: Appointment confirmed<br/>Jul 15 10:00
+    EHR-->>PCP: Referral completed
+    Patient->>REF: View referral status<br/>via patient portal
+    REF-->>Patient: Status: Active, Auth: Approved</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

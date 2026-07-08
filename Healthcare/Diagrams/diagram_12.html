@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant NURSE as Nurse
+    participant EHR as EHR (MAR)<br/>(Epic)
+    participant BAR as Barcode Scanner<br/>(BD Pyxis)
+    participant ADC as Automated Dispensing<br/>(Omnicell)
+    NURSE->>EHR: Open MAR for patient<br/>PT-2026-001: Bed 3A-204
+    EHR-->>NURSE: Scheduled medications<br/>Metformin 500mg BID - 09:00
+    NURSE->>BAR: Scan patient wristband<br/>PT-2026-001, MRN-2026-0001
+    BAR->>EHR: Verify patient identity<br/>5 patient identifiers check
+    EHR-->>BAR: Patient verified
+    NURSE->>BAR: Scan medication barcode<br/>Metformin 500mg tablet
+    BAR->>EHR: Verify 5 Rights<br/>right patient, drug, dose, route, time
+    EHR-->>BAR: All rights verified
+    NURSE->>ADC: Remove medication<br/>patient drawer 3A-204
+    NURSE->>NURSE: Administer medication<br/>oral route, with water
+    NURSE->>EHR: Document administration<br/>POST /MedicationAdministration
+    EHR-->>NURSE: MAR updated<br/>MED-2026-001: Administered 09:05
+    NURSE->>EHR: Document vitals<br/>post-administration glucose check
+    EHR-->>NURSE: Vitals recorded</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

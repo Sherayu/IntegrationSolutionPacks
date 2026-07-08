@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant TECH as Pharmacy Technician
+    participant PHARM as Pharmacy System<br/>(BD Pyxis)
+    participant ADC as Automated Dispensing<br/>(Omnicell)
+    participant BAR as Barcode Scanner<br/>(BD Pyxis)
+    participant INV as Inventory Mgmt<br/>(BD Supply)
+    PHARM->>PHARM: Receive new orders<br/>from CPOE (Epic)
+    TECH->>PHARM: Review order queue<br/>priority: STAT orders first
+    Pharmacist->>PHARM: Clinical verification<br/>verify dose, route, allergies
+    PHARM->>BAR: Generate barcode labels
+    BAR-->>PHARM: Labels printed
+    TECH->>ADC: Retrieve medication<br/>Metformin 500mg tabs
+    ADC-->>TECH: Medication dispensed
+    TECH->>BAR: Scan medication barcode<br/>verify NDC, lot, expiration
+    BAR-->>PHARM: Verification result<br/>match: Metformin 500mg NDC-12345
+    Pharmacist->>PHARM: Final verification<br/>electronic check
+    PHARM->>ADC: Assign to patient drawer<br/>PT-2026-001: Bed 3A-204
+    ADC-->>PHARM: Assign confirmed
+    PHARM->>INV: Update inventory level<br/>decrement stock count
+    INV-->>PHARM: Inventory updated
+    PHARM->>CPOE: Mark as dispensed<br/>status: Ready for Administration</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+</head><body>
+<div class="mermaid" id="test-diagram">
+sequenceDiagram
+    participant PT as Patient
+    participant REG as Admissions<br/>(Epic)
+    participant MPI as EMPI<br/>(Rhapsody)
+    participant RC as Revenue Cycle<br/>(Epic)
+    participant INS as Insurance Verification<br/>(Change Healthcare)
+    PT->>REG: Provide identification & demographics<br/>name=John Doe, dob=1985-04-12
+    REG->>MPI: CreateOrMatchPatient<br/>demographics, identifiers
+    MPI-->>REG: PatientID: PT-2026-001<br/>MRN: MRN-2026-0001
+    REG->>RC: Add insurance details<br/>AddInsurance(PT-2026-001, BCBS PPO)
+    RC->>INS: Verify eligibility<br/>eligibilityCheck(memberId=MBR-2026-001)
+    INS-->>RC: Coverage verified<br/>copay=$30, deductible=$500
+    RC-->>REG: Insurance confirmed
+    REG-->>PT: Registration complete
+</div>
+<div id="result"></div>
+<script>
+async function run() {
+    await new Promise(r => setTimeout(r, 2000));
+    const div = document.getElementById('test-diagram');
+    const resultDiv = document.getElementById('result');
+    const src = div.textContent.trim();
+    resultDiv.innerHTML = 'Source length: ' + src.length + '<br>Source start: ' + src.substring(0, 100).replace(/</g, '&lt;');
+    try {
+        mermaid.initialize({startOnLoad: false, theme: 'neutral', securityLevel: 'loose'});
+        const result = await mermaid.render('svg-' + 1, src);
+        resultDiv.innerHTML += '<br>SUCCESS: SVG length ' + result.svg.length;
+        document.getElementById('test-diagram').innerHTML = result.svg;
+    } catch(e) {
+        resultDiv.innerHTML += '<br>ERROR: <pre>' + e.message + '</pre>';
+    }
+}
+run();
+</script>
+</body></html>

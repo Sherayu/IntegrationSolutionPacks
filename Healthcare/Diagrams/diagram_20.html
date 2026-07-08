@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant PH as Population Health<br/>(Cerner HealtheIntent)
+    participant EHR as EHR<br/>(Epic)
+    participant CRM as CRM<br/>(Salesforce Health Cloud)
+    participant PORT as Patient Portal<br/>(MyChart)
+    PH->>EHR: Extract patient population data<br/>GET /Patient, GET /Condition
+    EHR-->>PH: Patient data batch<br/>10,000 patients
+    PH->>PH: Run risk stratification model<br/>predictive analytics, HCC scores
+    PH->>PH: Identify care gaps<br/>missing HbA1c, mammogram due
+    PH->>CRM: Create outreach list<br/>high-risk patients with gaps
+    CRM-->>PH: Outreach list created
+    PH->>EHR: Update patient risk scores<br/>PUT /Patient/PT-2026-001/risk
+    EHR-->>PH: Risk scores updated
+    Care Coordinator->>CRM: Review high-risk list<br/>PT-2026-001: Risk Score 8.5/10
+    CRM->>PORT: Send patient outreach<br/>appointment reminder, health tip
+    PORT-->>Patient: Notification sent
+    CRM->>EHR: Document outreach<br/>communication log
+    EHR-->>CRM: Outreach documented</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant EHR as EHR<br/>(Epic)
+    participant QA as Quality Analytics<br/>(Cerner HealtheIntent)
+    participant REG as Registry<br/>(NCQA HEDIS)
+    participant CMS as CMS Portal<br/>(HHS)
+    EHR->>QA: Extract quality measure data<br/>diabetes HbA1c, mammogram, etc.
+    QA->>QA: Calculate measure scores<br/>HEDIS specifications
+    QA->>QA: Validate data completeness<br/>gap analysis
+    Quality Analyst->>QA: Review measure results<br/>QM-2026-001: HbA1c Control 85.5%
+    QA->>EHR: Update quality gaps<br/>patient-level gap list
+    EHR-->>QA: Gaps updated
+    QA->>REG: Submit HEDIS measures<br/>NCQA HEDIS submission format
+    REG-->>QA: Submission accepted<br/>measureID: HEDIS-2026-001
+    QA->>CMS: Submit MIPS data<br/>QRDA Category III
+    CMS-->>QA: MIPS submission confirmed<br/>score: 92/100
+    Compliance Officer->>QA: Review quality dashboard<br/>compliance status</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

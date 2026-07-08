@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant DOC as Physician<br/>(Dr. Williams)
+    participant CPOE as CPOE<br/>(Epic)
+    participant CDS as Clinical Decision Support<br/>(Cerner)
+    participant PHARM as Pharmacy<br/>(BD Pyxis)
+    participant LIS as LIS<br/>(Cerner Lab)
+    participant RIS as RIS<br/>(GE PACS)
+    DOC->>CPOE: Select order set for patient<br/>PT-2026-001: Diabetes management
+    CPOE->>CDS: Check drug-allergy interactions<br/>allergy: Penicillin (ALG-2026-001)
+    CDS-->>CPOE: No interactions found
+    DOC->>CPOE: Order CBC lab<br/>CBC with differential
+    CPOE->>LIS: Place lab order<br/>ORU^O01 (HL7 v2.5.1)
+    LIS-->>CPOE: Order accepted<br/>ORD-2026-001: Active
+    DOC->>CPOE: Order Metformin 500mg BID<br/>MED-2026-001
+    CPOE->>PHARM: Place medication order<br/>newRx transaction (NCPDP SCRIPT)
+    PHARM-->>CPOE: Order verified
+    DOC->>CPOE: Order chest X-Ray<br/>reason: shortness of breath
+    CPOE->>RIS: Place imaging order<br/>ORM^O01 (HL7 v2.5.1)
+    RIS-->>CPOE: Order scheduled<br/>IMG-2026-001: X-Ray Chest
+    CPOE-->>DOC: Orders placed successfully</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant HOSP as Hospitalist
+    participant EHR as EHR<br/>(Epic)
+    participant CM as Care Management<br/>(Cerner)
+    participant PORT as Patient Portal<br/>(MyChart)
+    participant HIE as HIE<br/>(HealthShare)
+    participant PCP as PCP Office
+    HOSP->>EHR: Initiate discharge process<br/>PT-2026-001: ready for discharge
+    EHR->>CM: Notify care management<br/>discharge planning needed
+    Discharge Planner->>CM: Arrange post-acute care<br/>home health, follow-up
+    HOSP->>EHR: Complete discharge summary<br/>diagnosis, hospital course, meds
+    HOSP->>EHR: Reconcile medications<br/>continue Metformin, add Atorvastatin
+    EHR->>PORT: Share discharge instructions<br/>medication list, follow-up plan
+    PORT-->>PT: Discharge instructions reviewed
+    EHR->>HIE: Publish discharge summary<br/>IHE XDS document submission
+    HIE-->>EHR: Published
+    HIE->>PCP: Notify PCP of discharge<br/>Dr. Williams - patient discharged
+    PCP-->>HIE: Acknowledged
+    EHR->>EHR: Schedule follow-up<br/>2-week follow-up with PCP
+    EHR->>PHARM: Send new prescriptions<br/>Atorvastatin 20mg daily
+    PHARM-->>EHR: Prescriptions sent</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

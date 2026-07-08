@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant DOC as Physician<br/>(Dr. Williams)
+    participant EHR as EHR<br/>(Epic)
+    participant HIE as HIE<br/>(HealthShare)
+    participant EXT as External EHR<br/>(Cerner)
+    participant REPO as Document Repository<br/>(IHE XDS)
+    DOC->>EHR: Open patient chart<br/>PT-2026-001: John Doe
+    EHR->>HIE: Query for external docs<br/>IHE XCA Cross-Community Query
+    HIE->>HIE: Search patient index<br/>community MPI lookup
+    HIE-->>EHR: Documents found<br/>3 external documents available
+    DOC->>EHR: Request external records<br/>select documents to retrieve
+    EHR->>HIE: Retrieve documents<br/>IHE XCA Cross-Community Retrieve
+    HIE->>EXT: Request documents<br/>from external organization
+    EXT-->>HIE: Documents returned<br/>discharge summary, lab results
+    HIE->>REPO: Store in repository<br/>cache for future access
+    REPO-->>HIE: Stored
+    HIE-->>EHR: Documents delivered<br/>CCD, PDF, lab report
+    EHR-->>DOC: External records available<br/>view in chart</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

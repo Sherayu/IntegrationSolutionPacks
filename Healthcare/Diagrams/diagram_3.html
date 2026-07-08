@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant PT as Patient
+    participant PORT as Patient Portal<br/>(MyChart)
+    participant EHR as EHR<br/>(Epic)
+    participant CM as Consent Manager<br/>(IHE ATNA)
+    participant HIE as HIE<br/>(HealthShare)
+    PT->>PORT: Review & sign consent forms<br/>treatment, payment, operations
+    PORT->>EHR: CaptureSignedConsent<br/>POST /Consent
+    EHR->>EHR: Store consent document<br/>CON-2026-001: Treatment Consent
+    EHR->>CM: Register consent directive<br/>IHE BPPC document submission
+    CM-->>EHR: Consent registered
+    PT->>PORT: Update privacy preferences<br/>opt-out of data sharing
+    PORT->>EHR: UpdateConsentPreferences<br/>PUT /Consent/CON-2026-001
+    EHR->>HIE: Notify consent changes<br/>consent directive update
+    HIE-->>EHR: Acknowledged
+    Privacy Officer->>CM: Audit consent compliance<br/>review access logs
+    CM->>EHR: Query consent status<br/>GET /Consent?patient=PT-2026-001
+    EHR-->>CM: Current consent directives</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

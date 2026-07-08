@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant RP as Revenue Cycle<br/>(Epic)
+    participant CLR as Clearinghouse<br/>(Change Healthcare)
+    participant DM as Denial Management<br/>(Cerner)
+    participant PORT as Patient Portal<br/>(MyChart)
+    participant PT as Patient
+    RP->>CLR: Retrieve payment files (835)
+    CLR-->>RP: ERA transactions
+    RP->>RP: Auto-post payments<br/>ERA auto-adjudication rules
+    RP->>DM: Flag denied claims<br/>CLM-2026-001: Denied - Auth missing
+    DM->>DM: Analyze denial reason<br/>category: Authorization
+    Denial Specialist->>DM: Review denial<br/>gather supporting docs
+    DM->>CLR: Submit appeal (277CA)<br/>attach prior authorization
+    CLR-->>DM: Appeal accepted
+    RP->>RP: Post patient responsibility<br/>deductible: $300, copay: $30
+    RP->>PORT: Send patient statement<br/>balance: $330.00
+    PORT-->>PT: Bill notification
+    PT->>PORT: Make online payment<br/>credit card: $330.00
+    PORT->>RP: Payment notification<br/>paymentRef: PAY-2026-001
+    RP->>RP: Reconcile account<br/>CLM-2026-001: Paid in Full</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

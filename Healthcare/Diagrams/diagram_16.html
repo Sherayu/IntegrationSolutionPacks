@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant PT as Patient
+    participant PORT as Patient Portal<br/>(MyChart)
+    participant SCH as Scheduling<br/>(Epic Cadence)
+    participant KIOSK as Kiosk<br/>(Phreesia)
+    participant EHR as EHR<br/>(Epic)
+    PT->>PORT: Request appointment<br/>reason: annual physical
+    PORT->>SCH: Check availability<br/>GET /Slot?provider=PROV-101
+    SCH-->>PORT: Available slots<br/>Jul 10 09:00, Jul 11 14:00
+    PT->>PORT: Select Jul 10 09:00
+    PORT->>SCH: Book appointment<br/>POST /Appointment
+    SCH-->>PORT: Confirmed: APT-2026-001<br/>Dr. Sarah Williams, Jul 10
+    PORT-->>PT: Email/SMS confirmation
+    PT->>PORT: Complete pre-registration<br/>update demographics, insurance
+    PORT->>EHR: Update patient info<br/>PUT /Patient/PT-2026-001
+    EHR-->>PORT: Updated
+    PT->>KIOSK: Arrive & check in<br/>scan QR code from email
+    KIOSK->>SCH: Confirm arrival<br/>POST /Appointment/APT-2026-001/arrive
+    SCH-->>KIOSK: Check-in complete
+    KIOSK->>EHR: Update encounter status<br/>status: Arrived
+    EHR-->>KIOSK: Status updated
+    KIOSK->>PT: Collect copay<br/>$30.00 credit card
+    PT->>KIOSK: Payment completed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

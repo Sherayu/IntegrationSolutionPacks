@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant DOC as Physician<br/>(Dr. Williams)
+    participant EHR as EHR<br/>(Epic)
+    participant CDR as Clinical Data Repository
+    participant PHARM as Pharmacy<br/>(BD Pyxis)
+    participant ALLERGY as Allergy Registry
+    DOC->>EHR: Open patient chart<br/>PT-2026-001: John Doe
+    EHR->>CDR: Retrieve problem list<br/>GET /Condition?patient=PT-2026-001
+    CDR-->>EHR: Active problems<br/>Type 2 Diabetes, Hypertension
+    DOC->>EHR: Add new diagnosis<br/>Hyperlipidemia (ICD-10: E78.5)
+    EHR->>CDR: POST /Condition<br/>new diagnosis record
+    CDR-->>EHR: Diagnosis stored
+    DOC->>EHR: Review medication list<br/>GET /MedicationRequest
+    EHR->>PHARM: Query active medications<br/>external medication history
+    PHARM-->>EHR: Filled medications<br/>Metformin, Lisinopril
+    DOC->>EHR: Reconcile medications<br/>continue current regimen
+    DOC->>EHR: Document penicillin allergy<br/>ALG-2026-001: Penicillin - Rash
+    EHR->>ALLERGY: Add allergy record<br/>POST /AllergyIntolerance
+    ALLERGY-->>EHR: Allergy recorded
+    EHR-->>DOC: Problem list updated</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

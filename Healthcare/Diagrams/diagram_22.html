@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant EHR as EHR<br/>(Epic)
+    participant IIS as Immunization Registry<br/>(State IIS)
+    participant PH as Public Health Portal<br/>(CDC)
+    participant HIE as HIE<br/>(HealthShare)
+    Nurse->>EHR: Administer influenza vaccine<br/>IMM-2026-001: Influenza 0.5mL
+    EHR->>IIS: Report immunization<br/>HL7 VXU (v2.5.1)
+    IIS-->>EHR: Acknowledged<br/>registry ID: IIS-2026-001
+    EHR->>EHR: Update patient record<br/>immunization status: Complete
+    LAB->>EHR: Report positive lab result<br/>COVID-19 detected
+    EHR->>PH: Report communicable disease<br/>electronic lab reporting (ELR)
+    PH-->>EHR: Report accepted<br/>case ID: CD-2026-001
+    EHR->>HIE: Publish syndromic data<br/>emergency department chief complaints
+    HIE-->>EHR: Syndromic data submitted
+    Clinical Informaticist->>EHR: Review reporting dashboard<br/>compliance metrics</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

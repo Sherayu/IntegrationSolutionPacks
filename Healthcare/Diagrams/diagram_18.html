@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant COORD as Care Coordinator
+    participant CM as Care Management<br/>(Cerner HealtheIntent)
+    participant EHR as EHR<br/>(Epic)
+    participant PORT as Patient Portal<br/>(MyChart)
+    participant HIE as HIE<br/>(HealthShare)
+    COORD->>CM: Identify patient for care plan<br/>PT-2026-001: Diabetes + Hypertension
+    CM->>EHR: Retrieve clinical data<br/>diagnoses, medications, labs
+    EHR-->>CM: Patient summary<br/>E11.9, I10, Metformin, Lisinopril
+    COORD->>CM: Develop care plan<br/>CP-2026-001: Diabetes Management
+    CM->>EHR: Create care plan record<br/>POST /CarePlan
+    EHR-->>CM: Care plan created
+    CM->>PORT: Share care plan with patient<br/>goals, interventions, schedule
+    PORT-->>CM: Patient acknowledged
+    DOC->>EHR: Update goal progress<br/>HbA1c: 7.2% -> 6.8%
+    EHR->>CM: Sync goal progress<br/>PUT /Goal/CP-2026-001
+    CM-->>EHR: Goal updated
+    CM->>HIE: Publish care plan summary<br/>share with external providers
+    HIE-->>CM: Published
+    COORD->>CM: Review care plan monthly<br/>adjust interventions as needed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

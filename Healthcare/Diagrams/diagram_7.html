@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant DOC as Physician
+    participant CPOE as CPOE<br/>(Epic)
+    participant LIS as LIS<br/>(Cerner Lab)
+    participant PHL as Phlebotomy<br/>(BD Pyxis)
+    participant SPEC as Specimen Tracking<br/>(SoftLab)
+    DOC->>CPOE: Order CBC & BMP labs<br/>ORD-2026-001
+    CPOE->>LIS: PlaceOrder(orderId, testCodes)<br/>ORM^O01 (HL7 v2.5.1)
+    LIS-->>CPOE: Order accepted<br/>collection priority: Routine
+    LIS->>PHL: Create collection task<br/>collectSpecimen(PT-2026-001, CBC)
+    PHL-->>LIS: Collection scheduled<br/>phlebotomist assigned
+    Phlebotomist->>PHL: Scan patient wristband<br/>PT-2026-001, MRN-2026-0001
+    PHL->>PHL: Label specimen tubes<br/>barcode labels printed
+    Phlebotomist->>PHL: Collect specimen<br/>blood draw: 2 lavender tops
+    PHL->>LIS: CollectionComplete<br/>specimenID: SPEC-2026-001
+    LIS->>SPEC: Register specimen for tracking<br/>chain of custody started
+    SPEC-->>LIS: Specimen tracked
+    Lab Technician->>SPEC: Scan specimen received
+    SPEC->>LIS: SpecimenReceived<br/>lab accessioning complete
+    LIS-->>CPOE: Status update<br/>order status: In Progress</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant LAB as Lab Technician
+    participant LIS as LIS<br/>(Cerner Lab)
+    participant EHR as EHR<br/>(Epic)
+    participant CDS as Clinical Decision Support<br/>(Cerner)
+    participant ALERT as Critical Alerting<br/>(Spok)
+    LAB->>LIS: Enter results for specimen<br/>SPEC-2026-001: CBC results
+    LIS->>LIS: Validate results<br/>QC checks, delta checks
+    Pathologist->>LIS: Review & verify results<br/>digital signature
+    LIS->>LIS: Flag critical value<br/>Potassium: 6.8 mEq/L (Critical High)
+    LIS->>EHR: Report results<br/>ORU^R01 (HL7 v2.5.1)
+    EHR-->>LIS: Results acknowledged
+    EHR->>CDS: Evaluate critical value<br/>CDS rules engine
+    CDS-->>EHR: Alert: Critical Potassium
+    EHR->>ALERT: Send critical alert<br/>PT-2026-001: Hyperkalemia
+    ALERT->>EHR: Send to ordering physician<br/>Dr. Williams - page + SMS
+    EHR-->>ALERT: Alert acknowledged
+    DOC->>EHR: Review resulting lab<br/>OBS-2026-001: Blood Glucose 98 mg/dL
+    EHR-->>DOC: Lab results displayed</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant SRC as Source Systems<br/>(Epic, Cerner, etc.)
+    participant MPI as EMPI<br/>(Rhapsody)
+    participant VER as Identity Resolution<br/>(Verato)
+    participant EHR as EHR<br/>(Epic)
+    participant HIE as Community MPI<br/>(State HIE)
+    SRC->>MPI: Submit patient demographics<br/>ADT^A04 (PID, PD1, NK1 segments)
+    MPI->>MPI: Normalize & standardize<br/>name parsing, address validation
+    MPI->>VER: Match against reference data<br/>referential matching
+    VER-->>MPI: Match scores<br/>>=0.95 auto-link, 0.80-0.94 review
+    MPI->>MPI: Apply matching algorithm<br/>deterministic + probabilistic
+    MPI-->>SRC: Assigned MPI ID<br/>EnterpriseID: EID-2026-001
+    MPI->>EHR: Push consolidated record<br/>merge demographics across sources
+    EHR-->>MPI: Confirmation
+    MPI->>HIE: Publish to community index<br/>PIX Feed (IHE PIX)
+    HIE-->>MPI: Community ID assigned
+    Identity Analyst->>MPI: Review potential duplicates<br/>manual review queue
+    MPI->>MPI: Merge duplicate records<br/>survivorship rules applied</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>

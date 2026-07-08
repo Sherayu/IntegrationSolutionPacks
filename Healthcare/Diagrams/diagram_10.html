@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>body{margin:0;padding:10px;background:white}div.mermaid{text-align:center}</style>
+</head><body>
+<div class="mermaid" id="d">sequenceDiagram
+    participant DOC as Physician<br/>(Dr. Williams)
+    participant CPOE as CPOE<br/>(Epic)
+    participant CDS as Clinical Decision Support<br/>(Cerner)
+    participant PHARM as Pharmacy<br/>(BD Pyxis)
+    participant MR as Med Reconciliation<br/>(PillDrill)
+    DOC->>CPOE: Open medication orders<br/>PT-2026-001: Type 2 Diabetes
+    CPOE->>MR: Retrieve home medications<br/>GET /MedicationStatement
+    MR-->>CPOE: Home meds<br/>Metformin, Lisinopril
+    DOC->>CPOE: Order Metformin 500mg BID<br/>MED-2026-001
+    CPOE->>CDS: Check drug-drug interactions<br/>POST /$drug-interaction-check
+    CDS-->>CPOE: No significant interactions<br/>1 minor interaction flagged
+    CPOE->>CDS: Check drug-allergy interactions<br/>allergy: Penicillin (ALG-2026-001)
+    CDS-->>CPOE: No interactions with Metformin
+    DOC->>CPOE: Order Lisinopril 10mg daily<br/>continue home medication
+    DOC->>CPOE: Sign medication orders<br/>digital signature applied
+    CPOE->>PHARM: Send new orders<br/>newRx transaction (NCPDP SCRIPT)
+    PHARM-->>CPOE: Orders received
+    Clinical Pharmacist->>PHARM: Clinical review<br/>verify dose, route, frequency
+    PHARM-->>CPOE: Verification complete
+    CPOE-->>DOC: Orders verified</div>
+<script>
+async function r(){
+    await mermaid.initialize({startOnLoad:false,theme:"neutral",sequence:{showSequenceNumbers:false,mirrorActors:true},securityLevel:"loose"});
+    var div = document.getElementById("d");
+    var svg = await mermaid.render("svg-0", div.textContent);
+    div.innerHTML = svg.svg;
+}
+r();
+</script>
+</body></html>
