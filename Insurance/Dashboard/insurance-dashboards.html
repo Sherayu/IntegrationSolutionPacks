@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insurance Analytics Dashboards — ACORD Reference</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #222; padding: 20px; }
+  .header { background: #1a3c6e; color: #fff; padding: 18px 28px; border-radius: 10px; margin-bottom: 20px; }
+  .header h1 { font-size: 22pt; margin: 0; }
+  .header p { font-size: 10pt; opacity: 0.85; margin-top: 4px; }
+  .filters { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filters input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 10pt; }
+  .filters select { padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 10pt; background: #fff; }
+  .dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 16px; }
+  .dash-card { background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden; }
+  .dash-header { padding: 14px 18px; background: linear-gradient(135deg, #f8f9fa 0%, #eef1f5 100%); border-bottom: 1px solid #e0e0e0; }
+  .dash-header h2 { font-size: 12pt; margin: 0 0 6px 0; color: #1a3c6e; }
+  .acord-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .acord-badge { font-size: 7pt; color: #fff; padding: 2px 7px; border-radius: 3px; font-weight: 600; }
+  .dash-body { padding: 12px 18px 18px; }
+  .dash-desc { font-size: 8pt; color: #555; line-height: 1.5; margin-bottom: 8px; }
+  .dash-meta { font-size: 7.5pt; color: #666; margin-bottom: 4px; }
+  .kpi-section h3, .mermaid-section h3 { font-size: 9pt; color: #1a3c6e; cursor: pointer; padding: 6px 0; user-select: none; }
+  .kpi-toggle { transition: transform 0.2s; display: inline-block; margin-right: 6px; }
+  h3.expanded .kpi-toggle { transform: rotate(90deg); }
+  .hidden { display: none; }
+  .kpi-table { width: 100%; border-collapse: collapse; font-size: 7pt; margin: 6px 0; }
+  .kpi-table th { background: #1a3c6e; color: #fff; padding: 4px 6px; text-align: left; }
+  .kpi-table td { padding: 3px 6px; border-bottom: 1px solid #e0e0e0; }
+  .kpi-table tr:nth-child(even) { background: #f8f9fa; }
+  .reg-ref { font-size: 6.5pt; background: #e8eaf6; padding: 1px 5px; border-radius: 3px; color: #283593; white-space: nowrap; }
+  .mermaid-container { background: #fafafa; border-radius: 6px; padding: 8px; margin-top: 4px; overflow-x: auto; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .dash-count { font-size: 9pt; color: #666; margin-bottom: 12px; }
+  @media (max-width: 600px) { .dash-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>&#9670; Insurance Analytics Dashboards</h1>
+  <p>ACORD Capability Model Reference &mdash; 16 dashboards, 192 KPIs &bull; Solvency II / NAIC / IFRS 17 / APRA / GDPR</p>
+</div>
+<div class="filters">
+  <input type="text" id="search" placeholder="Search dashboards by name, ACORD code, or KPI..." oninput="filterCards()">
+  <select id="acordFilter" onchange="filterCards()">
+    <option value="">All ACORD Domains</option>
+    <option value="IN001-IN004">Product Lifecycle (IN001-004)</option>
+    <option value="IN005-IN008">Distribution (IN005-008)</option>
+    <option value="IN009-IN012">Underwriting (IN009-012)</option>
+    <option value="IN013-IN015">Policy Admin (IN013-015)</option>
+    <option value="IN016-IN019">Claims (IN016-019)</option>
+    <option value="IN020-IN022">Reinsurance (IN020-022)</option>
+    <option value="IN023-IN025">Actuarial (IN023-025)</option>
+    <option value="IN031">Billing (IN031)</option>
+    <option value="IN026-IN027">Customer (IN026-027)</option>
+    <option value="IN028-IN030">Risk &amp; Compliance (IN028-030)</option>
+    <option value="IN032">IFRS 17 (IN032)</option>
+    <option value="IN029">Reg Reporting (IN029)</option>
+    <option value="IN033">Data &amp; Analytics (IN033)</option>
+    <option value="IN034">Info Security (IN034)</option>
+    <option value="IN035">Enterprise (IN035)</option>
+    <option value="IN036">IT &amp; Digital (IN036)</option>
+  </select>
+</div>
+<p class="dash-count" id="dashCount">Showing 16 dashboards</p>
+<div class="dash-grid" id="dashGrid">
+
+<div class="dash-card" data-acord="IN001,IN002,IN003,IN004" data-id="1">
+  <div class="dash-header">
+    <h2>Product Lifecycle Performance Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#1a3c6e">IN001</span> <span class="acord-badge" style="background:#1a3c6e">IN002</span> <span class="acord-badge" style="background:#1a3c6e">IN003</span> <span class="acord-badge" style="background:#1a3c6e">IN004</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Tracks product pipeline from concept through filing, launch, and in-force performance. Enables product managers to compare loss/expense/combined ratios across products, monitor rate filing progress, and identify underperforming coverages before they erode margin.</p>
+    <div class="dash-meta"><strong>Question:</strong> Which products are underperforming and why? &nbsp;|&nbsp; <strong>Owner:</strong> Head of Product Management</div>
+    <div class="dash-meta"><strong>Filters:</strong> Product Line, Region, Distribution Channel, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Product > Coverage > Policy > Claim</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Products in Pipeline</td><td>Count of products in concept/design/filing</td><td>Count</td><td>Duck Creek PLM</td><td>Weekly</td><td><span class='reg-ref'>NAIC Product Filing</span></td></tr><tr><td>Time to Market</td><td>Avg days from concept to launch</td><td>Bar (trend)</td><td>Duck Creek PLM</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>In-Force Policies</td><td>Total active policies by product</td><td>Count</td><td>Guidewire PolicyCenter</td><td>Daily</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Premium Written (GWP)</td><td>Gross premium written by product line</td><td>Bar (stacked)</td><td>Duck Creek Rating</td><td>Monthly</td><td><span class='reg-ref'>IFRS 17.55(a)</span></td></tr><tr><td>Loss Ratio (LR)</td><td>Incurred Claims / Earned Premium</td><td>Line + Gauge</td><td>Guidewire ClaimCenter</td><td>Monthly</td><td><span class='reg-ref'>NAIC SSAP 53; IFRS 17.55(c)</span></td></tr><tr><td>Expense Ratio (ER)</td><td>Acquisition + Admin Expenses / EP</td><td>Line + Gauge</td><td>SAP GL</td><td>Monthly</td><td><span class='reg-ref'>NAIC SSAP 61</span></td></tr><tr><td>Combined Ratio</td><td>LR + ER</td><td>Gauge</td><td>BI (Tableau)</td><td>Monthly</td><td><span class='reg-ref'>NAIC IRIS 4a</span></td></tr><tr><td>Product Profitability</td><td>Underwriting result by product</td><td>Bar (waterfall)</td><td>Snowflake DW</td><td>Monthly</td><td><span class='reg-ref'>IFRS 17.55(d)</span></td></tr><tr><td>Rate Filing Approval %</td><td>Filed rates approved vs pending</td><td>Donut</td><td>Duck Creek Rating</td><td>Monthly</td><td><span class='reg-ref'>NAIC SERFF</span></td></tr><tr><td>Coverage Utilization</td><td>% of policies with optional coverages attached</td><td>Bar</td><td>Guidewire PolicyCenter</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Retention by Product</td><td>% of renewable policies retained</td><td>Line</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Benchmark Comparison</td><td>LR/ER vs industry benchmark by product line</td><td>Table (heatmap)</td><td>BI (Tableau)</td><td>Quarterly</td><td><span class='reg-ref'>NAIC IRIS</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant PLM as Product Lifecycle<br/>(Duck Creek)
+    participant RATE as Rating Engine<br/>(Duck Creek Rating)
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant CC as ClaimCenter<br/>(Guidewire ClaimCenter)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant PM as Product Manager
+    PLM->>DW: Product master, filing status
+    RATE->>DW: Rate tables, filed premiums
+    PAS->>DW: In-force policies, retention
+    CC->>DW: Incurred claims, loss triangles
+    DW->>BI: Aggregated KPI dataset
+    BI->>BI: LR/ER/Combined ratio calc
+    PM->>BI: View product dashboard
+    BI-->>PM: Dashboard loaded (12 KPIs)</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN005,IN006,IN007,IN008" data-id="2">
+  <div class="dash-header">
+    <h2>Distribution & Channel Analytics Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#2e7d32">IN005</span> <span class="acord-badge" style="background:#2e7d32">IN006</span> <span class="acord-badge" style="background:#2e7d32">IN007</span> <span class="acord-badge" style="background:#2e7d32">IN008</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Monitors channel performance (agents, brokers, direct, bancassurance, aggregators) on premium volume, acquisition cost, conversion, retention, and cross-sell. Includes producer scorecards with traffic-light indicators and peer percentile ranking.</p>
+    <div class="dash-meta"><strong>Question:</strong> Which channels and producers deliver the best ROI? &nbsp;|&nbsp; <strong>Owner:</strong> Head of Distribution</div>
+    <div class="dash-meta"><strong>Filters:</strong> Channel Type, Region, Producer Tier, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Channel > Producer > Policy > Commission</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Premium by Channel</td><td>GWP split by channel</td><td>Pie + Bar</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Customer Acquisition Cost</td><td>Total channel cost / new policies</td><td>Bar (by channel)</td><td>SAP GL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Conversion Rate</td><td>Quotes accepted / quotes issued by channel</td><td>Line + Gauge</td><td>Duck Creek Rating</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Retention Rate</td><td>Policies renewed / policies expiring by channel</td><td>Line</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Active Producer Count</td><td>Producers with >=1 policy in period</td><td>Count</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>NAIC Producer Licensing</span></td></tr><tr><td>Commission Ratio</td><td>Commission paid / premium written by channel</td><td>Bar</td><td>Duck Creek Billing</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cross-Sell Ratio</td><td>% of multi-policy households by channel</td><td>Bar</td><td>CRM (Salesforce)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cost-to-Serve</td><td>Service cost per policy by channel</td><td>Bar</td><td>SAP GL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Producer Scorecard</td><td>KPI vs target with traffic-light per producer</td><td>Table (heatmap)</td><td>BI (Tableau)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Channel Profitability</td><td>Channel P&L: premium - commissions - expenses</td><td>Waterfall</td><td>Snowflake DW</td><td>Monthly</td><td><span class='reg-ref'>IFRS 17.55(d)</span></td></tr><tr><td>Lead Conversion Funnel</td><td>Lead > quote > bind by source</td><td>Funnel</td><td>Marketo + CRM</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Agency Contingent Pay</td><td>Profit-sharing % vs loss-ratio threshold</td><td>Gauge</td><td>Duck Creek Billing</td><td>Annual</td><td><span class='reg-ref'>NAIC SSAP 54</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant CRM as CRM<br/>(Salesforce Financial Svcs)
+    participant BILL as Billing<br/>(Duck Creek Billing)
+    participant GL as Finance GL<br/>(SAP)
+    participant MKT as Marketing<br/>(Marketo)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant DIST as Distribution Manager
+    PAS->>DW: Premium, producer, channel
+    CRM->>DW: Lead sources, cross-sell
+    BILL->>DW: Commissions paid
+    GL->>DW: Channel expenses
+    MKT->>DW: Campaign attribution
+    DW->>BI: Channel analytics model
+    DIST->>BI: View distribution dashboard
+    BI-->>DIST: KPIs by channel</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN009,IN010,IN011,IN012" data-id="3">
+  <div class="dash-header">
+    <h2>Underwriting Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#e65100">IN009</span> <span class="acord-badge" style="background:#e65100">IN010</span> <span class="acord-badge" style="background:#e65100">IN011</span> <span class="acord-badge" style="background:#e65100">IN012</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Provides real-time visibility into new business pipeline, risk selection quality, quote-to-bind conversion, referral bottlenecks, and portfolio risk concentration. Helps underwriters balance growth against risk appetite.</p>
+    <div class="dash-meta"><strong>Question:</strong> Is underwriting risk selection improving or deteriorating? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Underwriting Officer</div>
+    <div class="dash-meta"><strong>Filters:</strong> Product Line, Region, UW Team, Risk Band &nbsp;|&nbsp; <strong>Drill-down:</strong> Submission > Quote > Policy > Claims Experience</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Submission Volume</td><td>New business submissions received</td><td>Count (trend)</td><td>Origami Risk UW</td><td>Daily</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Quote-to-Bind Ratio</td><td>Policies bound / quotes issued</td><td>Gauge</td><td>Duck Creek Rating</td><td>Daily</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Average Premium</td><td>Mean premium per bound policy</td><td>Line</td><td>Duck Creek Rating</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Risk Score Distribution</td><td>Count of risks by score decile</td><td>Histogram</td><td>Origami Risk UW</td><td>Monthly</td><td><span class='reg-ref'>Solvency II UW Risk 1.2</span></td></tr><tr><td>Referral Rate</td><td>% of submissions requiring UW referral</td><td>Line</td><td>Origami Risk UW</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>TAT (Submission > Quote)</td><td>Avg hours from submission to quote issued</td><td>Bar</td><td>Origami Risk UW</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>TAT (Quote > Bind)</td><td>Avg days from quote to policy bound</td><td>Bar</td><td>Guidewire PolicyCenter</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Portfolio Concentration</td><td>% of premium in top 3 risk categories</td><td>Donut</td><td>BI (Tableau)</td><td>Monthly</td><td><span class='reg-ref'>Solvency II Risk Concentration</span></td></tr><tr><td>Declination Rate</td><td>Quotes declined / submissions</td><td>Line</td><td>Origami Risk UW</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>UW Authority Utilization</td><td>% decided within UW authority limit</td><td>Gauge</td><td>Origami Risk UW</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Reinsurance Impact</td><td>Premium ceded vs retained by risk band</td><td>Bar (stacked)</td><td>Sapiens Re</td><td>Monthly</td><td><span class='reg-ref'>Solvency II RI Risk</span></td></tr><tr><td>New Business LR</td><td>Incurred loss ratio on policies <=12 months</td><td>Line</td><td>Guidewire ClaimCenter</td><td>Quarterly</td><td><span class='reg-ref'>NAIC IRIS 7</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant UW as UW Workbench<br/>(Origami Risk)
+    participant RATE as Rating Engine<br/>(Duck Creek Rating)
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant CRM as CRM<br/>(Salesforce Financial Svcs)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant CUO as Chief UW Officer
+    UW->>DW: Submission, risk score, referral
+    RATE->>DW: Quotes issued, premium
+    PAS->>DW: Bound policies, effective date
+    CRM->>DW: Producer attribution
+    DW->>BI: UW pipeline model
+    BI->>BI: Calc funnel metrics
+    CUO->>BI: View UW dashboard
+    BI-->>CUO: Pipeline and risk selection KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN013,IN014,IN015" data-id="4">
+  <div class="dash-header">
+    <h2>Policy Administration Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#01579b">IN013</span> <span class="acord-badge" style="background:#01579b">IN014</span> <span class="acord-badge" style="background:#01579b">IN015</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Provides a complete view of the policy lifecycle: new business, in-force book, renewals, mid-term adjustments, cancellations, and endorsements. Tracks service levels including TAT for endorsements and policy inquiry response.</p>
+    <div class="dash-meta"><strong>Question:</strong> How healthy is the in-force book and policy servicing? &nbsp;|&nbsp; <strong>Owner:</strong> Head of Policy Services</div>
+    <div class="dash-meta"><strong>Filters:</strong> Product Line, Region, Coverage Type, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Policy > Endorsement > Document > Inquiry</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>In-Force Policies</td><td>Total active policies</td><td>Count (trend)</td><td>Guidewire PolicyCenter</td><td>Daily</td><td><span class='reg-ref'>—</span></td></tr><tr><td>New Business Count</td><td>Policies issued (first-time) this period</td><td>Bar</td><td>Guidewire PolicyCenter</td><td>Daily</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Renewal Rate</td><td>Policies renewed / renewals offered</td><td>Gauge + Line</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Mid-Term Adjustments</td><td>Endorsements processed this period</td><td>Bar</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cancellation Rate</td><td>Policies cancelled / in-force count</td><td>Line</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cancellation Reason Mix</td><td>% by reason (non-pay, UW, fraud, request)</td><td>Pie</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Endorsement TAT</td><td>Avg hours from request to endorsement issued</td><td>Bar</td><td>Guidewire PolicyCenter</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Policy Inquiry Volume</td><td>Customer/producer inquiries received</td><td>Count (trend)</td><td>CRM (Salesforce)</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Average Policy Tenure</td><td>Mean days policy has been in-force</td><td>Line</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>NPS (Policy Servicing)</td><td>Net promoter score from servicing survey</td><td>Gauge</td><td>CRM (Salesforce)</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Auto-Issue %</td><td>Policies issued without manual intervention</td><td>Gauge</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Document Generation</td><td>Policy documents generated (schedules, COIs)</td><td>Count</td><td>M-Files</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant CRM as CRM<br/>(Salesforce Financial Svcs)
+    participant DOC as Document Mgmt<br/>(M-Files)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant MGR as Policy Services Manager
+    PAS->>DW: Policy events (issue, endorse, cancel, renew)
+    CRM->>DW: Inquiry, NPS, servicing data
+    DOC->>DW: Document generation count
+    DW->>BI: Policy lifecycle model
+    MGR->>BI: View policy dashboard
+    BI-->>MGR: Book health and servicing KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN016,IN017,IN018,IN019" data-id="5">
+  <div class="dash-header">
+    <h2>Claims Operations Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#c62828">IN016</span> <span class="acord-badge" style="background:#c62828">IN017</span> <span class="acord-badge" style="background:#c62828">IN018</span> <span class="acord-badge" style="background:#c62828">IN019</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">End-to-end claims analytics covering FNOL intake, investigation, adjudication, payment, litigation, and subrogation. Monitors leakage, cycle times, adjuster workload, and reserve adequacy. Alerts when claims exceed authority or outlier severity thresholds.</p>
+    <div class="dash-meta"><strong>Question:</strong> Are claims being handled efficiently, fairly, and within reserve? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Claims Officer</div>
+    <div class="dash-meta"><strong>Filters:</strong> Line of Business, Claim Status, Adjuster Team, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Claim > Coverage > Payment > Litigation > Recovery</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>FNOL Volume</td><td>First notices of loss received</td><td>Count (trend)</td><td>Guidewire ClaimCenter</td><td>Daily</td><td><span class='reg-ref'>NAIC Claims Handling</span></td></tr><tr><td>Open Claims Count</td><td>Claims currently open (by status)</td><td>Count</td><td>Guidewire ClaimCenter</td><td>Daily</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Average Severity</td><td>Total paid / closed claims</td><td>Line + Bar</td><td>Guidewire ClaimCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Claims Frequency</td><td>Claim count / in-force policies</td><td>Line</td><td>Guidewire ClaimCenter</td><td>Monthly</td><td><span class='reg-ref'>Solvency II Premium Risk</span></td></tr><tr><td>Leakage Rate</td><td>Indemnity paid / expected reserve (deviation)</td><td>Gauge</td><td>Guidewire ClaimCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cycle Time (FNOL > Payment)</td><td>Avg days from FNOL to first payment</td><td>Bar</td><td>Guidewire ClaimCenter</td><td>Weekly</td><td><span class='reg-ref'>NAIC Timely Claims Handling</span></td></tr><tr><td>Cycle Time (FNOL > Close)</td><td>Avg days from FNOL to claim closure</td><td>Bar</td><td>Guidewire ClaimCenter</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Reserve Adequacy</td><td>Case reserve adequacy ratio</td><td>Line</td><td>SAS Actuarial</td><td>Monthly</td><td><span class='reg-ref'>Solvency II TP 2.2; NAIC SSAP 55</span></td></tr><tr><td>Subrogation Recovery Rate</td><td>Amount recovered / amount recoverable</td><td>Gauge</td><td>Guidewire ClaimCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Litigation Rate</td><td>% of claims with active litigation</td><td>Line</td><td>Guidewire ClaimCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Adjuster Workload</td><td>Open claims per adjuster</td><td>Bar</td><td>Guidewire ClaimCenter</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Claims NPS</td><td>Customer satisfaction survey post-settlement</td><td>Gauge</td><td>CRM (Salesforce)</td><td>Quarterly</td><td><span class='reg-ref'>NAIC Fair Claims Practices</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant CC as ClaimCenter<br/>(Guidewire ClaimCenter)
+    participant CRM as CRM<br/>(Salesforce Financial Svcs)
+    participant SAS as Actuarial System<br/>(SAS)
+    participant PAY as Payment Gateway<br/>(Stripe)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant CCO as Chief Claims Officer
+    CC->>DW: FNOL, reserve, payment, status
+    CRM->>DW: Survey, NPS, interaction
+    SAS->>DW: Reserve adequacy, IBNR
+    PAY->>DW: Payment transactions
+    DW->>BI: Claims analytics model
+    CCO->>BI: View claims dashboard
+    BI-->>CCO: Operations and leakage KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN020,IN021,IN022" data-id="6">
+  <div class="dash-header">
+    <h2>Reinsurance Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#4a148c">IN020</span> <span class="acord-badge" style="background:#4a148c">IN021</span> <span class="acord-badge" style="background:#4a148c">IN022</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Monitors treaty and facultative placements, premium ceded, recoveries, bordereaux accuracy and timeliness, counterparty credit risk, and retrocession coverage. Provides early warning if treaty capacity is approaching exhaustion.</p>
+    <div class="dash-meta"><strong>Question:</strong> Are our reinsurance programmes adequately covering our risk exposure? &nbsp;|&nbsp; <strong>Owner:</strong> Head of Reinsurance</div>
+    <div class="dash-meta"><strong>Filters:</strong> Treaty Type, Reinsurer, Line of Business, Year &nbsp;|&nbsp; <strong>Drill-down:</strong> Treaty > Cession > Claim Recovery > Reinsurer</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Treaty Capacity Utilisation</td><td>% of treaty limit consumed by claims</td><td>Gauge + Bar</td><td>Sapiens Re</td><td>Monthly</td><td><span class='reg-ref'>Solvency II RI Risk 2.1</span></td></tr><tr><td>Premium Ceded Ratio</td><td>Ceded premium / gross written premium</td><td>Line</td><td>Sapiens Re + PAS</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.62; NAIC SSAP 61</span></td></tr><tr><td>Recoveries Received</td><td>Reinsurance recoveries collected this period</td><td>Bar</td><td>Sapiens Re</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Recovery Cycle Time</td><td>Avg days from cession notification to cash received</td><td>Bar</td><td>Sapiens Re</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Bordereaux Accuracy</td><td>% of bordereaux records error-free on submission</td><td>Gauge</td><td>Sapiens Re</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Bordereaux Timeliness</td><td>% submitted within contractual deadline</td><td>Gauge</td><td>Sapiens Re</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>RI Credit Risk</td><td>Exposure weighted by reinsurer credit rating</td><td>Bar</td><td>Sapiens Re + Moody's</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II Counterparty Risk 3.1</span></td></tr><tr><td>Facultative Placement</td><td>Number of facultative placements requested/placed</td><td>Count (bar)</td><td>Sapiens Re</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Retrocession Coverage</td><td>% of ceded risk covered by retrocession</td><td>Gauge</td><td>Sapiens Re</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II RI Risk 2.3</span></td></tr><tr><td>Catastrophe RI Cover</td><td>Per-occurrence limit vs modelled PML</td><td>Gauge</td><td>Moody's RMS</td><td>Annual</td><td><span class='reg-ref'>Solvency II Cat Risk</span></td></tr><tr><td>Treaty Expiry Calendar</td><td>Upcoming treaty renewals in next 6 months</td><td>Timeline table</td><td>Sapiens Re</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>RI Programme ROE</td><td>Return on equity of RI programme</td><td>Line</td><td>Snowflake DW</td><td>Annual</td><td><span class='reg-ref'>—</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant RE as Reinsurance System<br/>(Sapiens Re)
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant CC as ClaimCenter<br/>(Guidewire ClaimCenter)
+    participant RMS as Cat Modelling<br/>(Moody's RMS)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant RE_MGR as Reinsurance Manager
+    RE->>DW: Treaty, cession, bordereaux
+    PAS->>DW: Premium by treaty
+    CC->>DW: Ceded claim recoveries
+    RMS->>DW: PML by peril vs treaty cover
+    DW->>BI: RI analytics model
+    RE_MGR->>BI: View RI dashboard
+    BI-->>RE_MGR: Treaty and recovery KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN023,IN024,IN025" data-id="7">
+  <div class="dash-header">
+    <h2>Actuarial & Pricing Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#00695c">IN023</span> <span class="acord-badge" style="background:#00695c">IN024</span> <span class="acord-badge" style="background:#00695c">IN025</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Aggregates pricing, rate monitoring, reserving, and catastrophe modelling analytics. Enables the actuarial team to assess rate adequacy, track IBNR emergence, validate reserve assumptions, and understand catastrophe exposure. Links pricing decisions to actual loss experience.</p>
+    <div class="dash-meta"><strong>Question:</strong> Are our rates adequate and reserves sufficient? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Actuary</div>
+    <div class="dash-meta"><strong>Filters:</strong> Product Line, Accident Year, Development Period, Peril &nbsp;|&nbsp; <strong>Drill-down:</strong> Product > Accident Year > Reserve Method > Model Run</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Rate Adequacy</td><td>Indicated rate change vs filed (by product)</td><td>Gauge + Table</td><td>Duck Creek Rating</td><td>Monthly</td><td><span class='reg-ref'>NAIC SERFF; Solvency II Pricing</span></td></tr><tr><td>Actual vs Expected LR</td><td>Incurred LR vs pricing assumption LR</td><td>Line (pair)</td><td>SAS + DW</td><td>Monthly</td><td><span class='reg-ref'>Solvency II TP 2.2</span></td></tr><tr><td>IBNR Ratio</td><td>IBNR reserve / total reserve</td><td>Line</td><td>SAS Actuarial</td><td>Monthly</td><td><span class='reg-ref'>IFRS 17.37; NAIC SSAP 55</span></td></tr><tr><td>Reserve Adequacy Ratio</td><td>Best estimate vs central estimate</td><td>Gauge</td><td>SAS Actuarial</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II TP 2.3</span></td></tr><tr><td>Chain-Ladder IBNR</td><td>IBNR via chain-ladder method</td><td>Line (development)</td><td>SAS Actuarial</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Bornhuetter-Ferguson IBNR</td><td>IBNR via BF method for immature periods</td><td>Line (development)</td><td>SAS Actuarial</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Probable Maximum Loss</td><td>OEP 100yr / AEP 100yr / AAL</td><td>Bar (by peril)</td><td>Moody's RMS</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II Cat Risk</span></td></tr><tr><td>PML vs Treaty Cover</td><td>PML as % of per-occurrence treaty limit</td><td>Gauge</td><td>Moody's RMS</td><td>Annual</td><td><span class='reg-ref'>Solvency II Cat Risk 4.1</span></td></tr><tr><td>Credibility-Weighted LR</td><td>LR weighted by credibility factor</td><td>Line</td><td>SAS Actuarial</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Loss Development Pattern</td><td>Paid + incurred loss triangles</td><td>Line (multi-series)</td><td>SAS Actuarial</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.37; NAIC SSAP 55</span></td></tr><tr><td>Expense Load</td><td>Expense provision as % of gross premium</td><td>Bar</td><td>SAP GL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Model Stability</td><td>Variance of reserve estimates across quarterly runs</td><td>Bar (variance)</td><td>SAS Actuarial</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II TP 2.5</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant SAS as Actuarial System<br/>(SAS)
+    participant RATE as Rating Engine<br/>(Duck Creek Rating)
+    participant RMS as Cat Modelling<br/>(Moody's RMS)
+    participant CC as ClaimCenter<br/>(Guidewire ClaimCenter)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant ACT as Chief Actuary
+    SAS->>DW: Reserve estimates, IBNR
+    RATE->>DW: Rate adequacy, premiums
+    RMS->>DW: PML, AAL, exceedance curves
+    CC->>DW: Paid + incurred loss triangles
+    DW->>BI: Actuarial analytics model
+    ACT->>BI: View actuarial dashboard
+    BI-->>ACT: Pricing and reserving KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN031" data-id="8">
+  <div class="dash-header">
+    <h2>Billing & Collections Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#f57f17">IN031</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Monitors premium billing, payment processing, accounts receivable aging, collection effectiveness, refunds, and commission disbursement. Flags overdue accounts and tracks DSO improvements.</p>
+    <div class="dash-meta"><strong>Question:</strong> Are premiums being collected efficiently and on time? &nbsp;|&nbsp; <strong>Owner:</strong> Head of Finance Operations</div>
+    <div class="dash-meta"><strong>Filters:</strong> Product Line, Payment Method, Aging Bucket, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Billing Account > Policy > Payment > Refund</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Premium Billed</td><td>Total premium billed this period</td><td>Bar</td><td>Duck Creek Billing</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Premium Collected</td><td>Cash received against billed premium</td><td>Bar</td><td>Duck Creek Billing</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Collection Rate</td><td>Collected / billed (%)</td><td>Gauge</td><td>Duck Creek Billing</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Aging (0-30 days)</td><td>Receivables 0-30 days overdue</td><td>Bar (stacked)</td><td>Duck Creek Billing</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Aging (31-60 days)</td><td>Receivables 31-60 days overdue</td><td>Bar (stacked)</td><td>Duck Creek Billing</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Aging (61-90 days)</td><td>Receivables 61-90 days overdue</td><td>Bar (stacked)</td><td>Duck Creek Billing</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Aging (90+ days)</td><td>Receivables >90 days overdue</td><td>Bar (stacked)</td><td>Duck Creek Billing</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>DSO</td><td>Days sales outstanding to collect premium</td><td>Line</td><td>BI (Tableau)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Payment Method Mix</td><td>% by method (CC, bank transfer, direct debit, cheque)</td><td>Pie</td><td>Stripe + Billing</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Failed Payment Rate</td><td>Auto-pay attempts failed / total attempts</td><td>Line</td><td>Stripe</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Refund Volume</td><td>Premium refunds processed this period</td><td>Count (bar)</td><td>Duck Creek Billing</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Commission Payable</td><td>Commission due to producers this period</td><td>Bar</td><td>Duck Creek Billing</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant BILL as Billing<br/>(Duck Creek Billing)
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant PAY as Payment Gateway<br/>(Stripe)
+    participant GL as Finance GL<br/>(SAP)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant FIN as Finance Manager
+    BILL->>DW: Invoices, payments, aging
+    PAS->>DW: Premium adjustments, cancellations
+    PAY->>DW: Transaction success/failure
+    GL->>DW: GL postings, commission
+    DW->>BI: Billing analytics model
+    FIN->>BI: View billing dashboard
+    BI-->>FIN: Collection and aging KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN026,IN027" data-id="9">
+  <div class="dash-header">
+    <h2>Customer Analytics Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#ad1457">IN026</span> <span class="acord-badge" style="background:#ad1457">IN027</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">360-degree view of customer health including NPS, CSAT, customer lifetime value, retention and loyalty programme effectiveness, cross-sell penetration, complaints trends, and service experience metrics. Segments customers by behaviour, value, and risk profile.</p>
+    <div class="dash-meta"><strong>Question:</strong> How satisfied are our customers and what drives loyalty? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Customer Officer</div>
+    <div class="dash-meta"><strong>Filters:</strong> Customer Segment, Product Line, Channel, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Segment > Customer > Policy > Interaction</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Net Promoter Score</td><td>Promoters - Detractors (scale -100 to +100)</td><td>Gauge + Line</td><td>CRM (Salesforce)</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Customer Satisfaction</td><td>Avg satisfaction score (1-5) post-interaction</td><td>Gauge</td><td>CRM (Salesforce)</td><td>Monthly</td><td><span class='reg-ref'>NAIC Fair Treatment</span></td></tr><tr><td>Customer Lifetime Value</td><td>Present value of future profit from customer</td><td>Bar (segment)</td><td>BI (Tableau)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Retention Rate</td><td>Customers retained / customers at risk</td><td>Gauge + Line</td><td>Guidewire PolicyCenter</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cross-Sell Penetration</td><td>% customers with >1 policy</td><td>Bar (trend)</td><td>CRM (Salesforce)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Complaint Volume</td><td>Complaints received by category</td><td>Count (bar)</td><td>CRM (Salesforce)</td><td>Monthly</td><td><span class='reg-ref'>NAIC Consumer Complaints</span></td></tr><tr><td>First-Contact Resolution</td><td>Issues resolved in first interaction</td><td>Gauge</td><td>CRM (Salesforce)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Average Response Time</td><td>Avg hours to respond to customer enquiry</td><td>Line</td><td>CRM (Salesforce)</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Customer Segment Mix</td><td>% by value tier (platinum/gold/silver/bronze)</td><td>Pie</td><td>BI (Tableau)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Loyalty Programme Engagement</td><td>Active members / eligible customers</td><td>Gauge</td><td>CRM (Salesforce)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cost-to-Serve per Customer</td><td>Service cost / customer count by segment</td><td>Bar</td><td>SAP GL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Churn Prediction Score</td><td>Avg churn probability for at-risk population</td><td>Gauge</td><td>H2O.ai ML Model</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant CRM as CRM<br/>(Salesforce Financial Svcs)
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant ML as ML Platform<br/>(H2O.ai)
+    participant MKT as Marketing<br/>(Marketo)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant CCO as Chief Customer Officer
+    CRM->>DW: NPS, CSAT, complaints, CLV
+    PAS->>DW: Retention, cross-sell
+    ML->>DW: Churn probability scores
+    MKT->>DW: Campaign engagement
+    DW->>BI: Customer 360 model
+    CCO->>BI: View customer dashboard
+    BI-->>CCO: Satisfaction and loyalty KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN028,IN029,IN030" data-id="10">
+  <div class="dash-header">
+    <h2>Risk & Compliance Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#37474f">IN028</span> <span class="acord-badge" style="background:#37474f">IN029</span> <span class="acord-badge" style="background:#37474f">IN030</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Consolidates enterprise risk management, capital adequacy (SCR/MCR), operational risk incidents, compliance monitoring, internal audit findings, and conduct risk metrics. Provides a single pane of glass for the CRO and board risk committee.</p>
+    <div class="dash-meta"><strong>Question:</strong> Are we operating within risk appetite and meeting regulatory obligations? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Risk Officer</div>
+    <div class="dash-meta"><strong>Filters:</strong> Risk Category, Business Unit, KRI Status, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Risk Category > KRI > Incident > Remediation</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>SCR Coverage Ratio</td><td>Eligible own funds / SCR</td><td>Gauge + Line</td><td>Moody's Capital</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II SCR 3.1</span></td></tr><tr><td>MCR Coverage Ratio</td><td>Eligible own funds / MCR</td><td>Gauge</td><td>Moody's Capital</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II MCR 4.1</span></td></tr><tr><td>KRI Dashboard</td><td>15 green, 3 amber, 2 red indicators</td><td>Traffic-light heatmap</td><td>Moody's Risk</td><td>Monthly</td><td><span class='reg-ref'>Solvency II ORSA 5.1</span></td></tr><tr><td>Risk Appetite Utilisation</td><td>Risk exposure / risk appetite limit</td><td>Bullet chart</td><td>Moody's Risk</td><td>Monthly</td><td><span class='reg-ref'>Solvency II ORSA 5.2</span></td></tr><tr><td>Operational Risk Incidents</td><td>Operational loss events by category</td><td>Bar</td><td>ServiceNow GRC</td><td>Monthly</td><td><span class='reg-ref'>Solvency II OpRisk 6.1</span></td></tr><tr><td>Compliance Breaches</td><td>Regulatory or internal policy breaches</td><td>Count (trend)</td><td>ServiceNow GRC</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Internal Audit Findings</td><td>Open findings by severity</td><td>Bar (stacked)</td><td>ServiceNow GRC</td><td>Monthly</td><td><span class='reg-ref'>IAIS ICPs</span></td></tr><tr><td>Open Regulatory Queries</td><td>Outstanding regulatory information requests</td><td>Count</td><td>AxiomSL</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>RCSA Completion</td><td>Risk and control self-assessment completion by BU</td><td>Gauge</td><td>ServiceNow GRC</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Conduct Risk Score</td><td>Fair value assessment score by product</td><td>Bar</td><td>Compliance System</td><td>Monthly</td><td><span class='reg-ref'>NAIC Market Conduct</span></td></tr><tr><td>Capital Allocation</td><td>Capital allocated by risk type</td><td>Waterfall</td><td>Moody's Capital</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II SCR 3.2</span></td></tr><tr><td>Board Risk Summary</td><td>CRO summary for board risk committee</td><td>Table (executive)</td><td>BI (Tableau)</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II ORSA 5.3</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant RISK as Risk System<br/>(Moody's Risk)
+    participant CAP as Capital Model<br/>(Moody's Capital)
+    participant REG as Reg Reporting<br/>(AxiomSL)
+    participant GRC as GRC Platform<br/>(ServiceNow GRC)
+    participant AUDIT as Internal Audit<br/>(ServiceNow Audit)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant CRO as Chief Risk Officer
+    RISK->>DW: KRIs, risk appetite, incidents
+    CAP->>DW: SCR/MCR ratios, capital allocation
+    REG->>DW: Regulatory queries, filings
+    GRC->>DW: RCSA, compliance breaches
+    AUDIT->>DW: Audit findings
+    DW->>BI: Enterprise risk model
+    CRO->>BI: View risk dashboard
+    BI-->>CRO: Capital and compliance KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN032" data-id="11">
+  <div class="dash-header">
+    <h2>IFRS 17 Accounting Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#0d47a1">IN032</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Provides full visibility into IFRS 17 financial metrics: CSM balance and amortisation, risk adjustment, insurance revenue recognition by PAA/GMM/VFA, insurance service result, and reinsurance impact. Essential for internal and external financial reporting.</p>
+    <div class="dash-meta"><strong>Question:</strong> What is the IFRS 17 profit profile and CSM emergence pattern? &nbsp;|&nbsp; <strong>Owner:</strong> CFO / IFRS 17 Programme Director</div>
+    <div class="dash-meta"><strong>Filters:</strong> IFRS 17 Group, Measurement Approach, Transition Method, Reporting Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Group > Measurement Approach > Movement Component > Journal</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>CSM Balance</td><td>CSM opening + movement - amortised</td><td>Waterfall</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.43-46</span></td></tr><tr><td>CSM Amortisation</td><td>CSM released to P&L this period</td><td>Bar</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.44(b)</span></td></tr><tr><td>Risk Adjustment (RA)</td><td>Non-financial risk adjustment movement</td><td>Bar</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.37, 17.84</span></td></tr><tr><td>Insurance Revenue</td><td>Revenue recognised (PAA/GMM/VFA by group)</td><td>Line + Bar</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.83-86</span></td></tr><tr><td>Insurance Service Expenses</td><td>Incurred claims + expenses recognised</td><td>Bar</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.87-88</span></td></tr><tr><td>Net Insurance Result</td><td>Insurance revenue - service expenses</td><td>Line</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.80</span></td></tr><tr><td>GWP vs NEP</td><td>Gross written vs net earned premium</td><td>Bar (paired)</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.55(a)</span></td></tr><tr><td>PAA Eligibility</td><td>% of groups qualifying for PAA</td><td>Pie</td><td>SAP IFRS17</td><td>Annual</td><td><span class='reg-ref'>IFRS 17.53-54</span></td></tr><tr><td>Group Aggregation</td><td>Groups by profitability (onerous/other)</td><td>Bar (stacked)</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.16-24</span></td></tr><tr><td>Reinsurance Impact</td><td>Reinsurance share of CSM, RA, revenue</td><td>Bar (stacked)</td><td>SAP + Sapiens</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.62-65</span></td></tr><tr><td>Discount Rate Sensitivity</td><td>CSM sensitivity to -50bp/+50bp yield curve</td><td>Table</td><td>SAP IFRS17</td><td>Quarterly</td><td><span class='reg-ref'>IFRS 17.56-58</span></td></tr><tr><td>Transition Balances</td><td>Opening IFRS 17 equity adjustment by method</td><td>Waterfall</td><td>SAP IFRS17</td><td>Annual</td><td><span class='reg-ref'>IFRS 17.C1-C8</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant IFRS as IFRS17 Engine<br/>(SAP IFRS17)
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant CC as ClaimCenter<br/>(Guidewire ClaimCenter)
+    participant GL as Finance GL<br/>(SAP)
+    participant RE as Reinsurance<br/>(Sapiens Re)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant CFO as CFO / Reporting
+    IFRS->>DW: CSM, RA, revenue, result
+    PAS->>DW: Premium by group
+    CC->>DW: Claims by accident period
+    RE->>DW: RI share of CSM
+    GL->>DW: Journal postings
+    DW->>BI: IFRS17 analytics model
+    CFO->>BI: View IFRS17 dashboard
+    BI-->>CFO: CSM and revenue KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN029" data-id="12">
+  <div class="dash-header">
+    <h2>Regulatory Reporting Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#37474f">IN029</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Tracks the end-to-end regulatory reporting lifecycle across Solvency II QRTs, NAIC statutory statements, APRA GPS/LRS filings, and tax returns. Monitors filing calendar, submission status, data quality scores, and regulator queries.</p>
+    <div class="dash-meta"><strong>Question:</strong> Are all regulatory filings accurate and on time? &nbsp;|&nbsp; <strong>Owner:</strong> Head of Regulatory Reporting</div>
+    <div class="dash-meta"><strong>Filters:</strong> Regulator, Filing Type, Jurisdiction, Status &nbsp;|&nbsp; <strong>Drill-down:</strong> Regulator > Filing Type > Submission > Query</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Filings Due</td><td>Number of regulatory returns due this period</td><td>Count</td><td>AxiomSL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Filings Submitted</td><td>Returns submitted on time</td><td>Count</td><td>AxiomSL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>On-Time Filing Rate</td><td>Submitted on time / due (%)</td><td>Gauge</td><td>AxiomSL</td><td>Monthly</td><td><span class='reg-ref'>Solvency II, NAIC, APRA</span></td></tr><tr><td>Data Quality Score</td><td>DQ pass rate across all regulatory data</td><td>Gauge + Line</td><td>AxiomSL + Informatica</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>QRT Completion %</td><td>Solvency II QRT completeness (0-100%)</td><td>Gauge</td><td>AxiomSL</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II QRT</span></td></tr><tr><td>NAIC Filing Status</td><td>Annual/quarterly statement status by state</td><td>Table (traffic-light)</td><td>AxiomSL</td><td>Quarterly</td><td><span class='reg-ref'>NAIC SSAP</span></td></tr><tr><td>APRA Filing Status</td><td>GPS 001 / LRS 750.0 / other status</td><td>Table (traffic-light)</td><td>AxiomSL</td><td>Quarterly</td><td><span class='reg-ref'>APRA GPS 001</span></td></tr><tr><td>Regulatory Queries</td><td>Open queries from regulators</td><td>Count (trend)</td><td>AxiomSL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Query Resolution TAT</td><td>Avg days to respond to regulator query</td><td>Line</td><td>AxiomSL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Tax Filing Status</td><td>GST / premium tax / income tax filing status</td><td>Table</td><td>AxiomSL + SAP</td><td>Quarterly</td><td><span class='reg-ref'>ATO / IRS / HMRC</span></td></tr><tr><td>Filing Calendar Adherence</td><td>Days ahead of deadline for each filing</td><td>Bar</td><td>AxiomSL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Regulatory Change Impact</td><td>Number of regulatory changes affecting reporting</td><td>Count</td><td>AxiomSL</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant REG as Reg Reporting<br/>(AxiomSL)
+    participant PAS as Policy Admin<br/>(Guidewire PolicyCenter)
+    participant GL as Finance GL<br/>(SAP)
+    participant DQ as Data Quality<br/>(Informatica)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant REP as Reporting Manager
+    REG->>DW: Filing status, data quality
+    PAS->>DW: Premium, policy data
+    GL->>DW: Financial data for filings
+    DQ->>DW: DQ score by data domain
+    DW->>BI: Regulatory dashboard model
+    REP->>BI: View regulatory dashboard
+    BI-->>REP: Filing and compliance KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN033" data-id="13">
+  <div class="dash-header">
+    <h2>Data & Analytics Governance Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#33691e">IN033</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Monitors data quality across all insurance data domains (policy, claims, customer, finance, risk), data cataloguing coverage, data lineage completeness, master data management health, and ML model performance. Drives the data governance operating model.</p>
+    <div class="dash-meta"><strong>Question:</strong> Can we trust our data for decision-making and reporting? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Data Officer</div>
+    <div class="dash-meta"><strong>Filters:</strong> Data Domain, Business Unit, DQ Dimension, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Data Domain > DQ Rule > Issue > Remediation</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Overall DQ Score</td><td>Weighted avg of completeness, timeliness, accuracy, consistency</td><td>Gauge + Line</td><td>Informatica DQ</td><td>Weekly</td><td><span class='reg-ref'>BCBS 239; Solvency II Data</span></td></tr><tr><td>Completeness %</td><td>Mandatory fields populated correctly</td><td>Gauge</td><td>Informatica DQ</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Timeliness %</td><td>Data available within SLA</td><td>Gauge</td><td>Informatica DQ</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Accuracy %</td><td>Data values match authoritative source</td><td>Gauge</td><td>Informatica DQ</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Consistency %</td><td>Data consistent across source systems</td><td>Gauge</td><td>Informatica DQ</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>DQ Domain Coverage</td><td>% of data domains with active DQ rules</td><td>Donut</td><td>Informatica DQ</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Data Catalog Coverage</td><td>Data assets catalogued in Collibra</td><td>Gauge</td><td>Collibra</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Data Lineage Coverage</td><td>Critical data elements with documented lineage</td><td>Gauge</td><td>Collibra + Informatica</td><td>Monthly</td><td><span class='reg-ref'>BCBS 239</span></td></tr><tr><td>Open DQ Issues</td><td>Data quality issues by severity</td><td>Bar (stacked)</td><td>Informatica DQ</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>MDM Match Rate</td><td>Customer/policy master match rate</td><td>Gauge</td><td>Informatica MDM</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>ML Model Performance</td><td>Avg MAE / R2 across deployed models</td><td>Gauge + Table</td><td>H2O.ai ML Ops</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>DG Adoption</td><td>Business units with active data governance representation</td><td>Gauge</td><td>Collibra</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant DQ as Data Quality<br/>(Informatica DQ)
+    participant CAT as Data Catalog<br/>(Collibra)
+    participant MDM as MDM<br/>(Informatica MDM)
+    participant ML as ML Platform<br/>(H2O.ai)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant CDO as Chief Data Officer
+    DQ->>DW: DQ scores, issue count
+    CAT->>DW: Catalog coverage, lineage
+    MDM->>DW: Match rates, golden records
+    ML->>DW: Model performance metrics
+    DW->>BI: Data governance model
+    CDO->>BI: View governance dashboard
+    BI-->>CDO: Data quality and governance KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN034" data-id="14">
+  <div class="dash-header">
+    <h2>Information Security Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#b71c1c">IN034</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Provides a comprehensive view of the security posture including security incidents, vulnerability management, identity and access management, business continuity readiness, and third-party risk. Essential for board risk reporting and regulatory compliance (GDPR, CCPA, DORA).</p>
+    <div class="dash-meta"><strong>Question:</strong> Are we effectively protecting company and customer data? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Information Security Officer</div>
+    <div class="dash-meta"><strong>Filters:</strong> Incident Type, Severity, System, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Incident > System > Vulnerability > Remediation</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Security Incidents</td><td>Incidents by type (phishing, malware, DDoS, insider)</td><td>Bar (stacked)</td><td>SIEM (Azure Sentinel)</td><td>Daily</td><td><span class='reg-ref'>GDPR Art 33; NIST 800-61</span></td></tr><tr><td>MTTR (Incidents)</td><td>Mean time to resolve security incidents (hours)</td><td>Line</td><td>SIEM (Azure Sentinel)</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Critical Vulnerabilities</td><td>CVSS >=9.0 unpatched</td><td>Count (trend)</td><td>Qualys / Tenable</td><td>Daily</td><td><span class='reg-ref'>NIST 800-53; CIS Controls</span></td></tr><tr><td>High Vulnerabilities</td><td>CVSS 7.0-8.9 unpatched</td><td>Count (trend)</td><td>Qualys / Tenable</td><td>Daily</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Patch Compliance %</td><td>Systems patched within SLA</td><td>Gauge</td><td>Qualys + ServiceNow</td><td>Weekly</td><td><span class='reg-ref'>NIST 800-53 SI-2</span></td></tr><tr><td>Privileged Access Reviews</td><td>Reviews completed / due (%)</td><td>Gauge</td><td>CyberArk + ServiceNow</td><td>Monthly</td><td><span class='reg-ref'>SOX; NIST AC-6</span></td></tr><tr><td>Phishing Simulation Click Rate</td><td>Click-through rate on simulated phishing</td><td>Gauge</td><td>KnowBe4</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>BCP Tests Completed</td><td>Tests passed / scheduled (%)</td><td>Gauge</td><td>ServiceNow BCM</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II BCM; DORA</span></td></tr><tr><td>RPO/RTO Adherence</td><td>Systems meeting recovery point/time objectives</td><td>Gauge</td><td>ServiceNow BCM</td><td>Quarterly</td><td><span class='reg-ref'>Solvency II BCM</span></td></tr><tr><td>Third-Party Risk</td><td>Vendors with active security assessments</td><td>Count (bar)</td><td>ServiceNow VRM</td><td>Monthly</td><td><span class='reg-ref'>DORA; NIST SP 800-53</span></td></tr><tr><td>Data Breach Notifications</td><td>Breaches reported to regulator / affected parties</td><td>Count</td><td>SIEM + DPO Tracker</td><td>Monthly</td><td><span class='reg-ref'>GDPR Art 33-34</span></td></tr><tr><td>Security Awareness Training</td><td>Employees with up-to-date training</td><td>Gauge</td><td>KnowBe4</td><td>Monthly</td><td><span class='reg-ref'>NIST AT-2</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant SIEM as SIEM<br/>(Azure Sentinel)
+    participant VULN as Vuln Scanner<br/>(Qualys)
+    participant IAM as IAM<br/>(CyberArk + Azure AD)
+    participant BCM as BCM Platform<br/>(ServiceNow BCM)
+    participant VRM as Vendor Risk<br/>(ServiceNow VRM)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant CISO as Chief Info Security Officer
+    SIEM->>DW: Incidents, MTTR
+    VULN->>DW: Vuln scans, patch status
+    IAM->>DW: Access reviews, MFA coverage
+    BCM->>DW: BCP test results, RTO/RPO
+    VRM->>DW: Vendor assessments
+    DW->>BI: Security dashboard model
+    CISO->>BI: View security dashboard
+    BI-->>CISO: Security posture KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN035" data-id="15">
+  <div class="dash-header">
+    <h2>Enterprise Services Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#4e342e">IN035</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Covers corporate functions: HR and payroll, financial accounting, procurement and vendor management, legal and contract management, and facilities. Provides a cost-centre view of enterprise operations with headcount trends, attrition, vendor performance, open legal cases, and facilities utilisation.</p>
+    <div class="dash-meta"><strong>Question:</strong> Are enterprise operations running efficiently? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Operating Officer</div>
+    <div class="dash-meta"><strong>Filters:</strong> Department, Cost Centre, Vendor Category, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Function > Cost Centre > Vendor/Employee > Transaction</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>Headcount (FTE)</td><td>Total active employees</td><td>Count (trend)</td><td>Workday</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Attrition Rate</td><td>Departures / avg headcount</td><td>Line + Gauge</td><td>Workday</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Open Positions</td><td>Unfilled requisitions by department</td><td>Bar</td><td>Workday</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Time-to-Hire</td><td>Avg days from req open to offer accepted</td><td>Line</td><td>Workday</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Active Vendors</td><td>Vendors with active PO or contract</td><td>Count</td><td>SAP Procurement</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>PO Value (YTD)</td><td>Total purchase order value placed YTD</td><td>Bar</td><td>SAP Procurement</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Vendor Scorecard</td><td>Avg vendor rating (quality, delivery, cost)</td><td>Gauge + Table</td><td>SAP Procurement</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Legal Cases Open</td><td>Active litigation and regulatory matters</td><td>Count</td><td>ServiceNow Legal</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Contract Expiry Calendar</td><td>Contracts expiring within 6 months</td><td>Timeline table</td><td>ServiceNow Contracts</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Facilities Utilisation</td><td>% of office space occupied</td><td>Gauge</td><td>Facilities Mgmt System</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>HR Cost per FTE</td><td>Total HR cost / headcount</td><td>Line</td><td>SAP GL</td><td>Quarterly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Finance Close TAT</td><td>Days to complete month-end close</td><td>Line</td><td>SAP GL</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant HR as HR System<br/>(Workday)
+    participant PROC as Procurement<br/>(SAP Procurement)
+    participant LEGAL as Legal Mgmt<br/>(ServiceNow Legal)
+    participant FM as Facilities Mgmt
+    participant GL as Finance GL<br/>(SAP)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant COO as Chief Operating Officer
+    HR->>DW: Headcount, attrition, hiring
+    PROC->>DW: POs, vendors, contracts
+    LEGAL->>DW: Legal cases, matters
+    FM->>DW: Space utilisation, costs
+    GL->>DW: Cost centre GL data
+    DW->>BI: Enterprise services model
+    COO->>BI: View enterprise dashboard
+    BI-->>COO: Operational efficiency KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dash-card" data-acord="IN036" data-id="16">
+  <div class="dash-header">
+    <h2>IT & Digital Platform Operations Dashboard</h2>
+    <div class="acord-row"><span class="acord-badge" style="background:#004d40">IN036</span></div>
+  </div>
+  <div class="dash-body">
+    <p class="dash-desc">Monitors IT operations across cloud infrastructure, API gateway performance, CI/CD pipeline health, testing coverage, service desk, and cloud cost management. Provides real-time and trend visibility into platform reliability, developer productivity, and IT financial management.</p>
+    <div class="dash-meta"><strong>Question:</strong> Are our digital platforms reliable, performant, and cost-effective? &nbsp;|&nbsp; <strong>Owner:</strong> Chief Information Officer</div>
+    <div class="dash-meta"><strong>Filters:</strong> Service, Environment, Cloud Provider, Time Period &nbsp;|&nbsp; <strong>Drill-down:</strong> Service > API > Deployment > Incident > Ticket</div>
+    <div class="kpi-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> KPIs (12)
+      </h3>
+      <table class="kpi-table hidden">
+        <thead><tr><th>KPI</th><th>Formula / Source</th><th>Chart</th><th>Source System</th><th>Refresh</th><th>Reg Ref</th></tr></thead>
+        <tbody><tr><td>API Uptime</td><td>% of time API gateway is available</td><td>Gauge</td><td>Azure API Mgmt</td><td>Real-time</td><td><span class='reg-ref'>—</span></td></tr><tr><td>API Call Volume</td><td>API requests per minute by endpoint</td><td>Line (multi-series)</td><td>Azure API Mgmt</td><td>Real-time</td><td><span class='reg-ref'>—</span></td></tr><tr><td>API Latency (P50/P95/P99)</td><td>Response time in ms at percentiles</td><td>Line</td><td>Azure API Mgmt</td><td>Real-time</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Deployment Frequency</td><td>Production deployments per week</td><td>Bar</td><td>Azure DevOps</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Deployment Success Rate</td><td>% of deployments without rollback</td><td>Gauge</td><td>Azure DevOps</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>MTTR (Incidents)</td><td>Mean time to resolve P1/P2 incidents</td><td>Line</td><td>ServiceNow ITSM</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Service Desk Tickets</td><td>Tickets opened by category</td><td>Bar (stacked)</td><td>ServiceNow ITSM</td><td>Weekly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Ticket FCR Rate</td><td>First-contact resolution rate</td><td>Gauge</td><td>ServiceNow ITSM</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cloud Cost (Monthly)</td><td>Monthly cloud infrastructure spend by provider</td><td>Bar (stacked)</td><td>Azure Cost Mgmt</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Cloud Cost per Transaction</td><td>Cloud cost / API transactions</td><td>Line</td><td>Azure Cost Mgmt</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>Test Coverage</td><td>Code coverage % by criticality</td><td>Gauge</td><td>SonarQube + ADO</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr><tr><td>SLA Adherence</td><td>IT services meeting published SLAs</td><td>Gauge</td><td>ServiceNow ITSM</td><td>Monthly</td><td><span class='reg-ref'>—</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="mermaid-section">
+      <h3 onclick="this.nextElementSibling.classList.toggle('hidden');this.classList.toggle('expanded');">
+        <span class="kpi-toggle">&#9654;</span> Data Flow
+      </h3>
+      <div class="mermaid-container hidden">
+        <div class="mermaid">sequenceDiagram
+    participant API as API Gateway<br/>(Azure API Mgmt)
+    participant DEVOPS as DevOps<br/>(Azure DevOps)
+    participant CLOUD as Cloud Infra<br/>(Azure / AWS)
+    participant ITSM as Service Desk<br/>(ServiceNow ITSM)
+    participant COST as Cloud Cost Mgmt<br/>(Azure Cost Mgmt)
+    participant DW as Data Warehouse<br/>(Snowflake)
+    participant BI as BI Platform<br/>(Tableau)
+    participant CIO as Chief Information Officer
+    API->>DW: Uptime, latency, call volume
+    DEVOPS->>DW: Deploy frequency, success
+    CLOUD->>DW: Resource utilisation
+    ITSM->>DW: Incidents, tickets
+    COST->>DW: Cloud spend by service
+    DW->>BI: IT operations model
+    CIO->>BI: View IT dashboard
+    BI-->>CIO: Platform reliability and cost KPIs</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+async function initMermaid() {
+    await mermaid.initialize({startOnLoad:false, theme:'neutral', sequence:{showSequenceNumbers:false, mirrorActors:true}, securityLevel:'loose'});
+    var divs = document.querySelectorAll('div.mermaid');
+    for (var i = 0; i < divs.length; i++) {
+        try {
+            var result = await mermaid.render('svg-' + i, divs[i].textContent);
+            divs[i].innerHTML = result.svg;
+        } catch(e) {
+            divs[i].innerHTML = '<div style="color:red;padding:4px;font-size:8pt;">Render error: ' + e.message.substring(0,100) + '</div>';
+        }
+    }
+}
+initMermaid();
+
+function filterCards() {
+    var q = document.getElementById('search').value.toLowerCase();
+    var af = document.getElementById('acordFilter').value;
+    var cards = document.querySelectorAll('.dash-card');
+    var shown = 0;
+    cards.forEach(function(c) {
+        var acords = c.getAttribute('data-acord') || '';
+        var text = c.textContent.toLowerCase();
+        var matchSearch = !q || text.indexOf(q) >= 0;
+        var matchAcord = !af || acords.indexOf(af.replace('-',',')) >= 0 || acords.indexOf(af) >= 0;
+        if (matchSearch && matchAcord) { c.style.display = ''; shown++; }
+        else { c.style.display = 'none'; }
+    });
+    document.getElementById('dashCount').textContent = 'Showing ' + shown + ' dashboards';
+}
+</script>
+</body>
+</html>
