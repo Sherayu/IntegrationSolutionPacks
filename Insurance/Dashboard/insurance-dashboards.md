@@ -22,6 +22,219 @@
 - [16. IT & Digital Platform Operations Dashboard](#dashboard-16) — IN036
 - [ACORD Capability Cross-Reference](#acord-capability-cross-reference)
 
+<div style="page-break-before: avoid;"></div>
+
+## Business Capability Model
+
+The Insurance Business Capability Model defines **16 Level-1 (L1) domains** and **36 Level-2 (L2) capabilities** aligned to the [ACORD Capability Model](https://www.acord.org/standards-architecture/capability-model) (codes IN001–IN036). Each capability maps to one or more regulatory standards: Solvency II (SCR, MCR, ORSA, TP), NAIC (SSAP, IRIS, SERFF), IFRS 17 (paragraphs 16–C8), APRA (GPS 001, LRS 750.0), BCBS 239, GDPR, NIST 800-53, and DORA.
+
+The model serves as the organising framework for the 16 analytics dashboards defined in this catalogue. Each dashboard monitors KPIs that directly assess the health, efficiency, and regulatory compliance of its corresponding capabilities.
+
+### L1 Domain Decomposition
+
+| # | L1 Domain | Acronym | ACORD Codes | Regulatory Standards |
+|---|-----------|---------|-------------|---------------------|
+|1|Product Lifecycle Management|PLM|`IN001–IN004`|NAIC SERFF, NAIC SSAP 53/61, IFRS 17.55|
+|2|Distribution & Channel Management|DCM|`IN005–IN008`|NAIC Producer Licensing, NAIC SSAP 54|
+|3|Underwriting|UW|`IN009–IN012`|Solvency II UW Risk 1.2, Solvency II Risk Concentration, NAIC IRIS 7|
+|4|Policy Administration|PA|`IN013–IN015`|—|
+|5|Claims Management|CM|`IN016–IN019`|Solvency II Premium Risk, Solvency II TP 2.2, NAIC SSAP 55, NAIC Claims Handling|
+|6|Reinsurance|RI|`IN020–IN022`|Solvency II RI Risk 2.1/2.3, Solvency II Counterparty 3.1, Solvency II Cat Risk, IFRS 17.62|
+|7|Actuarial & Pricing|ACT|`IN023–IN025`|Solvency II Pricing, Solvency II TP 2.2/2.3/2.5, Solvency II Cat Risk 4.1, IFRS 17.37, NAIC SSAP 55|
+|8|Billing & Collections|BIL|`IN031`|—|
+|9|Customer Management|CUS|`IN026–IN027`|NAIC Fair Treatment, NAIC Consumer Complaints|
+|10|Risk Management & Compliance|RMC|`IN028–IN030`|Solvency II SCR 3.1, Solvency II MCR 4.1, Solvency II ORSA 5.1–5.3, Solvency II OpRisk 6.1, IAIS ICPs, NAIC Market Conduct|
+|11|IFRS 17 Accounting|IFR|`IN032`|IFRS 17.16–24, 17.37, 17.43–46, 17.53–58, 17.62–65, 17.80–88, 17.C1–C8|
+|12|Regulatory Reporting|RRE|`IN029`|Solvency II QRT, NAIC SSAP, APRA GPS 001, APRA LRS 750.0|
+|13|Data & Analytics|DAN|`IN033`|BCBS 239, Solvency II Data Quality|
+|14|Information Security & Cybersecurity|ISC|`IN034`|GDPR Art 33–34, NIST 800–53/800–61, CIS Controls, DORA, SOX|
+|15|Enterprise Services|ENT|`IN035`|—|
+|16|IT & Digital Platforms|ITD|`IN036`|—|
+
+### ACORD L2 Capability Detail (IN001–IN036)
+
+| ACORD | L2 Capability | L1 Domain | Description |
+|-------|---------------|-----------|-------------|
+|`IN001`|Product Concept & Design|Product Lifecycle Management|Ideation, market research, feasibility assessment, coverage design.|
+|`IN002`|Rate & Form Filing|Product Lifecycle Management|Actuarial rate development, regulatory filing, approval tracking.|
+|`IN003`|Product Launch|Product Lifecycle Management|Market launch, distribution activation, training, documentation.|
+|`IN004`|Product Performance Monitoring|Product Lifecycle Management|In-force tracking, LR/ER/combined ratio, profitability analysis.|
+|`IN005`|Agency & Producer Onboarding|Distribution & Channel Management|Producer contracting, licensing verification, appointment, training.|
+|`IN006`|Commission Management|Distribution & Channel Management|Commission schedule setup, calculation, disbursement, reconciliation.|
+|`IN007`|Producer Performance|Distribution & Channel Management|Scorecards, premium tracking, loss ratio monitoring, tier management.|
+|`IN008`|Distribution Analytics|Distribution & Channel Management|Channel mix, CAC, conversion funnel, cost-to-serve, optimisation.|
+|`IN009`|Risk Assessment & Scoring|Underwriting|Submission intake, data enrichment, risk scoring, predictive models.|
+|`IN010`|Underwriting Decision|Underwriting|Referral workflow, authority limits, declination, counter-offer.|
+|`IN011`|Quote Generation|Underwriting|Rating engine execution, premium calculation, discount application.|
+|`IN012`|Bind & Evidence|Underwriting|Policy binding, evidence of insurance issuance, downstream notification.|
+|`IN013`|Policy Issuance|Policy Administration|Policy schedule creation, document generation, welcome pack.|
+|`IN014`|Mid-Term Adjustments|Policy Administration|Endorsements, cancellations, reinstatements, coverage changes.|
+|`IN015`|Renewal Processing|Policy Administration|Renewal offer generation, premium adjustment, retention tracking.|
+|`IN016`|First Notice of Loss|Claims Management|FNOL intake, triage, coverage verification, claim file creation.|
+|`IN017`|Claims Investigation|Claims Management|Evidence gathering, statement collection, expert engagement.|
+|`IN018`|Claims Adjudication|Claims Management|Liability assessment, coverage determination, settlement authority.|
+|`IN019`|Payment & Settlement|Claims Management|Payment execution, reserve adjustment, closure, recovery referral.|
+|`IN020`|Treaty Administration|Reinsurance|Treaty setup, contract management, limits, retention scheduling.|
+|`IN021`|Facultative Placement|Reinsurance|Risk-by-risk cession, quote, placement, documentation.|
+|`IN022`|Retrocession Management|Reinsurance|Retrocession structure, placement, monitoring, recoveries.|
+|`IN023`|Pricing Model Development|Actuarial & Pricing|Model design, calibration, validation, regulatory approval.|
+|`IN024`|Rate Monitoring|Actuarial & Pricing|Rate adequacy tracking, competitor analysis, experience monitoring.|
+|`IN025`|Reserve Estimation|Actuarial & Pricing|Chain-ladder, BF, IBNR estimation, reserve adequacy testing.|
+|`IN026`|Customer Onboarding & KYC|Customer Management|Identity verification, AML screening, policy setup, welcome.|
+|`IN027`|Customer Relationship Management|Customer Management|Interaction history, 360 view, cross-sell, retention, complaints.|
+|`IN028`|Enterprise Risk Management|Risk Management & Compliance|Risk framework, risk appetite, KRI monitoring, ORSA.|
+|`IN029`|Regulatory Compliance|Risk Management & Compliance|Compliance monitoring, regulatory change, conduct risk.|
+|`IN030`|Capital Adequacy & ORSA|Risk Management & Compliance|SCR/MCR calculation, capital planning, stress testing.|
+|`IN031`|Billing & Collections|Billing & Collections|Invoice generation, payment processing, arrears, refunds.|
+|`IN032`|IFRS 17 Accounting|IFRS 17 Accounting|CSM, RA, PAA/GMM/VFA, revenue recognition, disclosure.|
+|`IN033`|Data & Analytics|Data & Analytics|Data governance, MDM, BI dashboards, ML models, DQ management.|
+|`IN034`|Information Security|Information Security & Cybersecurity|IAM, SOC, vulnerability, BCM, third-party risk.|
+|`IN035`|Enterprise Services|Enterprise Services|HR, procurement, finance, legal, facilities management.|
+|`IN036`|IT & Digital Platforms|IT & Digital Platforms|API platform, cloud infra, DevOps, ITSM, cost management.|
+
+### Capability Model Diagram
+
+```mermaid
+graph TD
+    INS[Insurance Enterprise]
+
+    L1_1["Product Lifecycle Management"]
+    INS-->L1_1
+    L1_2["Distribution &<br/>Channel Management"]
+    INS-->L1_2
+    L1_3["Underwriting"]
+    INS-->L1_3
+    L1_4["Policy Administration"]
+    INS-->L1_4
+    L1_5["Claims Management"]
+    INS-->L1_5
+    L1_6["Reinsurance"]
+    INS-->L1_6
+    L1_7["Actuarial &<br/>Pricing"]
+    INS-->L1_7
+    L1_8["Billing &<br/>Collections"]
+    INS-->L1_8
+    L1_9["Customer Management"]
+    INS-->L1_9
+    L1_10["Risk Management &<br/>Compliance"]
+    INS-->L1_10
+    L1_11["IFRS 17 Accounting"]
+    INS-->L1_11
+    L1_12["Regulatory Reporting"]
+    INS-->L1_12
+    L1_13["Data &<br/>Analytics"]
+    INS-->L1_13
+    L1_14["Information Security &<br/>Cybersecurity"]
+    INS-->L1_14
+    L1_15["Enterprise Services"]
+    INS-->L1_15
+    L1_16["IT &<br/>Digital Platforms"]
+    INS-->L1_16
+
+    L2_1["(IN001)<br/>Product Concept &<br/>Design"]
+    L1_1-->L2_1
+    L2_2["(IN002)<br/>Rate &<br/>Form Filing"]
+    L1_1-->L2_2
+    L2_3["(IN003)<br/>Product Launch"]
+    L1_1-->L2_3
+    L2_4["(IN004)<br/>Product Performance Monitoring"]
+    L1_1-->L2_4
+    L2_5["(IN005)<br/>Agency &<br/>Producer Onboarding"]
+    L1_2-->L2_5
+    L2_6["(IN006)<br/>Commission Management"]
+    L1_2-->L2_6
+    L2_7["(IN007)<br/>Producer Performance"]
+    L1_2-->L2_7
+    L2_8["(IN008)<br/>Distribution Analytics"]
+    L1_2-->L2_8
+    L2_9["(IN009)<br/>Risk Assessment &<br/>Scoring"]
+    L1_3-->L2_9
+    L2_10["(IN010)<br/>Underwriting Decision"]
+    L1_3-->L2_10
+    L2_11["(IN011)<br/>Quote Generation"]
+    L1_3-->L2_11
+    L2_12["(IN012)<br/>Bind &<br/>Evidence"]
+    L1_3-->L2_12
+    L2_13["(IN013)<br/>Policy Issuance"]
+    L1_4-->L2_13
+    L2_14["(IN014)<br/>Mid-Term Adjustments"]
+    L1_4-->L2_14
+    L2_15["(IN015)<br/>Renewal Processing"]
+    L1_4-->L2_15
+    L2_16["(IN016)<br/>First Notice of Loss"]
+    L1_5-->L2_16
+    L2_17["(IN017)<br/>Claims Investigation"]
+    L1_5-->L2_17
+    L2_18["(IN018)<br/>Claims Adjudication"]
+    L1_5-->L2_18
+    L2_19["(IN019)<br/>Payment &<br/>Settlement"]
+    L1_5-->L2_19
+    L2_20["(IN020)<br/>Treaty Administration"]
+    L1_6-->L2_20
+    L2_21["(IN021)<br/>Facultative Placement"]
+    L1_6-->L2_21
+    L2_22["(IN022)<br/>Retrocession Management"]
+    L1_6-->L2_22
+    L2_23["(IN023)<br/>Pricing Model Development"]
+    L1_7-->L2_23
+    L2_24["(IN024)<br/>Rate Monitoring"]
+    L1_7-->L2_24
+    L2_25["(IN025)<br/>Reserve Estimation"]
+    L1_7-->L2_25
+    L2_26["(IN031)<br/>Billing &<br/>Collections"]
+    L1_8-->L2_26
+    L2_27["(IN026)<br/>Customer Onboarding &<br/>KYC"]
+    L1_9-->L2_27
+    L2_28["(IN027)<br/>Customer Relationship Management"]
+    L1_9-->L2_28
+    L2_29["(IN028)<br/>Enterprise Risk Management"]
+    L1_10-->L2_29
+    L2_30["(IN029)<br/>Regulatory Compliance"]
+    L1_10-->L2_30
+    L2_31["(IN030)<br/>Capital Adequacy &<br/>ORSA"]
+    L1_10-->L2_31
+    L2_32["(IN032)<br/>IFRS 17 Accounting"]
+    L1_11-->L2_32
+    L2_33["(IN029)<br/>Regulatory Compliance"]
+    L1_12-->L2_33
+    L2_34["(IN033)<br/>Data &<br/>Analytics"]
+    L1_13-->L2_34
+    L2_35["(IN034)<br/>Information Security"]
+    L1_14-->L2_35
+    L2_36["(IN035)<br/>Enterprise Services"]
+    L1_15-->L2_36
+    L2_37["(IN036)<br/>IT &<br/>Digital Platforms"]
+    L1_16-->L2_37
+```
+
+### Regulatory Standards Mapping
+
+| Standard | Scope | Applicable L1 Domains |
+|----------|-------|----------------------|
+|Solvency II – SCR (Art. 100–127)|Capital adequacy, risk quantification|Risk Management & Compliance, Actuarial & Pricing|
+|Solvency II – MCR (Art. 128–131)|Minimum capital floor|Risk Management & Compliance|
+|Solvency II – ORSA (Art. 45)|Own risk and solvency assessment|Risk Management & Compliance|
+|Solvency II – Technical Provisions (Art. 76–86)|Best estimate, risk margin, TP adequacy|Actuarial & Pricing, Claims Management|
+|Solvency II – UW Risk (1.2)|Premium and reserve risk|Underwriting, Actuarial & Pricing|
+|Solvency II – Cat Risk (4.1)|Natural and man-made catastrophe risk|Actuarial & Pricing, Reinsurance|
+|Solvency II – RI Risk (2.1/2.3)|Reinsurance counterparty and coverage risk|Reinsurance|
+|Solvency II – OpRisk (6.1)|Operational loss events|Risk Management & Compliance|
+|NAIC SSAP 53|Property and casualty loss reserves|Claims Management, Actuarial & Pricing|
+|NAIC SSAP 54/61|Reinsurance, expense accounting|Reinsurance, Product Lifecycle|
+|NAIC SSAP 55|Loss reserve discounting|Claims Management, Actuarial & Pricing|
+|NAIC IRIS Ratios|Insurance regulatory information system|Product Lifecycle, Underwriting|
+|NAIC SERFF|Rate and form filing system|Product Lifecycle|
+|NAIC Producer Licensing|Agent and broker licensing|Distribution & Channel Management|
+|NAIC Market Conduct|Fair treatment of policyholders|Risk Management & Compliance, Customer Management|
+|IFRS 17 (Full standard)|Insurance contracts accounting|IFRS 17 Accounting, Product Lifecycle|
+|APRA GPS 001|Prudential framework for insurers|Regulatory Reporting, Risk Management|
+|APRA LRS 750.0|Life insurance reporting standards|Regulatory Reporting|
+|BCBS 239|Risk data aggregation and reporting|Data & Analytics, Risk Management|
+|GDPR Art. 33–34|Personal data breach notification|Information Security & Cybersecurity|
+|NIST SP 800-53|Security and privacy controls|Information Security & Cybersecurity|
+|DORA (EU 2022/2554)|Digital operational resilience|Information Security & Cybersecurity, IT & Digital Platforms|
+|IAIS ICPs|Insurance core principles|Risk Management & Compliance|
+
 ## Dashboard 01: Product Lifecycle Performance Dashboard
 
 **ACORD:** `IN001` • `IN002` • `IN003` • `IN004`  

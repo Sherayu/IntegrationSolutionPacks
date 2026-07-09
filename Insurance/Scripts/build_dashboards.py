@@ -198,6 +198,241 @@ function filterCards() {{
 def esc_md(val):
     return str(val).replace("|", "\\|")
 
+# ═══════════════════════════════════════════════════════════════
+#  BUSINESS CAPABILITY MODEL GENERATOR
+# ═══════════════════════════════════════════════════════════════
+
+BCM_DOMAINS = [
+    # (Domain, L1 Acronym, ACORD Range, Standards, Description)
+    ("Product Lifecycle Management", "PLM", "IN001\u2013IN004", "NAIC SERFF, NAIC SSAP 53/61, IFRS 17.55", "End-to-end product ideation, design, rate filing, launch, and performance monitoring."),
+    ("Distribution & Channel Management", "DCM", "IN005\u2013IN008", "NAIC Producer Licensing, NAIC SSAP 54", "Agency onboarding, commission management, producer performance, and channel analytics."),
+    ("Underwriting", "UW", "IN009\u2013IN012", "Solvency II UW Risk 1.2, Solvency II Risk Concentration, NAIC IRIS 7", "Risk assessment, scoring, underwriting decision, quote generation, and bind."),
+    ("Policy Administration", "PA", "IN013\u2013IN015", "\u2014", "Policy issuance, mid-term adjustments, endorsements, renewals, cancellations."),
+    ("Claims Management", "CM", "IN016\u2013IN019", "Solvency II Premium Risk, Solvency II TP 2.2, NAIC SSAP 55, NAIC Claims Handling", "FNOL, investigation, adjudication, payment, subrogation, litigation management."),
+    ("Reinsurance", "RI", "IN020\u2013IN022", "Solvency II RI Risk 2.1/2.3, Solvency II Counterparty 3.1, Solvency II Cat Risk, IFRS 17.62", "Treaty admin, facultative placement, bordereaux, retrocession management."),
+    ("Actuarial & Pricing", "ACT", "IN023\u2013IN025", "Solvency II Pricing, Solvency II TP 2.2/2.3/2.5, Solvency II Cat Risk 4.1, IFRS 17.37, NAIC SSAP 55", "Pricing models, rate monitoring, reserve estimation, catastrophe modelling."),
+    ("Billing & Collections", "BIL", "IN031", "\u2014", "Premium billing, payment processing, arrears management, refunds, commission disbursement."),
+    ("Customer Management", "CUS", "IN026\u2013IN027", "NAIC Fair Treatment, NAIC Consumer Complaints", "Onboarding, CRM, loyalty, self-service portal, complaints management."),
+    ("Risk Management & Compliance", "RMC", "IN028\u2013IN030", "Solvency II SCR 3.1, Solvency II MCR 4.1, Solvency II ORSA 5.1\u20135.3, Solvency II OpRisk 6.1, IAIS ICPs, NAIC Market Conduct", "ERM framework, capital adequacy/ORSA, compliance monitoring, internal audit, conduct risk."),
+    ("IFRS 17 Accounting", "IFR", "IN032", "IFRS 17.16\u201324, 17.37, 17.43\u201346, 17.53\u201358, 17.62\u201365, 17.80\u201388, 17.C1\u2013C8", "CSM calculation, PAA/GMM/VFA aggregation, revenue recognition, disclosures."),
+    ("Regulatory Reporting", "RRE", "IN029", "Solvency II QRT, NAIC SSAP, APRA GPS 001, APRA LRS 750.0", "Solvency II QRT, NAIC statutory, APRA GPS/LRS filings, tax reporting."),
+    ("Data & Analytics", "DAN", "IN033", "BCBS 239, Solvency II Data Quality", "Data governance, MDM, BI dashboards, predictive analytics, data quality management."),
+    ("Information Security & Cybersecurity", "ISC", "IN034", "GDPR Art 33\u201334, NIST 800\u201353/800\u201361, CIS Controls, DORA, SOX", "IAM, SOC/SIEM, vulnerability management, BCM/DR, third-party risk."),
+    ("Enterprise Services", "ENT", "IN035", "\u2014", "HR, payroll, finance GL, procurement, vendor management, legal, facilities."),
+    ("IT & Digital Platforms", "ITD", "IN036", "\u2014", "API management, cloud infra, DevOps, testing, service desk, cloud cost management."),
+]
+
+def gen_bcm():
+    lines = []
+
+    # ── Introduction ────────────────────────────────────────────
+    lines.append('<div style="page-break-before: avoid;"></div>\n')
+    lines.append("## Business Capability Model\n")
+    lines.append(
+        "The Insurance Business Capability Model defines **16 Level-1 (L1) domains** "
+        "and **36 Level-2 (L2) capabilities** aligned to the "
+        "[ACORD Capability Model](https://www.acord.org/standards-architecture/capability-model) "
+        "(codes IN001\u2013IN036). Each capability maps to one or more regulatory standards: "
+        "Solvency II (SCR, MCR, ORSA, TP), NAIC (SSAP, IRIS, SERFF), "
+        "IFRS 17 (paragraphs 16\u2013C8), APRA (GPS 001, LRS 750.0), "
+        "BCBS 239, GDPR, NIST 800-53, and DORA.\n"
+    )
+    lines.append(
+        "The model serves as the organising framework for the 16 analytics dashboards "
+        "defined in this catalogue. Each dashboard monitors KPIs that directly assess the "
+        "health, efficiency, and regulatory compliance of its corresponding capabilities.\n"
+    )
+
+    # ── L1 Domain Decomposition Table ──────────────────────────
+    lines.append("### L1 Domain Decomposition\n")
+    lines.append("| # | L1 Domain | Acronym | ACORD Codes | Regulatory Standards |")
+    lines.append("|---|-----------|---------|-------------|---------------------|")
+    for i, (domain, acr, arange, stds, _) in enumerate(BCM_DOMAINS, 1):
+        lines.append(f"|{i}|{domain}|{acr}|`{arange}`|{stds}|")
+    lines.append("")
+
+    # ── ACORD L2 Capability Detail ─────────────────────────────
+    lines.append("### ACORD L2 Capability Detail (IN001\u2013IN036)\n")
+    lines.append("| ACORD | L2 Capability | L1 Domain | Description |")
+    lines.append("|-------|---------------|-----------|-------------|")
+
+    acord_detail = [
+        ("IN001", "Product Concept & Design", "Product Lifecycle Management", "Ideation, market research, feasibility assessment, coverage design."),
+        ("IN002", "Rate & Form Filing", "Product Lifecycle Management", "Actuarial rate development, regulatory filing, approval tracking."),
+        ("IN003", "Product Launch", "Product Lifecycle Management", "Market launch, distribution activation, training, documentation."),
+        ("IN004", "Product Performance Monitoring", "Product Lifecycle Management", "In-force tracking, LR/ER/combined ratio, profitability analysis."),
+        ("IN005", "Agency & Producer Onboarding", "Distribution & Channel Management", "Producer contracting, licensing verification, appointment, training."),
+        ("IN006", "Commission Management", "Distribution & Channel Management", "Commission schedule setup, calculation, disbursement, reconciliation."),
+        ("IN007", "Producer Performance", "Distribution & Channel Management", "Scorecards, premium tracking, loss ratio monitoring, tier management."),
+        ("IN008", "Distribution Analytics", "Distribution & Channel Management", "Channel mix, CAC, conversion funnel, cost-to-serve, optimisation."),
+        ("IN009", "Risk Assessment & Scoring", "Underwriting", "Submission intake, data enrichment, risk scoring, predictive models."),
+        ("IN010", "Underwriting Decision", "Underwriting", "Referral workflow, authority limits, declination, counter-offer."),
+        ("IN011", "Quote Generation", "Underwriting", "Rating engine execution, premium calculation, discount application."),
+        ("IN012", "Bind & Evidence", "Underwriting", "Policy binding, evidence of insurance issuance, downstream notification."),
+        ("IN013", "Policy Issuance", "Policy Administration", "Policy schedule creation, document generation, welcome pack."),
+        ("IN014", "Mid-Term Adjustments", "Policy Administration", "Endorsements, cancellations, reinstatements, coverage changes."),
+        ("IN015", "Renewal Processing", "Policy Administration", "Renewal offer generation, premium adjustment, retention tracking."),
+        ("IN016", "First Notice of Loss", "Claims Management", "FNOL intake, triage, coverage verification, claim file creation."),
+        ("IN017", "Claims Investigation", "Claims Management", "Evidence gathering, statement collection, expert engagement."),
+        ("IN018", "Claims Adjudication", "Claims Management", "Liability assessment, coverage determination, settlement authority."),
+        ("IN019", "Payment & Settlement", "Claims Management", "Payment execution, reserve adjustment, closure, recovery referral."),
+        ("IN020", "Treaty Administration", "Reinsurance", "Treaty setup, contract management, limits, retention scheduling."),
+        ("IN021", "Facultative Placement", "Reinsurance", "Risk-by-risk cession, quote, placement, documentation."),
+        ("IN022", "Retrocession Management", "Reinsurance", "Retrocession structure, placement, monitoring, recoveries."),
+        ("IN023", "Pricing Model Development", "Actuarial & Pricing", "Model design, calibration, validation, regulatory approval."),
+        ("IN024", "Rate Monitoring", "Actuarial & Pricing", "Rate adequacy tracking, competitor analysis, experience monitoring."),
+        ("IN025", "Reserve Estimation", "Actuarial & Pricing", "Chain-ladder, BF, IBNR estimation, reserve adequacy testing."),
+        ("IN026", "Customer Onboarding & KYC", "Customer Management", "Identity verification, AML screening, policy setup, welcome."),
+        ("IN027", "Customer Relationship Management", "Customer Management", "Interaction history, 360 view, cross-sell, retention, complaints."),
+        ("IN028", "Enterprise Risk Management", "Risk Management & Compliance", "Risk framework, risk appetite, KRI monitoring, ORSA."),
+        ("IN029", "Regulatory Compliance", "Risk Management & Compliance", "Compliance monitoring, regulatory change, conduct risk."),
+        ("IN030", "Capital Adequacy & ORSA", "Risk Management & Compliance", "SCR/MCR calculation, capital planning, stress testing."),
+        ("IN031", "Billing & Collections", "Billing & Collections", "Invoice generation, payment processing, arrears, refunds."),
+        ("IN032", "IFRS 17 Accounting", "IFRS 17 Accounting", "CSM, RA, PAA/GMM/VFA, revenue recognition, disclosure."),
+        ("IN033", "Data & Analytics", "Data & Analytics", "Data governance, MDM, BI dashboards, ML models, DQ management."),
+        ("IN034", "Information Security", "Information Security & Cybersecurity", "IAM, SOC, vulnerability, BCM, third-party risk."),
+        ("IN035", "Enterprise Services", "Enterprise Services", "HR, procurement, finance, legal, facilities management."),
+        ("IN036", "IT & Digital Platforms", "IT & Digital Platforms", "API platform, cloud infra, DevOps, ITSM, cost management."),
+    ]
+    for code, cap, domain, desc in acord_detail:
+        lines.append(f"|`{code}`|{cap}|{domain}|{desc}|")
+    lines.append("")
+
+    # ── Capability Model Diagram ────────────────────────────────
+    lines.append("### Capability Model Diagram\n")
+    lines.append("```mermaid")
+    lines.append("graph TD")
+    lines.append("    INS[Insurance Enterprise]")
+    lines.append("")
+    for i, (domain, acr, _, _, _) in enumerate(BCM_DOMAINS, 1):
+        safe_dom = domain.replace(" & ", " &<br/>").replace(" &amp; ", " &<br/>")
+        lines.append(f"    L1_{i}[\"{safe_dom}\"]")
+        lines.append(f"    INS-->L1_{i}")
+    lines.append("")
+    # L1 to L2 connections
+    l2_idx = 1
+    for i, (domain, acr, arange, _, _) in enumerate(BCM_DOMAINS, 1):
+        codes = acord_detail_for_domain(domain)
+        for code, cap, _, _ in codes:
+            safe_cap = cap.replace(" & ", " &<br/>").replace(" &amp; ", " &<br/>")
+            lines.append(f"    L2_{l2_idx}[\"({code})<br/>{safe_cap}\"]")
+            lines.append(f"    L1_{i}-->L2_{l2_idx}")
+            l2_idx += 1
+    lines.append("```\n")
+
+    # ── Standards Mapping ───────────────────────────────────────
+    lines.append("### Regulatory Standards Mapping\n")
+    lines.append("| Standard | Scope | Applicable L1 Domains |")
+    lines.append("|----------|-------|----------------------|")
+
+    std_mapping = [
+        ("Solvency II \u2013 SCR (Art. 100\u2013127)", "Capital adequacy, risk quantification", "Risk Management & Compliance, Actuarial & Pricing"),
+        ("Solvency II \u2013 MCR (Art. 128\u2013131)", "Minimum capital floor", "Risk Management & Compliance"),
+        ("Solvency II \u2013 ORSA (Art. 45)", "Own risk and solvency assessment", "Risk Management & Compliance"),
+        ("Solvency II \u2013 Technical Provisions (Art. 76\u201386)", "Best estimate, risk margin, TP adequacy", "Actuarial & Pricing, Claims Management"),
+        ("Solvency II \u2013 UW Risk (1.2)", "Premium and reserve risk", "Underwriting, Actuarial & Pricing"),
+        ("Solvency II \u2013 Cat Risk (4.1)", "Natural and man-made catastrophe risk", "Actuarial & Pricing, Reinsurance"),
+        ("Solvency II \u2013 RI Risk (2.1/2.3)", "Reinsurance counterparty and coverage risk", "Reinsurance"),
+        ("Solvency II \u2013 OpRisk (6.1)", "Operational loss events", "Risk Management & Compliance"),
+        ("NAIC SSAP 53", "Property and casualty loss reserves", "Claims Management, Actuarial & Pricing"),
+        ("NAIC SSAP 54/61", "Reinsurance, expense accounting", "Reinsurance, Product Lifecycle"),
+        ("NAIC SSAP 55", "Loss reserve discounting", "Claims Management, Actuarial & Pricing"),
+        ("NAIC IRIS Ratios", "Insurance regulatory information system", "Product Lifecycle, Underwriting"),
+        ("NAIC SERFF", "Rate and form filing system", "Product Lifecycle"),
+        ("NAIC Producer Licensing", "Agent and broker licensing", "Distribution & Channel Management"),
+        ("NAIC Market Conduct", "Fair treatment of policyholders", "Risk Management & Compliance, Customer Management"),
+        ("IFRS 17 (Full standard)", "Insurance contracts accounting", "IFRS 17 Accounting, Product Lifecycle"),
+        ("APRA GPS 001", "Prudential framework for insurers", "Regulatory Reporting, Risk Management"),
+        ("APRA LRS 750.0", "Life insurance reporting standards", "Regulatory Reporting"),
+        ("BCBS 239", "Risk data aggregation and reporting", "Data & Analytics, Risk Management"),
+        ("GDPR Art. 33\u201334", "Personal data breach notification", "Information Security & Cybersecurity"),
+        ("NIST SP 800-53", "Security and privacy controls", "Information Security & Cybersecurity"),
+        ("DORA (EU 2022/2554)", "Digital operational resilience", "Information Security & Cybersecurity, IT & Digital Platforms"),
+        ("IAIS ICPs", "Insurance core principles", "Risk Management & Compliance"),
+    ]
+    for std, scope, domains in std_mapping:
+        lines.append(f"|{std}|{scope}|{domains}|")
+    lines.append("")
+
+    return lines
+
+
+def acord_detail_for_domain(domain):
+    """Return ACORD capabilities for a given L1 domain."""
+    mapping = {
+        "Product Lifecycle Management": [
+            ("IN001", "Product Concept & Design", "Product Lifecycle Management", ""),
+            ("IN002", "Rate & Form Filing", "Product Lifecycle Management", ""),
+            ("IN003", "Product Launch", "Product Lifecycle Management", ""),
+            ("IN004", "Product Performance Monitoring", "Product Lifecycle Management", ""),
+        ],
+        "Distribution & Channel Management": [
+            ("IN005", "Agency & Producer Onboarding", "Distribution & Channel Management", ""),
+            ("IN006", "Commission Management", "Distribution & Channel Management", ""),
+            ("IN007", "Producer Performance", "Distribution & Channel Management", ""),
+            ("IN008", "Distribution Analytics", "Distribution & Channel Management", ""),
+        ],
+        "Underwriting": [
+            ("IN009", "Risk Assessment & Scoring", "Underwriting", ""),
+            ("IN010", "Underwriting Decision", "Underwriting", ""),
+            ("IN011", "Quote Generation", "Underwriting", ""),
+            ("IN012", "Bind & Evidence", "Underwriting", ""),
+        ],
+        "Policy Administration": [
+            ("IN013", "Policy Issuance", "Policy Administration", ""),
+            ("IN014", "Mid-Term Adjustments", "Policy Administration", ""),
+            ("IN015", "Renewal Processing", "Policy Administration", ""),
+        ],
+        "Claims Management": [
+            ("IN016", "First Notice of Loss", "Claims Management", ""),
+            ("IN017", "Claims Investigation", "Claims Management", ""),
+            ("IN018", "Claims Adjudication", "Claims Management", ""),
+            ("IN019", "Payment & Settlement", "Claims Management", ""),
+        ],
+        "Reinsurance": [
+            ("IN020", "Treaty Administration", "Reinsurance", ""),
+            ("IN021", "Facultative Placement", "Reinsurance", ""),
+            ("IN022", "Retrocession Management", "Reinsurance", ""),
+        ],
+        "Actuarial & Pricing": [
+            ("IN023", "Pricing Model Development", "Actuarial & Pricing", ""),
+            ("IN024", "Rate Monitoring", "Actuarial & Pricing", ""),
+            ("IN025", "Reserve Estimation", "Actuarial & Pricing", ""),
+        ],
+        "Billing & Collections": [
+            ("IN031", "Billing & Collections", "Billing & Collections", ""),
+        ],
+        "Customer Management": [
+            ("IN026", "Customer Onboarding & KYC", "Customer Management", ""),
+            ("IN027", "Customer Relationship Management", "Customer Management", ""),
+        ],
+        "Risk Management & Compliance": [
+            ("IN028", "Enterprise Risk Management", "Risk Management & Compliance", ""),
+            ("IN029", "Regulatory Compliance", "Risk Management & Compliance", ""),
+            ("IN030", "Capital Adequacy & ORSA", "Risk Management & Compliance", ""),
+        ],
+        "IFRS 17 Accounting": [
+            ("IN032", "IFRS 17 Accounting", "IFRS 17 Accounting", ""),
+        ],
+        "Regulatory Reporting": [
+            ("IN029", "Regulatory Compliance", "Regulatory Reporting", ""),
+        ],
+        "Data & Analytics": [
+            ("IN033", "Data & Analytics", "Data & Analytics", ""),
+        ],
+        "Information Security & Cybersecurity": [
+            ("IN034", "Information Security", "Information Security & Cybersecurity", ""),
+        ],
+        "Enterprise Services": [
+            ("IN035", "Enterprise Services", "Enterprise Services", ""),
+        ],
+        "IT & Digital Platforms": [
+            ("IN036", "IT & Digital Platforms", "IT & Digital Platforms", ""),
+        ],
+    }
+    return mapping.get(domain, [])
+
+
 def gen_markdown():
     toc_lines = ["# Insurance Analytics Dashboards \u2014 ACORD Capability Reference\n"]
     toc_lines.append(f"> {len(DASHBOARDS)} master dashboards \u2022 {sum(len(d['kpis']) for d in DASHBOARDS)} KPIs \u2022 Solvency II / NAIC / IFRS 17 / APRA / GDPR / NIST\n")
@@ -270,7 +505,9 @@ def gen_markdown():
         linked = [f"#{d['id']:02d}" for d in DASHBOARDS if code in d["acord_codes"]]
         xref_lines.append(f"| `{code}` | {cap} | Dashboard {', '.join(linked) if linked else '\u2014'} |")
 
-    md = "\n".join(toc_lines + sections + xref_lines)
+    # Business Capability Model (prepended before dashboard sections)
+    bcm_lines = gen_bcm()
+    md = "\n".join(toc_lines + bcm_lines + sections + xref_lines)
 
     out = DASH_DIR / "insurance-dashboards.md"
     out.write_text(md, encoding="utf-8")
